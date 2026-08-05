@@ -10,6 +10,12 @@ Thumbs.db
 *.jpg
 *.jpeg
 *.gif
+
+# 例外：PWA 必需图标必须随仓库部署到 GitHub Pages（否则“添加到主屏幕”无自定义图标）
+!icon-192.png
+!icon-512.png
+!icon-maskable-512.png
+!apple-touch-icon.png
 *.pdf
 *.docx
 *.py

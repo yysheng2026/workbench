@@ -1,0 +1,19 @@
+# 依赖 / 系统文件
+node_modules/
+.DS_Store
+Thumbs.db
+
+# 本项目不纳入仓库的本地私有资料（源目录里的装修/记账表等）
+*.xlsx
+*.xls
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+*.docx
+*.py
+*.csv
+
+# 不纳入密钥（虽本页密钥只存浏览器 localStorage，仍保险排除）
+*.env

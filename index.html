@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>我的闯关工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffdf7;--ink:#4a4a4a;--pink:#f4c7c3;--green:#cde8d2;--blue:#cfe3f2;--yellow:#fcebc2;--orange:#f8d2a8;--lilac:#e3d4f0;--line:#d8cfc4}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 18% 12%,#fff7ef 0,transparent 42%),radial-gradient(circle at 85% 0%,#fdeef3 0,transparent 38%),var(--paper);
+ font-family:"ZCOOL KuaiLe","楷体",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);font-size:14px}
+.wrap{max-width:1080px;margin:0 auto;padding:10px 10px 70px}
+header{position:relative;text-align:center;margin-bottom:8px}
+header h1{font-family:"Ma Shan Zheng","ZCOOL KuaiLe",cursive;font-size:26px;margin:2px 0;color:#9c5b52}
+.tape{position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(-2deg);width:120px;height:20px;background:repeating-linear-gradient(45deg,#f4c7c3,#f4c7c3 8px,#f8d2a8 8px,#f8d2a8 16px);opacity:.85;border-radius:3px}
+.date{display:inline-block;background:var(--yellow);padding:2px 12px;border-radius:18px;font-size:12px}
+.banner{position:sticky;top:0;z-index:30;background:#fff4f1;border:2px dashed #c98b83;border-radius:12px;padding:6px 12px;margin:6px 0;font-size:13px;color:#9c5b52;box-shadow:2px 3px 0 rgba(0,0,0,.06)}
+.app{display:flex;gap:10px;align-items:flex-start}
+.nav{width:128px;flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
+.nav button{text-align:left;padding:9px 10px;border:2px dashed var(--line);border-radius:12px;background:#fffdfa;color:#6a5a55;font-family:inherit;font-size:13px;cursor:pointer;transition:.15s}
+.nav button.active{background:#9c5b52;color:#fff;border-color:#9c5b52;transform:translateX(3px)}
+.nav .dot{font-size:15px;margin-right:5px}
+.main{flex:1;min-width:0}
+.card{background:#fffdfa;border:2px dashed var(--line);border-radius:14px;padding:12px;margin-bottom:12px;box-shadow:3px 4px 0 rgba(0,0,0,.05)}
+.card h2{font-family:"Ma Shan Zheng",cursive;font-size:19px;margin:0 0 8px;color:#9c5b52}
+.card h3{font-size:15px;color:#7a4a44;margin:10px 0 4px}
+.sub{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.sub button{padding:5px 10px;border:2px dashed var(--line);border-radius:10px;background:#fffdfa;font-family:inherit;font-size:12px;cursor:pointer;color:#6a5a55}
+.sub button.active{background:var(--lilac);color:#5a3a6a;border-color:#c9a9d8}
+/* status */
+.hero{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.plant{width:96px;height:112px;flex:0 0 auto}
+.lvbox{flex:1;min-width:180px}
+.lv b{font-family:"Ma Shan Zheng",cursive;font-size:20px;color:#c0392b}
+.xpbar{height:14px;background:#f0e9dd;border-radius:9px;overflow:hidden;margin:4px 0}
+.xpbar>i{display:block;height:100%;background:linear-gradient(90deg,#8fd0a0,#5fae74);transition:width .5s}
+.xptxt{font-size:11px;color:#888}
+/* quest */
+.qtitle{font-weight:bold;color:#7a4a44}
+.reward{font-size:12px;color:#b5651d;background:var(--yellow);border-radius:8px;padding:5px 9px;margin:6px 0;transform:rotate(-.3deg)}
+.ring{width:50px;height:50px;border-radius:50%;background:conic-gradient(#8fd0a0 calc(var(--p)*1%),#eee 0);display:flex;align-items:center;justify-content:center;font-size:11px;color:#5fae74;flex:0 0 auto}
+.task{display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px dotted #ece3d6}
+.cb{width:20px;height:20px;border:2px solid #c9bcae;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#5fae74;background:#fff;flex:0 0 auto}
+.task.done .cb{background:#cde8d2;border-color:#8fd0a0}
+.task.done .txt{text-decoration:line-through;color:#aab}
+.txt{flex:1}.xp{font-size:11px;color:#b5651d;background:var(--orange);border-radius:10px;padding:1px 7px;flex:0 0 auto}
+.add{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.add input,.add select{padding:6px 8px;border:2px dashed var(--line);border-radius:9px;font-family:inherit;font-size:12px;background:#fffdfa;flex:1;min-width:120px}
+.btn{padding:6px 12px;border:none;border-radius:11px;background:#9c5b52;color:#fff;font-family:inherit;font-size:13px;cursor:pointer;box-shadow:2px 3px 0 rgba(0,0,0,.12)}
+.btn.sm{padding:4px 10px;font-size:12px}.btn.alt{background:#c98b83}.btn.green{background:#7fae8c}.btn.ghost{background:#fff;color:#9c5b52;border:2px dashed #c98b83}
+/* stages */
+.stagecur{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.stagecur button{padding:4px 9px;border-radius:10px;border:2px solid var(--line);background:#fffdfa;font-family:inherit;font-size:12px;cursor:pointer}
+.stagecur button.active{background:#cde8d2;border-color:#8fd0a0;color:#3c6b4a;font-weight:bold}
+.remind{background:var(--blue);border-radius:10px;padding:8px 10px;font-size:13px;margin:6px 0}
+.pit{background:#fde2c4;border-radius:10px;padding:8px 10px;font-size:12px;margin:6px 0;color:#9a5a1d}
+.stampmini{display:inline-block;font-size:12px;background:#cde8d2;border-radius:10px;padding:2px 9px;color:#3c6b4a}
+/* tables */
+.tbl{border-collapse:collapse;width:100%;font-size:12px;margin-top:4px}
+.tbl th{background:#9aa0a6;color:#fff;padding:5px 6px;text-align:left;font-weight:normal}
+.tbl td{border:1px solid #ece3d6;padding:5px 6px;vertical-align:top}
+.tbl td[contenteditable]{background:#fffdfa;outline:none}
+.tbl td[contenteditable]:focus{background:#fff7e8}
+.x{cursor:pointer;color:#c98b83;font-weight:bold;padding:0 4px}
+.addrow{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.addrow input{flex:1;min-width:80px;padding:5px 7px;border:2px dashed var(--line);border-radius:8px;font-family:inherit;font-size:12px}
+/* stamps */
+.stamps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stamp{aspect-ratio:1;border-radius:12px;border:2px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:#fffdfa;cursor:pointer}
+.stamp .seal{font-size:22px;filter:grayscale(1);opacity:.35}
+.stamp.on{border-color:#c98b83;background:#fff4f1}.stamp.on .seal{filter:none;opacity:1;animation:stampin .5s}
+@keyframes stampin{0%{transform:scale(2.4) rotate(-18deg);opacity:0}60%{transform:scale(.9) rotate(-6deg)}100%{transform:scale(1) rotate(-8deg)}}
+/* morning */
+.morning{background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:10px;font-size:13px;line-height:1.7;white-space:pre-wrap}
+.morning .h{font-family:"Ma Shan Zheng",cursive;color:#b5651d;font-size:16px;margin-bottom:4px}
+textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-radius:9px;font-family:inherit;font-size:12px;padding:6px;background:#fffdfa}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:8px}
+.float{position:fixed;font-family:"Ma Shan Zheng",cursive;color:#5fae74;font-size:18px;pointer-events:none;animation:floatup 1s forwards;z-index:50}
+@keyframes floatup{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-46px)}}
+.confetti{position:fixed;top:-10px;width:8px;height:13px;z-index:60;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg)}}
+.modal{position:fixed;inset:0;background:rgba(60,40,40,.45);display:none;align-items:center;justify-content:center;z-index:80}
+.modal.show{display:flex}
+.box{background:#fffdfa;border:3px dashed #c98b83;border-radius:18px;padding:20px;max-width:300px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:pop .4s}
+.box.wide{max-width:440px;text-align:left;max-height:80vh;overflow:auto}
+@keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+.box .big{font-size:42px}.box h3{font-family:"Ma Shan Zheng",cursive;color:#9c5b52;margin:6px 0}.box p{font-size:13px;color:#7a4a44}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#9c5b52;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.3s;z-index:90}
+.toast.show{opacity:1}
+/* ---- 云同步 UI ---- */
+.cloud-status{font-size:12px;padding:3px 10px;border-radius:20px;background:#fff;border:2px dashed #c98b83;color:#9c5b52;white-space:nowrap}
+.cloud-status.off{background:#f3ede4;color:#a08a7e}
+.cloud-status.ok{background:#eaf5ee;border-color:#7fae8c;color:#3f7a55}
+.cloud-status.syncing{background:#fff7e6;border-color:#e0b15a;color:#a9772a}
+.cloud-status.err{background:#fdecec;border-color:#d98b8b;color:#b14b4b}
+.ck-lbl{display:block;font-size:12px;color:#7a4a44;margin:10px 0 4px;font-weight:bold}
+.ck-inp{width:100%;box-sizing:border-box;padding:8px 10px;border:2px solid #e3d6c6;border-radius:10px;font-family:inherit;font-size:13px;color:#5a3b36;background:#fffdfa}
+.ck-inp:focus{outline:none;border-color:#c98b83}
+.ck-status{font-size:12px;margin:10px 0;min-height:16px;color:#7a4a44}
+.ck-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ck-btns .btn{flex:1 1 auto}
+.ck-hint{font-size:11px;color:#b09a8e;line-height:1.5;margin-top:6px}
+/* overview stat strip */
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin:8px 0}
+.stat{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:8px 6px;text-align:center}
+.stat b{display:block;font-size:18px;color:#9c5b52;font-family:'Ma Shan Zheng',cursive}
+.stat span{font-size:11px;color:#888}
+/* quote / energy */
+.quote{background:linear-gradient(135deg,#fff7e8,#fdeef3);border:2px dashed #e0b96a;border-radius:12px;padding:12px;font-size:14px;color:#7a4a44;line-height:1.7}
+.quote .q{font-family:'Ma Shan Zheng',cursive;color:#b5651d;font-size:16px;margin-bottom:4px}
+/* focus timer */
+.focus{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.focus-circle{position:relative;width:140px;height:140px}
+.focus-circle .t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.focus-circle .t .tm{font-size:26px;font-weight:bold;color:#7a4a44;font-family:'Ma Shan Zheng',cursive}
+.focus-btns{display:flex;gap:8px;flex-wrap:wrap}
+/* heatmap (github style) */
+.heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);gap:3px;overflow-x:auto;padding:4px 0}
+.heat-cell{width:13px;height:13px;border-radius:3px;background:#f0e9dd}
+.heat-cell.on{background:#8fd0a0}
+.heat-cell.on2{background:#5fae74}
+.heat-legend{font-size:11px;color:#888;margin-top:4px;display:flex;gap:6px;align-items:center}
+.heat-legend i{display:inline-block;width:11px;height:11px;border-radius:3px}
+/* kanban */
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.kanban-col{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:8px;min-height:80px}
+.kanban-col h4{margin:0 0 6px;font-size:12px;color:#9c5b52;text-align:center}
+.kanban-card{background:#fff; border:1px solid #ece3d6;border-radius:9px;padding:7px;margin-bottom:6px;font-size:12px;color:#7a4a44;cursor:pointer;box-shadow:1px 1px 0 rgba(0,0,0,.04)}
+.kanban-card .w{height:6px;background:#f0e9dd;border-radius:4px;margin-top:5px;overflow:hidden}
+.kanban-card .w i{display:block;height:100%;background:#8fd0a0}
+/* social card */
+.social-card{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;position:relative}
+.social-card .pf{font-weight:bold;color:#7a4a44;font-size:15px}
+.social-card .row{display:flex;justify-content:space-between;font-size:12px;color:#888;margin:4px 0}
+.tagchip{display:inline-block;font-size:11px;padding:3px 9px;border-radius:10px;background:#e3d4f0;color:#5a3a6a;cursor:pointer;margin:2px}
+.tagchip.active{background:#9c5b52;color:#fff}
+.search{width:100%;padding:7px 9px;border:2px dashed var(--line);border-radius:9px;font-family:inherit;font-size:13px;background:#fffdfa;margin-bottom:8px}
+/* renovation overall progress */
+.overall{height:16px;background:#f0e9dd;border-radius:9px;overflow:hidden;margin:6px 0}
+.overall i{display:block;height:100%;background:linear-gradient(90deg,#8fd0a0,#5fae74)}
+/* renovation gantt */
+.gantt{display:flex;height:34px;border-radius:8px;overflow:hidden;border:2px solid var(--line);margin-top:8px;position:relative}
+.g-seg{display:flex;align-items:center;justify-content:center;font-size:12px;color:#5a3a2a;border-right:1px solid #fffdfa;min-width:0;overflow:hidden}
+.g-now{position:absolute;top:-4px;bottom:-4px;width:3px;background:#b03021}
+.g-now::after{content:"今";position:absolute;top:-15px;left:-7px;font-size:10px;color:#b03021;font-weight:bold}
+/* budget warning */
+.warnbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px;border-radius:12px;font-size:13px;margin-bottom:10px}
+.warnbar.over{background:#fceae8;border:2px solid #e7a59f}
+.warnbar.ok{background:#eaf6ed;border:2px solid #a9d8b8}
+.warnbar b{font-size:15px}
+/* pie */
+.pie-wrap{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.pie-legend{flex:1;min-width:160px;font-size:12px}
+.pie-legend div{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #ece3d6}
+.pie-legend .hot{color:#b03021;font-weight:bold}
+@media(max-width:680px){.kanban{grid-template-columns:1fr}}
+/* renovation acceptance */
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:4px;vertical-align:middle}
+.badge-key{background:#f4c7c3;color:#8e2525}
+.badge-imp{background:#fcebc2;color:#9a5a1d}
+.badge-nor{background:#e9e9e9;color:#666}
+.badge-type{background:#cfe3f2;color:#3a5a7a}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{font-size:11px;padding:4px 9px;border-radius:10px;background:#fff7e8;border:2px dashed #e0b96a;color:#7a4a44}
+.guide summary{cursor:pointer;color:#9c5b52;font-size:13px;font-weight:bold}
+.guide ul{margin:6px 0;padding-left:18px;font-size:12px;color:#7a4a44;line-height:1.6}
+.guide .defect-row{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.guide .defect-item{background:#fffdfa;border:2px dashed var(--line);border-radius:10px;padding:6px 9px;font-size:12px;flex:1;min-width:120px}
+.metrics{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.metric{display:flex;gap:8px;background:#fffdfa;border:1px dashed var(--line);border-radius:8px;padding:5px 8px;font-size:12px}
+.metric b{color:#9c5b52;flex:0 0 88px}
+.metric span{color:#7a4a44}
+.defect{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;margin-bottom:8px;border-left:5px solid #f4c7c3;position:relative}
+.defect-status-0{border-left-color:#f4c7c3}
+.defect-status-1{border-left-color:#fcebc2}
+.defect-status-2{border-left-color:#cde8d2}
+.mini-photo{width:44px;height:44px;object-fit:cover;border-radius:6px;border:2px dashed var(--line);cursor:pointer;margin:2px}
+.row-actions{display:flex;gap:6px;align-items:center;justify-content:flex-end;margin-top:6px}
+.row-actions button{font-size:11px;padding:2px 7px;border-radius:8px;border:2px dashed #c9bcae;background:#fffdfa;color:#7a4a44;cursor:pointer;font-family:inherit}
+.note-inline{width:100%;min-height:46px;border:2px dashed var(--line);border-radius:9px;font-family:inherit;font-size:12px;padding:6px;background:#fffdfa;margin-top:6px}
+.shot-list{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.shot-tag{font-size:11px;padding:3px 8px;border-radius:10px;background:#e3d4f0;color:#5a3a6a}
+@media(max-width:680px){.app{flex-direction:column}.nav{width:100%;flex-direction:row;overflow-x:auto;gap:5px}.nav button{white-space:nowrap}.nav button.active{transform:none}.stamps{grid-template-columns:repeat(3,1fr)}}
+/* fitness redesign */
+.fit-block{margin:8px 0;padding:8px 10px;background:#fffdfa;border:2px dashed var(--line);border-radius:10px}
+.fit-h{font-size:12px;font-weight:bold;color:#7a4a44;margin-bottom:4px}
+.fit-steps{margin:0;padding-left:18px;font-size:12px;color:#5a4a44;line-height:1.7}
+.fit-caut{margin:0;padding-left:18px;font-size:12px;color:#9a3a2a;line-height:1.7}
+.fit-timer{display:flex;flex-direction:column;align-items:center;gap:6px;background:#f0e9dd;border-radius:12px;padding:14px;margin:8px 0}
+.fit-phase{padding:4px 14px;border-radius:20px;background:#fffdfa;font-size:13px;color:#7a4a44;font-weight:bold}
+.fit-big{font-size:30px;font-weight:bold;font-family:'Ma Shan Zheng',cursive;color:#7a4a44}
+.fit-sub{font-size:12px;color:#888}
+.vid{margin-top:8px}
+.vidframe{width:100%;aspect-ratio:16/9;border:2px dashed var(--line);border-radius:10px;background:#000;margin-top:6px}
+/* reading / film / knowledge / stamps redesign */
+.goalbar{height:10px;background:#f0e9dd;border-radius:6px;overflow:hidden;margin-top:4px}
+.goalbar i{display:block;height:100%;background:linear-gradient(90deg,#8fd0a0,#5fae74)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tab{display:inline-block;font-size:12px;padding:3px 12px;border-radius:12px;background:#fffdfa;border:2px dashed var(--line);color:#6a5a55;cursor:pointer}
+.tab.active{background:#9c5b52;color:#fff;border-color:#9c5b52}
+.bk-card{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;cursor:pointer;position:relative}
+.bk-card:hover{border-color:#c98b83}
+.film-card{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;cursor:pointer;position:relative}
+.film-card:hover{border-color:#c98b83}
+.platbar{display:flex;align-items:center;gap:6px;margin:4px 0;font-size:12px}
+.platbar .track{flex:1;height:12px;background:#f0e9dd;border-radius:7px;overflow:hidden}
+.platbar .track i{display:block;height:100%;background:#9c5b52}
+.platbar .n{color:#888;min-width:54px;text-align:right}
+.kcard{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;cursor:pointer;position:relative}
+.kcard:hover{border-color:#c98b83}
+.review-q{background:#fff7e8;border:2px dashed #e0b96a;border-radius:10px;padding:8px 10px;font-size:13px;color:#7a4a44;margin:6px 0}
+.badge-detail{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;margin:6px 0}
+.badge-detail .ok{color:#3c6b4a;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="tape"></div><h1>🗺 我的闯关工作台</h1><span class="date" id="d"></span></header>
+<div class="toolbar">
+  <button class="btn green" id="checkin">✅ 今日打卡 +20</button>
+  <button class="btn alt" id="newmonth">➕ 新月份</button>
+  <button class="btn ghost" id="export">⬇ 导出</button>
+  <button class="btn ghost" id="import">⬆ 导入</button>
+  <input type="file" id="file" accept="application/json" style="display:none">
+  <span class="cloud-status off" id="cloudStatus">云端未配置</span>
+  <button class="btn ghost" id="cloudBtn">☁ 云同步</button>
+</div>
+<div class="banner" id="banner">🔨 今日装修待确认 —</div>
+<div class="app">
+  <div class="nav" id="nav"></div>
+  <div class="main" id="main"></div>
+</div>
+<footer style="text-align:center;color:#bdbdbd;font-size:11px;margin-top:8px">手账风闯关工作台 · 数据存本机浏览器 · 可在「☁ 云同步」开启跨设备共享 · 早间复盘由自动化每日自动写入</footer>
+</div>
+<div class="modal" id="modal"><div class="box"><div class="big">🎁</div><h3 id="mTitle"></h3><p id="mBody"></p><button class="btn" onclick="document.getElementById('modal').classList.remove('show')">收下啦</button></div></div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="cloudModal"><div class="box wide">
+ <h3>☁ 云同步设置</h3>
+ <p class="muted" style="font-size:12px;color:#7a4a44">开启后，电脑与手机会<b>自动读写同一份数据</b>（后端 JSONBin.io）。密钥仅存你本机浏览器，<b>不会</b>进入网页源码，公开网址也不会泄露。</p>
+ <label class="ck-lbl">API Key（X-Master-Key）</label>
+ <input class="ck-inp" id="ckKey" type="text" placeholder="粘贴你的 JSONBin Master Key" autocomplete="off">
+ <label class="ck-lbl">Bin ID（数据容器）</label>
+ <input class="ck-inp" id="ckBin" type="text" placeholder="例如 64f1a2...  （留空则自动新建一个）" autocomplete="off">
+ <div class="ck-status" id="ckStatus"></div>
+ <div class="ck-btns">
+  <button class="btn" id="ckSave">💾 保存并连接</button>
+  <button class="btn alt" id="ckPull">⬇ 立即拉取</button>
+  <button class="btn alt" id="ckPush">⬆ 立即上传</button>
+  <button class="btn ghost" id="ckClear">🚫 断开</button>
+  <button class="btn ghost" onclick="document.getElementById('cloudModal').classList.remove('show')">关闭</button>
+ </div>
+ <div class="ck-hint">① 到 jsonbin.io 注册并复制 API Key；② 填 Key、Bin ID 留空会自动建一个；③ 两端（电脑/手机）填<b>同一组</b> Key+Bin 即共享数据。未联网时自动退回本机，不影响使用。</div>
+</div></div>
+
+<script type="application/json" id="morningSeed">{"text": "今天最重要的一件事：逼盛居给出水电整改的书面计划——你口述\"水电至今未整改\"，这是 07-30 验收遗留的最大隐患，再拖会卡死后续铺贴。\n\n🔴 今日必办（P0）\n🔴 水电整改确认：现场/电话向盛居（陶工/徐工）核对 07-30 验收问题清单与整改时限，要求给出书面/微信整改计划，杜绝无留痕。\n🔴 地插高度 1710/1690 最终拍板：在微信/现场书面确认，锁死不再变动。\n🔴 窗户单扇\"太憋气/打不开\"定性：问汉森张生是保护态还是真卡死，真卡死立即安排维修。\n\n🟠 关键推进（P1）\n🟠 瓷砖铺贴排期：催陶工给具体开工日期（砖已到货验收通过，不应再拖）。\n🟠 海棠角文字尺寸：要求装修公司给加工厂能用的文字版（CAD 加工厂看不懂）。\n🟠 主卧窗室内胶补缝：确认 07-23 张生所说\"里面还要补缝\"是否已补完。\n🟠 全屋智能点位回执：向付广金确认 07-30 现场核对清单已交付。\n🟠 预算记账：瓷砖尾款 ¥2,444（已付）+ 运费上楼 ¥650 录入表，刷新看板缓存。\n\n🟡 顺手跟（P2）\n🟡 壹玖效果图：按\"贴砖后复尺再签约\"催终版，不阻塞硬装。\n🟡 派雅门窗退房间门 + 卫生间门。\n🟡 地面找平层空鼓是否重做（与师傅确认）。\n\n💰 预算：总超支 ¥25,828.46（+12.9%），若补录瓷砖尾款+运费后约 ¥28,972.46（+14.5%）。\n\n详细复盘见 装修进度日报_2026-08-04.md。"}</script>
+
+<script type="application/json" id="stockSeed">{"prices": {"sh601899": 33.18, "sh601717": 15.92, "sh600879": 15.91, "sh600501": 14.55, "sz002270": 20.75, "sz000429": 13.94, "sh605166": 8.5, "sh600343": 18.88, "sz002997": 27.18, "sz159928": 0.669, "sh513130": 0.611, "sh562800": 0.933, "sh601012": 12.89}, "news": [], "updated": "2026-08-05 09:58", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股"}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股"}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股"}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股"}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股"}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股"}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股"}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股"}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股"}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF"}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF"}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF"}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股"}]}</script>
+
+<script>
+const MORNING_FALLBACK=`🔴 今天最重要：水电验收前再核一遍智能点位（风管机/米家开关均在待付清单）。
+
+🔴 今日必办（P0）：
+① 与设计师壹玖确认定制柜内部尺寸图（厨房/衣帽间）
+② 风管机商家约安装排期（商家一价全包，自购电源线/空开/检修口）
+
+🟠 关键推进（P1）：论文明补实验依据段落；小红书「水电避坑」脚本定稿
+🟡 顺手跟（P2）：安吉尔管线机赠品到货确认
+
+💰 预算：已花 ¥149,608 / 预算 ¥200,000，待付 ¥8,004（全为全屋智能）；总超支约 ¥0（分类「电器/全屋智能」略超，总盘未超）。
+
+详细复盘见 装修进度日报_*.md`;
+const MORNING_DEFAULT=(function(){try{const el=document.getElementById('morningSeed');if(el){const o=JSON.parse(el.textContent||'{}');if(o&&o.text)return o.text;}}catch(e){}return MORNING_FALLBACK;})();
+const STOCK_DATA=(function(){try{const el=document.getElementById('stockSeed');if(el)return JSON.parse(el.textContent||'{}');}catch(e){}return {prices:{},news:[],updated:""};})();
+// ---------- 默认书单 / 片单 ----------
+const DEFAULT_BOOKS=[
+{title:"疑案里的中国史",author:"艾公子",status:"已读",tags:"历史/悬疑",note:"1-3册"},
+{title:"请至少爱一个像男人的男人",author:"张妙娴",status:"已读",tags:"情感/随笔",note:""},
+{title:"傲慢与偏见",author:"简·奥斯汀",status:"已读",tags:"经典/爱情",note:""},
+{title:"林徽因：人间四月天",author:"张俊",status:"已读",tags:"传记/民国",note:""},
+{title:"简爱",author:"夏洛蒂·勃朗特",status:"已读",tags:"经典/女性",note:""},
+{title:"呼啸山庄",author:"艾米莉·勃朗特",status:"已读",tags:"经典/哥特",note:""},
+{title:"安娜·卡列尼娜",author:"列夫·托尔斯泰",status:"已读",tags:"经典/俄国文学",note:"上下册"},
+{title:"中国历代政治得失",author:"钱穆",status:"已读",tags:"历史/政治",note:""},
+{title:"文物中的化学",author:"周嘉华",status:"已读",tags:"科普/历史",note:""},
+{title:"一分钟物理",author:"中科院物理所",status:"已读",tags:"科普/物理",note:""},
+{title:"小王子",author:"圣埃克苏佩里",status:"已读",tags:"童话/哲学",note:"李继宏译"},
+{title:"简·奥斯汀之幸福哲学",author:"伊丽莎白·坎特",status:"已读",tags:"文学评论",note:""},
+{title:"红书",author:"荣格",status:"已读",tags:"心理学/经典",note:""},
+{title:"你也走了很远的路吧",author:"卢思浩",status:"已读",tags:"散文/治愈",note:""},
+{title:"局外人",author:"加缪",status:"已读",tags:"哲学/存在主义",note:""},
+{title:"月亮与六便士",author:"毛姆",status:"已读",tags:"经典/艺术",note:""},
+{title:"素食者",author:"韩江",status:"已读",tags:"小说/韩国文学",note:""},
+{title:"蛤蟆先生去看心理医生",author:"罗伯特·戴博德",status:"已读",tags:"心理学/自愈",note:""},
+{title:"围棋入门一本就够",author:"吴秉铁",status:"已读",tags:"围棋/技艺",note:""},
+{title:"郭德纲讲三国",author:"郭德纲",status:"已读",tags:"历史/评书",note:""},
+{title:"人间食粮",author:"安德烈·纪德",status:"已读",tags:"散文/哲学",note:""},
+{title:"《星际迷航》里的物理学",author:"劳伦斯·M·克劳斯",status:"已读",tags:"科普/科幻",note:""},
+{title:"厨房里的人类学家",author:"庄祖宜",status:"已读",tags:"美食/人类学",note:""},
+{title:"活着",author:"余华",status:"已读",tags:"小说/中国当代",note:""},
+{title:"我只要写作就是回家",author:"余华",status:"已读",tags:"写作/访谈",note:""},
+{title:"人口学",author:"莫吉",status:"已读",tags:"社科/人口",note:""},
+{title:"历史中的大与小",author:"马伯庸",status:"已读",tags:"历史/随笔",note:""},
+{title:"敦煌大历史",author:"胡同庆",status:"已读",tags:"历史/敦煌",note:""},
+{title:"本色敦煌",author:"胡同庆/王进/张锋",status:"已读",tags:"历史/艺术",note:"壁画背后的故事"}
+];
+const DEFAULT_FILMS=[
+{title:"呼啸山庄",type:"剧情/文学改编",status:"已看",tags:"哥特/经典"},
+{title:"安娜·卡列尼娜",type:"剧情/文学改编",status:"已看",tags:"俄国文学/爱情"},
+{title:"简·爱",type:"剧情/文学改编",status:"已看",tags:"女性/经典"},
+{title:"傲慢与偏见",type:"剧情/爱情",status:"已看",tags:"奥斯汀/英伦"},
+{title:"茶花女",type:"剧情/爱情",status:"已看",tags:"文学改编/悲剧"},
+{title:"小妇人",type:"剧情/家庭",status:"已看",tags:"女性成长/经典"},
+{title:"红与黑",type:"剧情/文学改编",status:"已看",tags:"法国文学/野心"},
+{title:"镖人",type:"动画/武侠",status:"已看",tags:"国漫/武侠"},
+{title:"飞驰人生",type:"喜剧/赛车",status:"已看",tags:"韩寒/热血"},
+{title:"基督山伯爵",type:"剧情/复仇",status:"已看",tags:"文学改编/爽片"},
+{title:"成为简·奥斯汀",type:"剧情/传记",status:"已看",tags:"作家/爱情"},
+{title:"肖申克的救赎",type:"剧情/励志",status:"已看",tags:"自由/经典"},
+{title:"悲惨世界",type:"歌舞/文学改编",status:"已看",tags:"雨果/革命"},
+{title:"苔丝",type:"剧情/文学改编",status:"已看",tags:"英国文学/命运"},
+{title:"千年之恋之源氏物语",type:"剧情/古典",status:"已看",tags:"日本古典/物哀"},
+{title:"布达佩斯大饭店",type:"喜剧/剧情",status:"已看",tags:"韦斯·安德森/美学"},
+{title:"理智与情感",type:"剧情/爱情",status:"已看",tags:"奥斯汀/英伦"},
+{title:"面纱",type:"剧情/爱情",status:"已看",tags:"毛姆/中国背景"},
+{title:"战争与和平",type:"剧情/历史",status:"已看",tags:"俄国文学/史诗"},
+{title:"沙翁情史",type:"剧情/爱情",status:"已看",tags:"莎士比亚/戏说"},
+{title:"劝导",type:"剧情/爱情",status:"已看",tags:"奥斯汀/英伦"},
+{title:"诺桑觉寺",type:"剧情/爱情",status:"已看",tags:"奥斯汀/哥特"},
+{title:"蒂凡尼的早餐",type:"剧情/爱情",status:"已看",tags:"赫本/都市"},
+{title:"永不妥协",type:"剧情/传记",status:"已看",tags:"女性/维权"},
+{title:"追风筝的人",type:"剧情/成长",status:"已看",tags:"阿富汗/救赎"},
+{title:"托斯卡纳艳阳下",type:"剧情/治愈",status:"已看",tags:"意大利/疗伤"},
+{title:"百万美元宝贝",type:"剧情/运动",status:"已看",tags:"拳击/励志"},
+{title:"奇迹男孩",type:"剧情/成长",status:"已看",tags:"家庭/温暖"},
+{title:"大鱼",type:"奇幻/剧情",status:"已看",tags:"蒂姆·波顿/父子"},
+{title:"隐藏人物",type:"剧情/传记",status:"已看",tags:"NASA/女性/黑人"},
+{title:"时时刻刻",type:"剧情/传记",status:"已看",tags:"伍尔夫/女性"},
+{title:"弱点",type:"剧情/传记",status:"已看",tags:"橄榄球/温情"},
+{title:"裁缝",type:"剧情/喜剧",status:"已看",tags:"复仇/时尚"},
+{title:"谎言大师",type:"剧情/悬疑",status:"已看",tags:"海伦·米伦/骗局"},
+{title:"爱在黎明破晓前",type:"剧情/爱情",status:"已看",tags:"爱在三部曲/话痨"},
+{title:"爱在日落黄昏时",type:"剧情/爱情",status:"已看",tags:"爱在三部曲/重逢"},
+{title:"爱在午夜降临时",type:"剧情/爱情",status:"已看",tags:"爱在三部曲/婚姻"},
+{title:"海街日记",type:"剧情/家庭",status:"已看",tags:"是枝裕和/治愈"},
+{title:"美国往事",type:"剧情/犯罪",status:"已看",tags:"黑帮/史诗"},
+{title:"超脱",type:"剧情/文艺",status:"已看",tags:"教育/孤独"},
+{title:"摩托日记",type:"剧情/传记",status:"已看",tags:"切·格瓦拉/旅行"},
+{title:"七号房的礼物",type:"剧情/亲情",status:"已看",tags:"韩国/催泪"},
+{title:"妙手情真",type:"剧情/传记",status:"已看",tags:"医疗/人文关怀"},
+{title:"至暗时刻",type:"剧情/传记",status:"已看",tags:"丘吉尔/二战"}
+];
+const FITNESS_PLAN=[
+ {name:"全身放松",focus:"久坐全身紧张，先放松再练",sets:"泡沫轴滚背/腿 10 min",setsCount:1,work:600,rest:0,tip:"放松竖脊肌和髂胫束，不要滚腰椎。",while:"边追剧边滚",video:"",
+  steps:["把泡沫轴垫在需要放松的肌肉下（背阔肌、大腿前/外侧、小腿）","缓慢滚动，遇到痛点停留 20–30 秒做深呼吸","背部滚动时双手抱头、屁股离地，让轴在胸椎段上下滚","每部位滚 1–2 分钟，左右对称"],
+  cautions:["❌ 绝对不要直接滚腰椎（腰无肋骨保护，易伤）","❌ 不要滚颈椎和膝关节","⚠ 停留在肌肉上，避开骨头与关节","⚠ 疼痛以‘酸胀可忍’为准，不要憋气"]},
+ {name:"靠墙站 + 下巴后缩",focus:"脖子前倾 / 驼背",sets:"靠墙站 5 min + 下巴后缩 15 次",setsCount:3,work:45,rest:15,tip:"后脑勺、肩胛、臀部、小腿贴墙，收下巴。",while:"看电影时靠墙站",video:"",
+  steps:["脚跟离墙约一脚掌，后脑勺/肩胛骨/臀部/小腿肚贴墙","肩膀下沉，双手自然下垂或抱臂","做‘下巴后缩’：水平向后收下巴（像双下巴），保持 3 秒，重复 15 次","全程后脑勺贴墙，想象头顶被线往上拉"],
+  cautions:["❌ 不要‘仰头贴墙’，那是脖子在代偿","❌ 不要塌腰顶肚子，腰与墙留一手掌厚即可","⚠ 下巴后缩是水平后收，不是低头也不是抬头","⚠ 小腿贴墙即可，膝盖不要锁死"]},
+ {name:"死虫式 + 腹式呼吸",focus:"小腹突出 / 核心无力",sets:"死虫式 3 组×10 次 + 腹式呼吸 5 min",setsCount:3,work:40,rest:20,tip:"腰始终贴地，呼气时肋骨下沉。",while:"电影片头片尾做",video:"",
+  steps:["仰卧，屈膝 90°（大腿垂直、小腿平行），双手举向天花板","吸气鼓肚（腹式呼吸），呼气时腰更贴地、肋骨下沉","呼气同时对侧手脚缓慢下放（右手+左腿），不触地，最低停 1 秒","吸气收回换另一侧；每侧 10 次为 1 组"],
+  cautions:["❌ 腰一旦离地立刻收回——‘一离地就是错’","❌ 不要甩动下放，越慢越有效","❌ 不要耸肩抬头，颈部自然放松","⚠ 下放幅度以‘腰不抬起’为上限，宁可小幅度","⚠ 全程不憋气，呼气发力、吸气还原"]},
+ {name:"胸椎灵活度 + 臀桥",focus:"驼背 / 胸椎僵",sets:"胸椎旋转 10 次/侧 + 臀桥 3 组×15",setsCount:3,work:45,rest:20,tip:"臀桥顶峰夹臀 2 秒，胸椎旋转保持骨盆稳定。",while:"睡前或阅读后",video:"",
+  steps:["胸椎旋转：四足跪姿，一手抱头，呼气时肘向下找对侧膝、旋转胸椎，每侧 10 次","臀桥：仰卧屈膝脚踩地，呼气顶髋抬臀至肩-髋-膝一条线","顶峰夹臀保持 2 秒，吸气下落，15 次为 1 组"],
+  cautions:["❌ 臀桥不要顶腰（腰椎超伸），用臀发力而非腰","⚠ 胸椎旋转时骨盆稳定，别用腰代偿扭转","⚠ 膝盖对准脚尖方向，不要内扣","⚠ 落臀时控制，不要‘砸’下来"]},
+ {name:"YTWL 肩背激活",focus:"驼背 / 翼状肩胛",sets:"YTWL 4 个字母各 10 次",setsCount:4,work:30,rest:15,tip:"俯卧或站姿，肩胛下沉后收，不要耸肩。",while:"办公/看书间隙",video:"",
+  steps:["站/俯姿，双臂伸直、拇指朝上","依次做 Y（斜上45°）、T（水平外展）、W（屈肘夹背）、L（屈肘外展）","每个字母停 1 秒再回，感受肩胛骨后收夹紧","Y/T/W/L 各 10 次为 1 轮"],
+  cautions:["❌ 全程沉肩，绝不耸肩借力","⚠ 用后背（斜方中下束）发力，不是手臂甩","⚠ 幅度小没关系，先把‘夹背’感觉找到","⚠ 颈部放松，不要缩脖子"]},
+ {name:"猫牛式 + 平板支撑",focus:"脊柱僵硬 / 核心",sets:"猫牛式 10 次 + 平板支撑 3 组×30s",setsCount:3,work:30,rest:20,tip:"猫牛式配合呼吸，平板撑保持耳肩髋一条线。",while:"看电影前 5 分钟",video:"",
+  steps:["四足跪姿，吸气塌腰抬头（牛式），呼气拱背低头（猫式），配合呼吸做 10 次","平板支撑：前臂撑地，身体成一条直线，收紧腹臀","保持耳-肩-髋-踝一条线，30 秒为 1 组"],
+  cautions:["❌ 平板不要塌腰撅臀","⚠ 肩胛不下压耸肩，肩在腕正上方（直臂版）","⚠ 塌腰是平板最大错，宁可膝盖着地降阶","⚠ 猫牛式要慢，跟随呼吸，不要快甩"]},
+ {name:"蚌式开合 + 髋屈肌拉伸",focus:"骨盆前倾 / 小腹突出 / 臀凹陷",sets:"蚌式开合 3 组×15 + 髋屈肌拉伸 2 min/侧",setsCount:3,work:40,rest:20,tip:"蚌式脚跟不离地，拉伸时骨盆后倾。",while:"睡前",video:"",
+  steps:["侧卧，屈膝约 90°，脚跟并拢贴紧","呼气时上方膝盖像蚌壳打开（骨盆不动），吸气合上，每侧 15 次","髋屈肌拉伸：弓步，后腿膝着地、骨盆后倾，前推髋，每侧 2 分钟"],
+  cautions:["❌ 蚌式打开时骨盆不要后倒，身体始终朝正前方","❌ 脚跟不要分开（保持并拢才是真蚌式）","⚠ 髋屈肌拉伸膝盖不适就垫软物，不要硬压","⚠ 拉伸到‘牵拉感’即可，不要弹震"]}
+];
+// 观影主题 → 推荐片单（按每月主线联动）
+const FILM_THEME_POOL={
+ "人文历史纪录片":["河西走廊","我在故宫修文物","敦煌","大明宫","国家宝藏","故宫100","跟着书本去旅行","历史那些事","书简阅中国"],
+ "商业纪录片":["美国商业大亨","制高点：世界经济之战","公司的力量","货币","华尔街","创新之路","无节制消费的元凶"],
+ "科幻":["星际迷航","银翼杀手","2001太空漫游","降临","盗梦空间","火星救援","地心引力"],
+ "经典文学改编":["呼啸山庄","安娜·卡列尼娜","简·爱","傲慢与偏见","战争与和平","悲惨世界","红与黑"]
+};
+const WRITING_PROMPTS=[
+ "今天写一个你「最想被理解」的瞬间。",
+ "用 100 字描述十年后的自己清晨。",
+ "把刚才发生的一件小事，写成一个有悬念的开头。",
+ "写一封不会寄出的信，给三年前的自己。",
+ "描写一种气味，以及它唤起的记忆。",
+ "用‘如果……就好了’开头，写三句话。",
+ "记录今天一个让你心动的细节。",
+ "写一个你敬佩的人，只写他的一个习惯。",
+ "把‘家’拆成五个感官片段。",
+ "虚构一个因为一句话而改变命运的角色。",
+ "描写雨天的车站，不出现‘寂寞’二字。",
+ "写一个你一直想道歉的场景。",
+ "用第二人称，写一段鼓励自己的话。",
+ "把今天的晚饭写成一篇微型散文。",
+ "写一个‘被误解’的善意瞬间。"
+];
+// ---------- 等级 / 植物 ----------
+const LV=[0,150,400,800,1300,1900,2600,3400,4300,5300,6400,7600];
+function levelOf(x){let l=1;for(let i=0;i<LV.length;i++)if(x>=LV[i])l=i+1;return l;}
+function lvInfo(x){const l=levelOf(x),cur=LV[l-1],nxt=LV[l]??LV[LV.length-1]+1000,span=(nxt-cur)||1;return{l,xpIn:x-cur,pct:Math.min(100,Math.round((x-cur)/span*100)),next:nxt};}
+function stageOf(x){if(x<150)return 0;if(x<400)return 1;if(x<800)return 2;if(x<1900)return 3;if(x<3400)return 4;return 5;}
+function plantSVG(s){const g=`<line x1="14" y1="96" x2="92" y2="96" stroke="#c9b79c" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 5"/>`;
+ const soil=`<path d="M20 96 Q54 86 88 96 Z" fill="#e3c9a0"/>`;let b="";
+ if(s===0)b=`<circle cx="54" cy="82" r="4" fill="#a9764e"/>`;
+ else if(s===1)b=`<path d="M54 96 L54 78" stroke="#7fae8c" stroke-width="3" fill="none"/><path d="M54 82 Q46 75 42 80 Q50 84 54 82Z" fill="#8fd0a0"/><path d="M54 82 Q62 75 66 80 Q58 84 54 82Z" fill="#8fd0a0"/>`;
+ else if(s===2)b=`<path d="M54 96 L54 68" stroke="#7fae8c" stroke-width="3.5" fill="none"/><path d="M54 74 Q40 67 36 74 Q48 79 54 74Z" fill="#8fd0a0"/><path d="M54 70 Q68 63 72 70 Q60 75 54 70Z" fill="#8fd0a0"/>`;
+ else if(s===3)b=`<path d="M54 96 L54 64" stroke="#7fae8c" stroke-width="4" fill="none"/><path d="M54 72 Q38 65 34 72 Q48 77 54 72Z" fill="#8fd0a0"/><path d="M54 68 Q70 61 74 68 Q60 73 54 68Z" fill="#8fd0a0"/><circle cx="54" cy="58" r="5" fill="#f6c6d0"/>`;
+ else if(s===4)b=`<path d="M54 96 L54 62" stroke="#7fae8c" stroke-width="4" fill="none"/><path d="M54 74 Q36 67 32 74 Q46 79 54 74Z" fill="#8fd0a0"/><path d="M54 70 Q72 63 76 70 Q60 75 54 70Z" fill="#8fd0a0"/><circle cx="54" cy="54" r="7" fill="#f4a8c0"/><circle cx="54" cy="54" r="3" fill="#fff"/>`;
+ else b=`<rect x="50" y="66" width="8" height="32" rx="3" fill="#b98a5e"/><circle cx="54" cy="48" r="24" fill="#8fd0a0"/><circle cx="44" cy="54" r="13" fill="#9bdcae"/><circle cx="66" cy="54" r="13" fill="#9bdcae"/><circle cx="54" cy="44" r="13" fill="#9bdcae"/>`;
+ return `<svg class="plant" viewBox="0 0 108 110">${g}${soil}${b}</svg>`;}
+
+// ---------- 种子 ----------
+function seed(){const m="2026-08";return{version:1,currentMonth:m,checkinXp:0,lastCheckin:"",
+ months:{[m]:{main:"盛夏三连击：装修定稿 · 论文投稿 · 故事连载",reward:"达标奖励：一顿大餐 / 一件心仪好物",stampName:"🌿 盛夏印记",filmTheme:"人文历史纪录片",
+  tasks:[{id:1,text:"装修：定制柜内部尺寸图定稿 + 风管机安装排期锁定",xp:300,done:false},
+   {id:2,text:"论文：补实验依据 + 润色英文摘要/结论 + 8/20前投稿ASS",xp:300,done:false},
+   {id:3,text:"写作：小说第3章初稿 + 小红书/抖音各2更",xp:150,done:false},
+   {id:4,text:"阅读：读完《认知觉醒》+ 推进《分析化学》",xp:120,done:false},
+   {id:5,text:"习惯：早起/阅读30min/写作500字 全月打卡",xp:150,done:false}]}},
+ renovation:{currentStage:"水电",
+  budget:{total:200000,spent:149608,pending:8004,cats:[
+   {n:"硬装（半包）",cap:70000,spent:68275},{n:"主材",cap:60000,spent:40813},
+   {n:"电器",cap:30000,spent:32516},{n:"全屋定制",cap:50000,spent:0},
+   {n:"全屋智能",cap:8000,spent:8004},{n:"其他",cap:null,spent:0}]},
+  pendingItems:["全屋路由BE3600Pro(待付)","中控屏×3(待付)","领普智能开关T3(待付)","天然气卫士(待付)","传感器组(待付)","智能摄像机(待付)","窗帘机×3(待付)","晾衣机1S(待付)","智能浴霸S1(待付)","智能音箱Pro(待付)","管线机(待付·赠)"],
+  stages:[
+   {name:"打拆",done:true,remind:"拆改前务必确认承重墙与管线走向，全程拍照留底；垃圾及时清运避免楼道堆积。",pit:"⚠ 误拆承重墙/未标注管线 → 后期结构/漏水隐患。",
+    guide:{tools:["卷尺","记号笔","物业图纸"],pass:["非承重墙方可拆除","管线已标注保护","垃圾当日清运"],defects:[{icon:"🧱",name:"墙体误拆",fix:"立即停止并加固"},{icon:"💧",name:"水管打破",fix:"关总阀并修复"},{icon:"🗑",name:"垃圾堆积",fix:"督促清运"}],shots:["拆除前后对比","管线裸露位置","垃圾堆放点"]},
+    checks:[{t:"非承重墙拆除确认",d:true,sev:"关键",type:"其他",note:"",photos:[]},{t:"原门窗拆除",d:true,sev:"重要",type:"其他",note:"",photos:[]},{t:"垃圾清运完毕",d:true,sev:"一般",type:"其他",note:"",photos:[]}]},
+   {name:"水电",done:false,remind:"隐蔽工程！水路打压≥0.8MPa 保压24h；电路绝缘测试；所有点位与家具/智能清单核对后再封槽。",pit:"⚠ 点位遗漏/走向不明 → 后期砸墙重做。水管走顶、电管分色、留检修口。",
+    guide:{tools:["打压泵","兆欧表","通断仪","激光水平仪"],pass:["打压≥0.8MPa保压24h无掉压","绝缘电阻≥0.5MΩ","点位与图纸一致","闭水试验48h无渗漏"],defects:[{icon:"💧",name:"渗漏",fix:"返工重新熔接"},{icon:"⚡",name:"短路/虚接",fix:"重新接线并测试"},{icon:"📍",name:"点位偏差",fix:"返工开槽移位"}],shots:["水管走向全景","打压表读数","电箱接线","闭水试验水位"]},
+    checks:[{t:"水路打压测试通过",d:false,sev:"关键",type:"其他",note:"",photos:[]},{t:"电路绝缘/通断测试",d:false,sev:"关键",type:"其他",note:"",photos:[]},{t:"开关插座点位复核(含智能)",d:false,sev:"关键",type:"其他",note:"",photos:[]},{t:"防水涂刷+闭水试验",d:false,sev:"关键",type:"其他",note:"",photos:[]}]},
+   {name:"泥瓦",done:false,remind:"瓷砖对缝/空鼓率<5%；地漏坡度；窗台/门槛石收口。",pit:"⚠ 空鼓、坡度反坡导致积水。",
+    guide:{tools:["空鼓锤","2m靠尺","塞尺","水平仪","玻璃珠/乒乓球"],pass:["瓷砖空鼓率<5%(单砖边角空鼓<1/4)","墙面平整度≤3mm/2m","阴阳角方正≤3mm","地漏坡度≥1%"],defects:[{icon:"🔨",name:"空鼓",fix:"敲掉重铺"},{icon:"🌫",name:"裂缝",fix:"检查基层后重贴"},{icon:"📐",name:"不平/坡度反",fix:"打磨或返工"}],shots:["全屋瓷砖阴阳角","空鼓锤敲击过程","地漏坡度测试","门槛石收口"]},
+    checks:[{t:"瓷砖铺贴+空鼓检查",d:false,sev:"关键",type:"空鼓",note:"",photos:[]},{t:"地漏/坡度验收",d:false,sev:"重要",type:"其他",note:"",photos:[]},{t:"墙面平整度检查",d:false,sev:"重要",type:"平整度",note:"",photos:[]},{t:"阴阳角顺直检查",d:false,sev:"重要",type:"其他",note:"",photos:[]}]},
+   {name:"木工",done:false,remind:"吊顶/背景墙/定制柜基层；与全屋定制复尺对齐。",pit:"⚠ 与定制柜尺寸冲突。",
+    guide:{tools:["卷尺","水平仪","直角尺"],pass:["吊顶平整无开裂","龙骨间距符合规范","预留检修口/窗帘盒","与定制柜尺寸对齐"],defects:[{icon:"📐",name:"吊顶不平",fix:"调整龙骨"},{icon:"🌫",name:"石膏板裂缝",fix:"重新封板/贴绷带"},{icon:"📏",name:"尺寸冲突",fix:"现场改方案"}],shots:["吊顶完成面","龙骨间距","窗帘盒/检修口","定制柜复尺记录"]},
+    checks:[{t:"吊顶/基层完成",d:false,sev:"重要",type:"其他",note:"",photos:[]},{t:"定制柜复尺确认",d:false,sev:"关键",type:"其他",note:"",photos:[]},{t:"墙面基层平整度",d:false,sev:"重要",type:"平整度",note:"",photos:[]}]},
+   {name:"油漆",done:false,remind:"墙面挂网/腻子/底漆面漆；阴阳角顺直。",pit:"⚠ 开裂、色差。",
+    guide:{tools:["强光手电","2m靠尺","直角尺","色卡"],pass:["无裂纹/砂眼/流坠","墙面平整度≤3mm/2m","阴阳角顺直","无明显色差"],defects:[{icon:"🌫",name:"裂缝",fix:"铲除至基层挂网重做"},{icon:"🎨",name:"色差",fix:"重新调色涂刷"},{icon:"📐",name:"阴阳角不直",fix:"重新批刮修整"}],shots:["强光下墙面","阴阳角特写","涂刷前后对比","色号/漆桶标签"]},
+    checks:[{t:"墙面三遍完成",d:false,sev:"重要",type:"其他",note:"",photos:[]},{t:"阴阳角/收口检查",d:false,sev:"重要",type:"其他",note:"",photos:[]},{t:"强光下无砂眼流坠",d:false,sev:"重要",type:"裂缝",note:"",photos:[]}]},
+   {name:"安装",done:false,remind:"门/柜/洁具/灯具/开关面板安装；与米家设备联调。",pit:"⚠ 尺寸不符装不上。",
+    guide:{tools:["水平仪","卷尺","螺丝刀","米家App"],pass:["门扇开合顺畅无刮擦","柜体水平/门板对齐","洁具无渗漏","灯具/面板安装牢固","智能设备可入网"],defects:[{icon:"🚪",name:"门扇刮地",fix:"调整门套/合页"},{icon:"🗄",name:"柜门不齐",fix:"调节铰链"},{icon:"💧",name:"洁具渗漏",fix:"重新打胶/紧固"}],shots:["门套安装","柜体细节","洁具下水","开关面板","智能设备入网界面"]},
+    checks:[{t:"门+柜+洁具安装",d:false,sev:"关键",type:"其他",note:"",photos:[]},{t:"灯具+面板安装",d:false,sev:"重要",type:"其他",note:"",photos:[]},{t:"米家设备入网测试",d:false,sev:"重要",type:"其他",note:"",photos:[]}]},
+   {name:"软装",done:false,remind:"家具进场+窗帘+配饰；按软装搭配思路摆场。",pit:"⚠ 风格不统一。",
+    guide:{tools:["卷尺","色卡","手机相机"],pass:["家具尺寸与预留空间匹配","窗帘离地2-3cm","配色符合奶油原木方案","无磕碰划痕"],defects:[{icon:"🛋",name:"尺寸不符",fix:"退换货"},{icon:"🎨",name:"风格冲突",fix:"调整搭配"},{icon:"🪟",name:"窗帘离地不对",fix:"调整挂钩/改短"}],shots:["客厅摆场","卧室床品","窗帘落地效果","绿植/配饰"]},
+    checks:[{t:"家具进场",d:false,sev:"重要",type:"其他",note:"",photos:[]},{t:"窗帘+配饰到位",d:false,sev:"一般",type:"其他",note:"",photos:[]},{t:"成品保护无磕碰",d:false,sev:"重要",type:"其他",note:"",photos:[]}]},
+   {name:"竣工验收",done:false,remind:"逐项验收+保洁+米家全屋联动测试。",pit:"⚠ 遗漏尾项。",
+    guide:{tools:["验收清单","米家App","强光手电","空鼓锤"],pass:["所有阶段问题已整改","全屋保洁完成","联动场景可执行","尾款前问题清零"],defects:[{icon:"📋",name:"尾项遗漏",fix:"列清单限期整改"},{icon:"🤖",name:"智能联动失效",fix:"重新配置场景"},{icon:"🧹",name:"保洁不到位",fix:"返工清洁"}],shots:["全屋验收清单签字","联动场景执行视频","保洁后全景","尾款收据"]},
+    checks:[{t:"全屋验收清单过一遍",d:false,sev:"关键",type:"其他",note:"",photos:[]},{t:"米家联动测试",d:false,sev:"重要",type:"其他",note:"",photos:[]},{t:"保洁完成",d:false,sev:"一般",type:"其他",note:"",photos:[]},{t:"尾项清零",d:false,sev:"关键",type:"其他",note:"",photos:[]}]}],
+  materials:[
+   {name:"智能马桶 箭牌D30",brand:"箭牌",status:"已购·已到",note:"6年质保"},
+   {name:"花洒 箭牌K60",brand:"箭牌",status:"已购·已到",note:""},
+   {name:"封窗/封阳台",brand:"汉森",status:"已购·已到",note:"797/m² 三玻两腔"},
+   {name:"入户门+房门窗 派雅",brand:"派雅",status:"已购·已到",note:""},
+   {name:"木纹砖+地脚线",brand:"杂牌",status:"已购·已到",note:"26元/m²"},
+   {name:"莱姆石地砖(卫)",brand:"",status:"已购·已到",note:""},
+   {name:"定制柜(橱柜/衣柜)",brand:"诗尼曼/酷家乐",status:"待定稿",note:"~¥41,200"}],
+  appliances:[
+   {name:"风管机 海尔云瀑Pro大3匹",brand:"海尔",status:"已购·待安装",note:"R32 液6.35/气12.7mm"},
+   {name:"小米大1.5匹Pro空调",brand:"小米",status:"已购·待装",note:""},
+   {name:"洗烘套装 海尔云溪5.0",brand:"海尔",status:"已购·待装",note:""},
+   {name:"洗碗机 小米16套P2",brand:"小米",status:"已购·待装",note:""},
+   {name:"净烟机+燃气灶 小米P2",brand:"小米",status:"已购·待装",note:""},
+   {name:"热水器 小米16L",brand:"小米",status:"已购·待装",note:""},
+   {name:"智能门锁 小米M40Pro",brand:"小米",status:"已购·待装",note:""},
+   {name:"扫地机 小米6Pro",brand:"小米",status:"已购·待装",note:""},
+   {name:"净水+管线机 安吉尔",brand:"安吉尔",status:"净水已购·管线待付",note:""}],
+  pitfalls:[
+   {title:"铲批荡层找平费用",symptom:"全屋铲批荡+找平 45元/平",cause:"旧墙基层差",fix:"打拆阶段一并谈定单价",cost:"已计入"}],
+  social:[
+   {date:"2026-07-30",platform:"小红书",topic:"装修开工记·打拆避坑",status:"已发",link:""},
+   {date:"",platform:"抖音",topic:"水电阶段避坑脚本",status:"待拍",link:""}],
+  softdecor:[{idea:"低饱和奶油风+原木点缀",note:"客厅米色沙发+绿植；卧室暖光"},
+   {idea:"洞洞板收纳+轨道插座",note:"阳台工具墙"}],
+  smart:[
+   {room:"全屋",device:"全屋路由BE3600Pro网线版",type:"网络",status:"待付·待装",note:"智能方案总¥8005 定金¥5000"},
+   {room:"客厅/卧室",device:"智能中控屏×3",type:"中控",status:"待付·待装",note:""},
+   {room:"全屋",device:"领普智能开关T3",type:"开关",status:"待付·待装",note:"单开+双开×3+三开"},
+   {room:"全屋",device:"天然气卫士/水浸卫士/人在传感器",type:"传感器",status:"待付·待装",note:""},
+   {room:"客厅/卧室",device:"米系智能窗帘3米×3+轨道",type:"窗帘机",status:"待付·待装",note:""},
+   {room:"阳台",device:"米家智能晾衣机1S",type:"晾衣机",status:"待付·待装",note:""},
+   {room:"卫生间",device:"米家智能浴霸S1",type:"浴霸",status:"待付·待装",note:""},
+   {room:"客厅",device:"Xiaomi智能音箱Pro",type:"音箱",status:"待付·待装",note:""}]}
+ };}
+const KEY="workbench_save_v1";
+const CLOUD_KEY="wb_cloud_key";   // JSONBin X-Master-Key（仅存本机）
+const CLOUD_BIN="wb_cloud_bin";   // JSONBin Bin ID（仅存本机）
+const API_ROOT="https://api.jsonbin.io/v3/b";
+let S=load();let view="home",sub="today";
+
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return seed();}
+function save(){S.__updatedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(S));cloudSave();}
+
+// ---------- 云端同步（JSONBin.io v3，跨设备同一份数据） ----------
+function cloudCfg(){const k=localStorage.getItem(CLOUD_KEY)||"";const b=localStorage.getItem(CLOUD_BIN)||"";return{k:k,b:b,on:(k&&b)};}
+function setCloudStatus(txt,cls){const el=document.getElementById("cloudStatus");if(el){el.textContent=txt;el.className="cloud-status "+(cls||"");}}
+async function cloudLoad(){
+ const c=cloudCfg();if(!c.on)throw new Error("未配置云端");
+ const r=await fetch(API_ROOT+"/"+c.b+"/latest",{headers:{"X-Master-Key":c.k}});
+ if(!r.ok)throw new Error("拉取失败 "+r.status);
+ const j=await r.json();return j.record;           // 实际数据嵌套在 record 下
+}
+let _cloudBusy=false,_cloudPending=false;
+async function cloudSave(){
+ const c=cloudCfg();if(!c.on)return;                // 未配置则不联网
+ if(_cloudBusy){_cloudPending=true;return;}         // 合并并发上传
+ _cloudBusy=true;
+ try{
+  setCloudStatus("同步中…","syncing");
+  const r=await fetch(API_ROOT+"/"+c.b,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":c.k},body:JSON.stringify(S)});
+  if(!r.ok)throw new Error("上传失败 "+r.status);
+  setCloudStatus("已同步 ☁","ok");
+ }catch(e){setCloudStatus("同步失败 · 已本地保存","err");}
+ _cloudBusy=false;
+ if(_cloudPending){_cloudPending=false;cloudSave();}
+}
+async function cloudPull(silent){
+ try{
+  setCloudStatus("拉取云端…","syncing");
+  const remote=await cloudLoad();
+  const local=S.__updatedAt||0, remoteT=remote&&remote.__updatedAt||0;
+  if(remote && remoteT>local){S=remote;localStorage.setItem(KEY,JSON.stringify(S));render();setCloudStatus("已从云端更新 ☁","ok");if(!silent)toast("已从云端更新");}
+  else{setCloudStatus("本地即最新 ☁","ok");if(!silent)toast("本地已是最新");}
+ }catch(e){setCloudStatus("云端不可用 · 本地模式","err");if(!silent)toast("拉取失败："+e.message);}
+}
+async function initCloudSync(){
+ const c=cloudCfg();
+ if(!c.on){setCloudStatus("云端未配置","off");return;}
+ await cloudPull(true);
+}
+function R(){return S.renovation;}
+function taskXp(){let t=0;for(const k in S.months)S.months[k].tasks.forEach(x=>{if(x.done)t+=x.xp;});return t;}
+function totalXp(){return taskXp()+S.checkinXp;}
+function todayStr(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+
+// ---------- 导航 ----------
+const NAV=[{v:"home",t:"⭐ 状态/主线"},{v:"reno",t:"🏗 装修"},{v:"stocks",t:"📈 股市"},{v:"fitness",t:"💪 健身"},
+ {v:"reading",t:"📚 阅读"},{v:"film",t:"🎬 影视"},{v:"social",t:"📱 自媒体"},{v:"writing",t:"✍️ 写作"},
+ {v:"knowledge",t:"🧠 知识库"},{v:"stamps",t:"🏅 成就墙"}];
+function renderNav(){const n=document.getElementById("nav");n.innerHTML="";
+ NAV.forEach(it=>{const b=document.createElement("button");b.innerHTML='<span class="dot"></span>'+it.t;b.className=(view===it.v?"active":"");
+  b.onclick=()=>{view=it.v;if(it.v==="reno")sub="today";render();};n.appendChild(b);});}
+
+// ---------- 主渲染 ----------
+function render(){
+ renderNav();
+ const main=document.getElementById("main");main.innerHTML="";
+ if(view==="reno")renderReno(main);
+ else if(view==="home")renderHome(main);
+ else if(view==="stamps")renderStamps(main);
+ else if(view==="stocks")renderStocks(main);
+ else if(view==="fitness")renderFitness(main);
+ else if(view==="reading")renderReading(main);
+ else if(view==="film")renderFilm(main);
+ else if(view==="social")renderSocial(main);
+ else if(view==="writing")renderWriting(main);
+ else if(view==="knowledge")renderKnowledge(main);
+ else renderSimple(main);
+ updateBanner();
+}
+
+// 今日待确认
+function todayList(){const r=R();const st=r.stages.find(s=>s.name===r.currentStage);
+ const checks=st?st.checks.filter(c=>!c.d).map(c=>"▢ "+c.t):[];
+ return checks.concat(r.pendingItems.map(p=>"▢ 待付："+p));}
+function updateBanner(){const n=todayList().length;const b=document.getElementById("banner");
+ b.textContent="🔨 今日装修待确认 "+n+" 项（"+R().currentStage+"阶段）— 手机不解锁也能看";}
+
+// 装修模块
+const RENO_SUB=[{k:"today",t:"📌 今日待确认"},{k:"stages",t:"🪜 阶段验收"},{k:"finance",t:"💰 财务"},{k:"materials",t:"🧱 主材"},
+ {k:"appliances",t:"🔌 家电家具"},{k:"pitfalls",t:"🕳 踩坑避坑"},{k:"social",t:"📸 自媒体日更"},{k:"softdecor",t:"🛋 软装搭配"},{k:"smart",t:"📡 全屋智能(米家)"},{k:"log",t:"📅 施工日志"}];
+function renderReno(main){
+ const card=document.createElement("div");card.className="card";
+ const subbar=document.createElement("div");subbar.className="sub";
+ RENO_SUB.forEach(s=>{const b=document.createElement("button");b.textContent=s.t;b.className=(sub===s.k?"active":"");
+  b.onclick=()=>{sub=s.k;render();};subbar.appendChild(b);});
+ card.appendChild(subbar);main.appendChild(card);
+ // 装修总体进度
+ const stages=R().stages||[];
+ const totalChecks=stages.reduce((a,s)=>a+(s.checks?s.checks.length:0),0);
+ const doneChecks=stages.reduce((a,s)=>a+(s.checks?s.checks.filter(c=>c.d).length:0),0);
+ const doneStages=stages.filter(s=>s.done).length;
+ const pct=totalChecks?Math.round(doneChecks/totalChecks*100):0;
+ const ov=document.createElement("div");ov.className="card";
+ ov.innerHTML=`<h2>🏗 装修总体进度</h2>
+  <div class="stat-strip">
+   <div class="stat"><b>${doneStages}/${stages.length}</b><span>阶段完成</span></div>
+   <div class="stat"><b>${doneChecks}/${totalChecks}</b><span>验收项</span></div>
+   <div class="stat"><b>${pct}%</b><span>总进度</span></div>
+  </div>
+  <div class="overall"><i style="width:${pct}%"></i></div>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">${stages.map(s=>`<span class="tagchip${s.done?' active':''}" title="${esc(s.name)}阶段">${s.done?'✓ ':''}${esc(s.name)}</span>`).join("")}</div>`;
+ main.appendChild(ov);
+ // 工期倒计时 / 甘特
+ const gs=R().stages||[];const totalDays=gs.reduce((a,s)=>a+(s.plan||0),0);
+ const sd=R().startDate;let elapsed=null;
+ if(sd){const t0=new Date(sd+"T00:00:00");const now=new Date();if(!isNaN(t0)&&now>=t0)elapsed=Math.floor((now-t0)/86400000);}
+ const segs=gs.map(s=>{const w=(s.plan||0)/totalDays*100;const col=s.done?"#8fd0a0":(s.name===R().currentStage?"#e0b96a":"#f0e9dd");const lbl=s.done?"✓":(s.name===R().currentStage?"▶":"·");return `<div class="g-seg" style="width:${w}%;background:${col}" title="${esc(s.name)}：${s.plan||0}天"><span>${lbl}</span></div>`;}).join("");
+ const marker=elapsed!==null?`<div class="g-now" style="left:${Math.min(100,Math.max(0,elapsed/totalDays*100))}%"></div>`:"";
+ const remain=elapsed!==null?Math.max(0,totalDays-elapsed):null;
+ const gantt=document.createElement("div");gantt.className="card";
+ gantt.innerHTML=`<h2>📅 工期倒计时</h2>
+  <div class="stat-strip">
+   <div class="stat"><b>${totalDays}</b><span>预计总工期(天)</span></div>
+   <div class="stat"><b>${elapsed!==null?elapsed:"—"}</b><span>已开工(天)</span></div>
+   <div class="stat"><b>${remain!==null?remain:"—"}</b><span>剩余(天)</span></div>
+   <div class="stat"><b>${esc(R().currentStage)}</b><span>当前阶段</span></div>
+  </div>
+  <div class="gantt">${segs}${marker}</div>
+  <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px"><span>开工日 ${esc(sd||"未设")}</span><span>🟢已完成 · 🟡进行中 · ⚪未开始</span></div>`;
+ main.appendChild(gantt);
+ const body=document.createElement("div");main.appendChild(body);
+ if(sub==="today")renderToday(body);
+ else if(sub==="stages")renderStages(body);
+ else if(sub==="finance")renderFinance(body);
+ else if(sub==="materials")renderMaterials(body);
+ else if(sub==="appliances")renderAppliances(body);
+ else if(sub==="pitfalls")body.appendChild(listSection(R().pitfalls,[{k:"title",label:"坑"},{k:"symptom",label:"现象"},{k:"cause",label:"原因"},{k:"fix",label:"解决"},{k:"cost",label:"花费"}]));
+ else if(sub==="social")body.appendChild(listSection(R().social,[{k:"date",label:"日期"},{k:"platform",label:"平台"},{k:"topic",label:"主题"},{k:"status",label:"状态"},{k:"link",label:"链接"}]));
+ else if(sub==="softdecor")renderSoftdecor(body);
+ else if(sub==="smart")renderSmart(body);
+ else if(sub==="log")renderRenoLog(body);
+}
+function renderToday(body){
+ // 早间复盘（自动同步）
+ const c1=document.createElement("div");c1.className="card";
+ const mv=(localStorage.getItem("wb_morning_override")||MORNING_DEFAULT);
+ c1.innerHTML=`<h2>🌅 早间复盘（自动同步）</h2><div class="morning" id="mv">${esc(mv)}</div>
+  <details style="margin-top:8px"><summary style="cursor:pointer;color:#9c5b52;font-size:13px">＋ 我的补充</summary>
+  <textarea class="note" id="mnote" placeholder="补充今天个人的关注点…">${esc(localStorage.getItem("wb_morning_note")||"")}</textarea>
+  <button class="btn sm" id="msave" style="margin-top:6px">保存补充</button></div>`;
+ body.appendChild(c1);
+ document.getElementById("msave").onclick=()=>{localStorage.setItem("wb_morning_note",document.getElementById("mnote").value);toast("已保存补充");};
+ // 今日待确认
+ const c2=document.createElement("div");c2.className="card";
+ c2.innerHTML=`<h2>📌 今日装修待确认（${R().currentStage}阶段）</h2><div id="td"></div>`;
+ const td=document.getElementById("td");todayList().forEach(t=>{const d=document.createElement("div");d.className="task";
+  d.innerHTML=`<div class="cb">▢</div><div class="txt">${esc(t.replace("▢ ",""))}</div>`;td.appendChild(d);});
+ body.appendChild(c2);
+ // 当前阶段进度
+ const st=R().stages.find(s=>s.name===R().currentStage);
+ const done=st.checks.filter(c=>c.d).length;
+ const c3=document.createElement("div");c3.className="card";
+ c3.innerHTML=`<h2>🪜 ${st.name}阶段进度</h2><div class="xptxt">已完成 ${done}/${st.checks.length} 项验收</div>`;
+ body.appendChild(c3);
+}
+function sevClass(s){s=s||"重要";if(s==="关键")return"key";if(s==="重要")return"imp";return"nor";}
+function renderStages(body){
+ const cur=R().currentStage;
+ const bar=document.createElement("div");bar.className="stagecur";
+ R().stages.forEach(s=>{const b=document.createElement("button");b.textContent=(s.done?"✓ ":"")+s.name;b.className=(s.name===cur?"active":"");
+  b.onclick=()=>{R().currentStage=s.name;save();render();};bar.appendChild(b);});
+ body.appendChild(bar);
+ const st=R().stages.find(s=>s.name===cur);
+ const guide=st.guide||{};
+
+ // 1. 验收指南卡
+ const gcard=document.createElement("div");gcard.className="card guide";
+ const tools=(guide.tools||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join("");
+ const pass=(guide.pass||[]).map(p=>`<li>${esc(p)}</li>`).join("");
+ const defects=(guide.defects||[]).map(d=>`<div class="defect-item"><b>${esc(d.icon)} ${esc(d.name)}</b><div style="font-size:11px;color:#888;margin-top:3px">处理：${esc(d.fix)}</div></div>`).join("");
+ const shots=(guide.shots||[]).map(s=>`<span class="shot-tag">${esc(s)}</span>`).join("");
+ gcard.innerHTML=`<details open>
+  <summary>📖 ${esc(cur)}阶段验收指南</summary>
+  <div style="margin-top:8px">
+   <div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">🛠 验收工具</div><div class="chips">${tools}</div>
+   <div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">✅ 合格标准</div><ul>${pass}</ul>
+   <div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">🐞 常见缺陷 & 处理</div><div class="defect-row">${defects}</div>
+   <div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">📸 必拍点位</div><div class="shot-list">${shots}</div>
+   ${(guide.metrics&&guide.metrics.length)?`<div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">📏 量化验收标准（用数据说话）</div><div class="metrics">${guide.metrics.map(m=>`<div class="metric"><b>${esc(m.k)}</b><span>${esc(m.v)}</span></div>`).join("")}</div>`:""}
+  </div>
+ </details>`;
+ body.appendChild(gcard);
+
+ // 2. 富交互清单
+ const c=document.createElement("div");c.className="card";
+ let chk=st.checks.map((c,i)=>{
+  const sev=c.sev||"重要",type=c.type||"其他";
+  const pshots=(c.photos||[]).map((pid,pi)=>{
+   const p=R().photos.find(ph=>ph.id===pid);
+   return p?`<img src="${p.src}" class="mini-photo" onclick="window.open('${p.src}')" title="${esc(p.date)}">`:"";
+  }).join("");
+  return `<div class="task ${c.d?'done':''}">
+   <div class="cb" onclick="toggleCheck('${cur}',${i},event)">${c.d?'✓':''}</div>
+   <div style="flex:1;min-width:0">
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+     <span class="txt">${esc(c.t)}</span>
+     <span class="badge badge-${sevClass(sev)}">${esc(sev)}</span>
+     <span class="badge badge-type">${esc(type)}</span>
+    </div>
+    <textarea class="note-inline" onchange="saveNote('${cur}',${i},this.value)" placeholder="点这里写验收备注…">${esc(c.note||"")}</textarea>
+    <div style="margin-top:4px">${pshots}</div>
+   </div>
+   <div class="row-actions">
+    <input type="file" id="phC${i}" accept="image/*" capture="environment" style="display:none" onchange="handleCheckPhoto(event,'${cur}',${i})">
+    <button onclick="document.getElementById('phC${i}').click()">📷挂图</button>
+   </div>
+  </div>`;
+ }).join("");
+ c.innerHTML=`<h2>🪜 ${esc(st.name)}阶段验收清单</h2>
+  <div class="remind">💡 本阶段提醒：${esc(st.remind)}</div>
+  <div class="pit">${esc(st.pit)}</div>
+  <div id="cks">${chk}</div>
+  ${st.done?'<div class="stampmini" style="margin-top:10px">🏅 本阶段已验收盖章</div>':''}`;
+ body.appendChild(c);
+
+ // 3. 阶段评分卡
+ const done=st.checks.filter(c=>c.d).length;
+ const total=st.checks.length;
+ const passPct=total?Math.round(done/total*100):0;
+ const stageDefects=R().defectLog.filter(d=>d.stage===cur);
+ const openDefects=stageDefects.filter(d=>d.status!==2).length;
+ const r=36,circ=2*Math.PI*r,dash=passPct/100*circ;
+ const score=document.createElement("div");score.className="card";
+ score.innerHTML=`<h2>📊 ${esc(cur)}阶段评分</h2>
+  <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+   <svg width="76" height="76" viewBox="0 0 76 76">
+    <circle cx="38" cy="38" r="${r}" fill="none" stroke="#f0e9dd" stroke-width="9"/>
+    <circle cx="38" cy="38" r="${r}" fill="none" stroke="#8fd0a0" stroke-width="9" stroke-dasharray="${dash} ${circ}" stroke-linecap="round" transform="rotate(-90 38 38)"/>
+    <text x="38" y="41" text-anchor="middle" font-size="14" fill="#5fae74" font-weight="bold">${passPct}%</text>
+   </svg>
+   <div style="flex:1;min-width:160px">
+    <div class="xptxt">验收项：${done}/${total} 完成</div>
+    <div class="xptxt">本阶段缺陷：${stageDefects.length} 条（待整改 ${openDefects}）</div>
+    <div style="margin-top:6px">${st.done?'<span class="stampmini">🏅 已验收</span>':'<span class="stampmini" style="background:#fcebc2;color:#9a5a1d">⏳ 待验收</span>'}</div>
+   </div>
+  </div>`;
+ body.appendChild(score);
+
+ // 4. 缺陷/整改跟踪
+ const dcard=document.createElement("div");dcard.className="card";
+ let defectList=stageDefects.map((d,i)=>{
+  const status=["待整改","整改中","已复验"][d.status||0];
+  const pshots=(d.photos||[]).map(pid=>{
+   const p=R().photos.find(ph=>ph.id===pid);
+   return p?`<img src="${p.src}" class="mini-photo" onclick="window.open('${p.src}')" title="${esc(p.date)}">`:"";
+  }).join("");
+  return `<div class="defect defect-status-${d.status||0}">
+   <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+    <div style="min-width:0">
+     <div style="font-weight:bold;color:#7a4a44;font-size:14px">${esc(d.desc)}</div>
+     <div style="font-size:11px;color:#888;margin-top:5px">
+      <span class="badge badge-${sevClass(d.sev)}">${esc(d.sev||"重要")}</span>
+      <span class="badge badge-type">${esc(d.type||"其他")}</span>
+      <span style="margin-left:6px">${esc(d.date)}</span>
+     </div>
+    </div>
+    <div class="row-actions" style="flex:0 0 auto">
+     <button onclick="cycleDefect(${d.id})">${esc(status)}</button>
+     <input type="file" id="phD${d.id}" accept="image/*" capture="environment" style="display:none" onchange="handleDefectPhoto(event,${d.id})">
+     <button onclick="document.getElementById('phD${d.id}').click()">📷</button>
+     <button onclick="deleteDefect(${d.id})">✕</button>
+    </div>
+   </div>
+   <div style="margin-top:6px">${pshots}</div>
+  </div>`;
+ }).join("");
+ dcard.innerHTML=`<h2>🐞 缺陷 / 整改跟踪</h2>
+  <div style="display:flex;gap:6px;margin:8px 0;flex-wrap:wrap" class="addrow">
+   <select id="ndType" style="flex:0 0 auto;min-width:80px"><option>空鼓</option><option>裂缝</option><option>平整度</option><option>渗漏</option><option>其他</option></select>
+   <select id="ndSev" style="flex:0 0 auto;min-width:70px"><option>关键</option><option selected>重要</option><option>一般</option></select>
+   <input id="ndDesc" placeholder="描述发现的问题…" style="flex:1;min-width:120px">
+   <button class="btn sm" onclick="addDefect('${cur}')">＋ 新增</button>
+  </div>
+  ${defectList||'<div class="xptxt">暂无缺陷记录，发现问题随时添加 👆</div>'}`;
+ body.appendChild(dcard);
+
+ // 5. 照片档
+ const photos=R().photos.filter(p=>p.stage===cur);
+ if(photos.length){
+  const g=document.createElement("div");g.className="card";
+  g.innerHTML=`<h3>📸 ${esc(cur)}阶段照片档</h3>
+   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:8px">`+
+   photos.map((p,i)=>{
+    let tag="";
+    if(p.checkIdx!==undefined) tag="📌清单";
+    else if(p.defectId!==undefined) tag="🐞缺陷";
+    else tag="📝通用";
+    return `<div style="position:relative;background:#fffdfa;border:2px dashed var(--line);border-radius:10px;padding:4px">
+     <img src="${p.src}" style="width:100%;border-radius:6px;display:block;cursor:pointer" onclick="window.open('${p.src}')">
+     <div style="font-size:10px;color:#888;margin-top:3px">${esc(p.date)} <span style="color:#9c5b52">${tag}</span></div>
+     <span style="position:absolute;top:2px;right:2px;cursor:pointer;background:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#c98b83" onclick="deleteStagePhoto(${i},'${cur}')">✕</span>
+    </div>`;
+   }).join("")+`</div>`;
+  body.appendChild(g);
+ }
+}
+function handleStagePhoto(e,stage){
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{const id=Date.now()+Math.random();R().photos.push({id,stage,date:todayStr(),src:r.result,note:"",aiCheck:null});save();render();toast("照片已保存");};
+ r.readAsDataURL(f);
+}
+function handleCheckPhoto(e,stage,idx){
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  const id=Date.now()+Math.random();
+  const st=R().stages.find(s=>s.name===stage);
+  if(!st.checks[idx].photos) st.checks[idx].photos=[];
+  st.checks[idx].photos.push(id);
+  R().photos.push({id,stage,date:todayStr(),src:r.result,note:"",aiCheck:null,checkIdx:idx});
+  save();render();toast("照片已挂接到清单项");
+ };
+ r.readAsDataURL(f);
+}
+function handleDefectPhoto(e,defectId){
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  const id=Date.now()+Math.random();
+  const d=R().defectLog.find(x=>x.id===defectId);
+  if(d){if(!d.photos) d.photos=[];d.photos.push(id);}
+  const st=R().currentStage;
+  R().photos.push({id,stage:st,date:todayStr(),src:r.result,note:"",aiCheck:null,defectId});
+  save();render();toast("照片已挂接到缺陷");
+ };
+ r.readAsDataURL(f);
+}
+function deleteStagePhoto(idx,stage){
+ const arr=R().photos.filter(p=>p.stage===stage);const target=arr[idx];
+ const i=R().photos.indexOf(target);
+ if(i>=0){
+  const pid=R().photos[i].id;
+  // 同步清理 checklist / defect 中的引用
+  R().stages.forEach(s=>{if(s.name===stage){s.checks.forEach(c=>{if(c.photos)c.photos=c.photos.filter(p=>p!==pid);});}});
+  R().defectLog.filter(d=>d.stage===stage).forEach(d=>{if(d.photos)d.photos=d.photos.filter(p=>p!==pid);});
+  R().photos.splice(i,1);save();render();
+ }
+}
+function toggleCheck(stageName,i,e){
+ const st=R().stages.find(s=>s.name===stageName);const c=st.checks[i];const was=c.d;
+ c.d=!c.d;
+ if(!was){S.checkinXp+=5;confetti();floatXp("+5 XP",e);}
+ else{S.checkinXp=Math.max(0,S.checkinXp-5);}
+ st.done=st.checks.every(x=>x.d);
+ save();render();
+ if(!was && st.done){setTimeout(()=>openStage(st.name),300);}
+}
+function saveNote(stage,idx,val){
+ const st=R().stages.find(s=>s.name===stage);
+ if(st && st.checks[idx]){st.checks[idx].note=val;save();toast("备注已保存");}
+}
+function renderRenoLog(body){
+ const logs=(R().logs||[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>📅 施工日志</h2><div class="xptxt">每天一句话记录工地进展（参考真实装修软件的「每日打卡+照片」），透明可追溯。</div>
+  <div class="addrow" style="align-items:stretch">
+   <input id="lgDate" type="date" value="${todayStr()}" style="flex:0 0 150px">
+   <textarea id="lgText" class="note" placeholder="今天工地做了什么 / 到场了谁 / 有什么问题…" style="min-height:46px;flex:1"></textarea>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+   <input type="file" id="lgPhoto" accept="image/*" style="font-size:12px;flex:1">
+   <button class="btn sm" onclick="addLog()">📌 打卡</button>
+  </div>`;
+ body.appendChild(c);
+ const tl=document.createElement("div");tl.className="card";
+ tl.innerHTML=`<h3>🗒 记录流（${logs.length} 条）</h3>`+(logs.length?logs.map(l=>{
+   const ph=(l.photos||[]).map(p=>`<img src="${p}" class="mini-photo" onclick="window.open('${p}')">`).join("");
+   return `<div style="border-bottom:1px dotted #ece3d6;padding:8px 0">
+     <div style="display:flex;justify-content:space-between;align-items:center"><b style="color:#7a4a44;font-size:13px">${esc(l.date)}</b><span style="font-size:11px;color:#c98b83;cursor:pointer" onclick="deleteLog(${l.id})">✕ 删除</span></div>
+     <div style="font-size:13px;color:#5a3a2a;margin-top:3px">${esc(l.text)}</div>${ph?`<div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">${ph}</div>`:""}
+   </div>`;
+  }).join(""):`<div style="color:#aaa;font-size:13px">还没有记录，今天打第一条吧。</div>`);
+ body.appendChild(tl);
+}
+function addLog(){
+ const date=document.getElementById("lgDate").value||todayStr();
+ const text=document.getElementById("lgText").value.trim();
+ const file=document.getElementById("lgPhoto").files[0];
+ if(!text && !file){toast("写点什么或传张图");return;}
+ if(file){const r=new FileReader();r.onload=()=>{S.renovation.logs.push({id:Date.now(),date,text,photos:[r.result]});save();render();toast("已打卡");};r.readAsDataURL(file);}
+ else{S.renovation.logs.push({id:Date.now(),date,text,photos:[]});save();render();toast("已打卡");}
+}
+function deleteLog(id){S.renovation.logs=S.renovation.logs.filter(l=>l.id!==id);save();render();}
+function addDefect(stage){
+ const type=document.getElementById("ndType").value;
+ const sev=document.getElementById("ndSev").value;
+ const desc=document.getElementById("ndDesc").value.trim();
+ if(!desc){toast("请先描述问题");return;}
+ const id=Date.now()+Math.random();
+ R().defectLog.push({id,stage,type,sev,desc,status:0,photos:[],date:todayStr(),note:""});
+ save();render();toast("缺陷已记录");
+}
+function cycleDefect(id){
+ const d=R().defectLog.find(x=>x.id===id);
+ if(d){d.status=(d.status+1)%3;save();render();}
+}
+function deleteDefect(id){
+ R().defectLog=R().defectLog.filter(x=>x.id!==id);
+ save();render();
+}
+function renderFinance(body){
+ const b=R().budget;
+ const overCats=b.cats.filter(c=>c.cap&&c.spent>c.cap);
+ const warnCats=b.cats.filter(c=>c.cap&&c.spent<=c.cap&&Math.round(c.spent/c.cap*100)>=90);
+ const totalOver=b.cats.reduce((a,c)=>a+Math.max(0,(c.spent||0)-(c.cap||0)),0);
+ const wb=document.createElement("div");
+ if(overCats.length||warnCats.length){
+  wb.className="warnbar over";
+  wb.innerHTML=`🚨 <b>超支预警</b> · ${overCats.length} 项已超预算（合计超 ¥${totalOver.toLocaleString()}）${warnCats.length?` · ${warnCats.length} 项已用≥90%`:""}<div style="width:100%;display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">${overCats.concat(warnCats).map(c=>`<span style="background:#fff;padding:1px 7px;border-radius:8px;font-size:11px">${esc(c.n)}</span>`).join("")}</div>`;
+ }else{
+  wb.className="warnbar ok";wb.innerHTML=`✅ <b>预算可控</b> · 各分类均未超支`;
+ }
+ body.appendChild(wb);
+ const c=document.createElement("div");c.className="card";
+ const pct=Math.round(b.spent/b.total*100);
+ const r=36,circ=2*Math.PI*r;
+ const dash=Math.min(pct,100)/100*circ;
+ const ringColor=pct>100?"#b03021":(pct>=90?"#b5651d":"#8fd0a0");
+ let rows=b.cats.map(cat=>{const cp=cat.cap?Math.round(cat.spent/(cat.cap||1)*100):0;
+  const st=cat.cap&&cat.spent>cat.cap?'<span style="color:#b03021">超支</span>':(cat.cap&&cp>=90?'<span style="color:#b5651d">预警</span>':'<span style="color:#3c6b4a">正常</span>');
+  return `<tr><td>${esc(cat.n)}</td><td>${cat.cap?cat.cap.toLocaleString():'—'}</td><td>${cat.spent.toLocaleString()}</td><td>${cp}%</td><td>${st}</td></tr>`;}).join("");
+ c.innerHTML=`<h2>💰 装修财务</h2>
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:10px 0">
+   <svg width="90" height="90" viewBox="0 0 90 90">
+    <circle cx="45" cy="45" r="${r}" fill="none" stroke="#f0e9dd" stroke-width="10"/>
+    <circle cx="45" cy="45" r="${r}" fill="none" stroke="${ringColor}" stroke-width="10" stroke-dasharray="${dash} ${circ}" stroke-linecap="round" transform="rotate(-90 45 45)"/>
+    <text x="45" y="48" text-anchor="middle" font-size="16" fill="#7a4a44" font-weight="bold">${pct}%</text>
+   </svg>
+   <div style="flex:1;min-width:180px">
+    <div class="xptxt" style="font-size:14px">总预算 <b>¥${b.total.toLocaleString()}</b></div>
+    <div class="xptxt" style="font-size:14px">已花 <b>¥${b.spent.toLocaleString()}</b> · 待付 <b>¥${b.pending.toLocaleString()}</b></div>
+    <div class="xptxt" style="font-size:14px">超支 <b style="color:#b03021">¥${Math.max(0,b.spent-b.total).toLocaleString()}</b></div>
+   </div>
+  </div>
+  <table class="tbl"><thead><tr><th>分类</th><th>预算上限</th><th>已花</th><th>使用率</th><th>状态</th></tr></thead><tbody>${rows}</tbody></table>`;
+ body.appendChild(c);
+ const p=document.createElement("div");p.className="card";
+ const timeline=R().pendingItems.map((t,i)=>`<div style="display:flex;gap:10px;margin:8px 0;align-items:flex-start">
+  <div style="width:10px;height:10px;border-radius:50%;background:#c98b83;margin-top:4px;flex:0 0 auto"></div>
+  <div style="font-size:13px;color:#7a4a44">${esc(t)}</div>
+ </div>`).join("");
+ p.innerHTML=`<h3>🧾 待付款时间线</h3>${timeline}`;
+ body.appendChild(p);
+}
+
+function statusColor(s){
+ s=s||"";
+ if(s.includes("已")||s.includes("到")||s.includes("完成")||s.includes("已购"))return"#cde8d2";
+ if(s.includes("待")||s.includes("待定")||s.includes("未"))return"#fcebc2";
+ return"#cfe3f2";
+}
+function renderMaterials(body){
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>🧱 主材追踪</h2><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:8px">`+
+  R().materials.map((m,i)=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
+   <div style="font-weight:bold;color:#7a4a44;font-size:14px">${esc(m.name)}</div>
+   <div style="font-size:12px;color:#888;margin:4px 0">品牌：${esc(m.brand||"—")}</div>
+   <span style="display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:${statusColor(m.status)}" onclick="cycleMatStatus(${i})">${m.status}</span>
+   <div style="font-size:11px;color:#888;margin-top:6px">${esc(m.note||"")}</div>
+  </div>`).join("")+`</div>`;
+ body.appendChild(c);
+ const add=document.createElement("div");add.className="card";
+ add.innerHTML=`<h3>➕ 添加主材</h3><div class="addrow"><input id="nmName" placeholder="名称"><input id="nmBrand" placeholder="品牌"><input id="nmStatus" placeholder="状态"><input id="nmNote" placeholder="备注"><button class="btn sm" onclick="addMaterial()">添加</button></div>`;
+ body.appendChild(add);
+}
+function cycleMatStatus(i){const s=["已购·已到","待定稿","已下单","待安装"];const cur=R().materials[i].status;R().materials[i].status=s[(s.indexOf(cur)+1)%s.length]||s[0];save();render();}
+function addMaterial(){const n=document.getElementById("nmName").value.trim();if(!n)return;R().materials.push({name:n,brand:document.getElementById("nmBrand").value.trim(),status:document.getElementById("nmStatus").value.trim()||"待定稿",note:document.getElementById("nmNote").value.trim()});save();render();toast("已添加");}
+
+function renderAppliances(body){
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>🔌 家电家具</h2><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:8px">`+
+  R().appliances.map((a,i)=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
+   <div style="font-weight:bold;color:#7a4a44;font-size:14px">${esc(a.name)}</div>
+   <div style="font-size:12px;color:#888;margin:4px 0">品牌：${esc(a.brand||"—")}</div>
+   <span style="display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:${statusColor(a.status)}" onclick="cycleAppStatus(${i})">${a.status}</span>
+   <div style="font-size:11px;color:#888;margin-top:6px">${esc(a.note||"")}</div>
+  </div>`).join("")+`</div>`;
+ body.appendChild(c);
+ const add=document.createElement("div");add.className="card";
+ add.innerHTML=`<h3>➕ 添加家电</h3><div class="addrow"><input id="naName" placeholder="名称"><input id="naBrand" placeholder="品牌"><input id="naStatus" placeholder="状态"><input id="naNote" placeholder="备注"><button class="btn sm" onclick="addAppliance()">添加</button></div>`;
+ body.appendChild(add);
+}
+function cycleAppStatus(i){const s=["已购·待装","已购·已到","待下单","安装完成"];const cur=R().appliances[i].status;R().appliances[i].status=s[(s.indexOf(cur)+1)%s.length]||s[0];save();render();}
+function addAppliance(){const n=document.getElementById("naName").value.trim();if(!n)return;R().appliances.push({name:n,brand:document.getElementById("naBrand").value.trim(),status:document.getElementById("naStatus").value.trim()||"待下单",note:document.getElementById("naNote").value.trim()});save();render();toast("已添加");}
+
+function renderSoftdecor(body){
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>🛋 软装搭配思路</h2>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0">
+   <div style="width:60px;height:60px;border-radius:12px;background:#f5f0e6;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:#888">奶油白</div>
+   <div style="width:60px;height:60px;border-radius:12px;background:#e3c9a0;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff">原木</div>
+   <div style="width:60px;height:60px;border-radius:12px;background:#8fd0a0;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff">绿植</div>
+   <div style="width:60px;height:60px;border-radius:12px;background:#cfe3f2;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:#888">雾霾蓝</div>
+  </div>
+  <div style="font-size:13px;color:#7a4a44;margin-bottom:10px">低饱和奶油风 + 原木点缀 + 绿植点睛</div>`;
+ body.appendChild(c);
+ R().softdecor.forEach((idea,i)=>{
+  const d=document.createElement("div");d.className="card";
+  d.innerHTML=`<div style="font-weight:bold;color:#7a4a44">${esc(idea.idea)}</div><div style="font-size:12px;color:#888;margin-top:4px">${esc(idea.note)}</div>`;
+  body.appendChild(d);
+ });
+}
+
+function renderSmart(body){
+ const c=document.createElement("div");c.className="card";
+ const scenes=[
+  {name:"回家模式",desc:"开门 → 玄关灯亮 + 窗帘开 + 空调/新风启动 + 音箱播放欢迎语"},
+  {name:"离家模式",desc:"一键关所有灯/窗帘 + 开启安防 + 扫地机出动"},
+  {name:"睡眠模式",desc:"卧室灯渐暗 + 窗帘关闭 + 夜灯开启 + 安防布防"},
+  {name:"起床模式",desc:"窗帘缓缓打开 + 音箱播放天气/日程 + 浴室浴霸预热"}
+ ];
+ c.innerHTML=`<h2>📡 全屋智能（米家）</h2>
+  <h3>🏠 联动场景</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:8px 0">`+
+   scenes.map(s=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
+    <div style="font-weight:bold;color:#7a4a44;font-size:14px">${esc(s.name)}</div>
+    <div style="font-size:11px;color:#888;margin-top:4px;line-height:1.5">${esc(s.desc)}</div>
+   </div>`).join("")+`</div>
+  <h3>🔌 设备清单</h3>`;
+ body.appendChild(c);
+ const grid=document.createElement("div");grid.className="card";
+ grid.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">`+
+  R().smart.map((d,i)=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
+   <div style="font-weight:bold;color:#7a4a44;font-size:13px">${esc(d.device)}</div>
+   <div style="font-size:11px;color:#888;margin:3px 0">${esc(d.room)} · ${esc(d.type)}</div>
+   <span style="display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:${statusColor(d.status)}" onclick="cycleSmartStatus(${i})">${d.status}</span>
+   <div style="font-size:11px;color:#888;margin-top:4px">${esc(d.note||"")}</div>
+  </div>`).join("")+`</div>`;
+ body.appendChild(grid);
+}
+function cycleSmartStatus(i){const s=["待付·待装","已付·待装","安装完成","调试完成"];const cur=R().smart[i].status;R().smart[i].status=s[(s.indexOf(cur)+1)%s.length]||s[0];save();render();}
+
+// 通用列表（可编辑+增删）
+function listSection(arr,fields){
+ const wrap=document.createElement("div");wrap.className="card";
+ let h=`<table class="tbl"><thead><tr>${fields.map(f=>'<th>'+f.label+'</th>').join('')}<th></th></tr></thead><tbody>`;
+ arr.forEach((it,idx)=>{h+='<tr>'+fields.map(f=>`<td contenteditable="true" data-i="${idx}" data-k="${f.k}">${esc(it[f.k]||'')}</td>`).join('')+`<td><span class="x" data-i="${idx}">✕</span></td></tr>`;});
+ h+='</tbody></table><div class="addrow">'+fields.map(f=>`<input data-k="${f.k}" placeholder="${f.label}">`).join('')+'<button class="btn sm">添加</button></div>';
+ wrap.innerHTML=h;
+ wrap.querySelectorAll('td[contenteditable]').forEach(td=>td.onblur=()=>{arr[+td.dataset.i][td.dataset.k]=td.textContent;save();});
+ wrap.querySelectorAll('.x').forEach(x=>x.onclick=()=>{arr.splice(+x.dataset.i,1);save();render();});
+ wrap.querySelector('.addrow .btn').onclick=()=>{const o={};fields.forEach(f=>{const i=wrap.querySelector('.addrow input[data-k="'+f.k+'"]');o[f.k]=i.value;i.value='';});arr.push(o);save();render();};
+ return wrap;
+}
+
+// 状态/主线
+function renderHome(main){
+ const mk=S.months[S.currentMonth];
+ const xp=totalXp(),li=lvInfo(xp),st=stageOf(xp);
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>⭐ 我的状态</h2><div class="hero"><div>${plantSVG(st)}</div><div class="lvbox">
+  <div class="lv">等级 <b>Lv.${li.l}</b> · 第 ${st+1}/6 阶成长</div>
+  <div class="xpbar"><i style="width:${li.pct}%"></i></div>
+  <div class="xptxt">经验 ${xp} / 下一级 ${li.next}（还差 ${Math.max(0,li.next-xp)} XP）</div></div></div>`;
+ main.appendChild(c);
+ // 全局概览统计条
+ const renoDone=S.renovation.stages.filter(s=>s.done).length,renoAll=S.renovation.stages.length;
+ const readDone=S.reading.filter(b=>b.status==="已读").length;
+ const filmDone=S.film.filter(f=>f.status==="已看").length;
+ const stp=S.stocks.holdings.reduce((a,h)=>{const pr=STOCK_DATA.prices[h.code]||h.price||h.cost;const pl=(h.shares*pr)-(h.shares*h.cost);return a+pl;},0);
+ const recPct=Math.min(100,Math.round((S.stocks.targetRecovery-Math.abs(Math.min(0,stp)))/S.stocks.targetRecovery*100));
+ const strip=document.createElement("div");strip.className="card";
+ strip.innerHTML=`<h2>🧭 全局概览</h2><div class="stat-strip">
+  <div class="stat"><b>${li.l}</b><span>当前等级</span></div>
+  <div class="stat"><b>${checkinStreak()}</b><span>🔥 连续打卡</span></div>
+  <div class="stat"><b>${renoDone}/${renoAll}</b><span>🏗 装修阶段</span></div>
+  <div class="stat"><b>${readDone}/${S.reading.length}</b><span>📚 已读</span></div>
+  <div class="stat"><b>${filmDone}/${S.film.length}</b><span>🎬 已看</span></div>
+  <div class="stat"><b>${S.fitness.streak}</b><span>💪 健身连续</span></div>
+  <div class="stat"><b>${recPct}%</b><span>📈 回本进度</span></div>
+ </div>`;
+ main.appendChild(strip);
+ // 今日能量语
+ const qEl=document.createElement("div");qEl.className="card";
+ qEl.innerHTML=`<div class="quote"><div class="q">🌟 今日能量</div>${esc(dailyQuote())}</div>`;
+ main.appendChild(qEl);
+ // 专注番茄钟
+ renderFocusCard(main);
+ // 今日并行计划 + 固定节奏
+ const dayNames=["日","一","二","三","四","五","六"];
+ const todayIdx=new Date().getDay();
+ const isWed=todayIdx===3;
+ const rhythm=document.createElement("div");rhythm.className="card";
+ let planItems=[];
+ if(isWed) planItems.push("🕐 周三下午去覔书店：带一本候选书，阅读间隙做「靠墙站 3 min」矫正驼背");
+ planItems.push("🌙 今晚观影时：梳头 100 次 + 死虫式 2 组 × 10 次（边看电影边练核心）");
+ if(R().currentStage==="水电") planItems.push("🔨 装修间隙：核对智能点位清单，每次只确认 1 个房间");
+ planItems.push("🧠 碎片时间：刷 1 条股票知识卡片，而不是行情");
+ rhythm.innerHTML=`<h2>🎯 今日并行计划</h2>
+  <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:10px;font-size:13px;line-height:1.8;margin-bottom:10px">
+   ${planItems.map(x=>`<div>${x}</div>`).join("")}
+  </div>
+  <h3>📅 本周固定节奏</h3>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+   ${dayNames.map((d,i)=>`<div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px ${i===todayIdx?'solid #9c5b52;background:#fff4f1':'dashed var(--line)'};color:${i===todayIdx?'#9c5b52':'#888'}">${d}</div>`).join("")}
+  </div>
+  <div style="margin-top:8px;font-size:12px;color:#7a4a44">
+   <div>📍 每周三下午：覔书店看书</div>
+   <div>🎬 每天晚上：电影 / 纪录片（本月主题：${esc(mk.filmTheme||"人文历史纪录片")}）</div>
+  </div>`;
+ main.appendChild(rhythm);
+ const done=mk.tasks.filter(t=>t.done).length,tot=mk.tasks.length,pct=tot?Math.round(done/tot*100):0;
+ const q=document.createElement("div");q.className="card";
+ q.innerHTML=`<h2>🗺 本月主线（${S.currentMonth}）</h2><div class="qtitle">${esc(mk.main)}</div>
+  <div class="reward">🎁 ${esc(mk.reward)}</div>
+  <div style="display:flex;gap:10px;align-items:center;margin:6px 0"><div class="ring" style="--p:${pct}">${pct}%</div><div class="xptxt">支线 ${done}/${tot}</div></div>
+  <div style="margin:8px 0;font-size:13px;color:#7a4a44">🎬 本月观影主题：<input id="ft" value="${esc(mk.filmTheme||"")}" style="border:2px dashed var(--line);border-radius:8px;padding:3px 6px;font-family:inherit;font-size:12px;width:150px"><button class="btn sm" onclick="setFilmTheme()">保存</button></div>
+  <div id="tl"></div><div class="add"><input id="nt" placeholder="加一条支线…"><select id="nx"><option>80</option><option>120</option><option>150</option><option>200</option><option>300</option></select><button class="btn" onclick="addTask()">添加</button></div>`;
+ main.appendChild(q);
+ const tl=document.getElementById("tl");mk.tasks.forEach(t=>{const d=document.createElement("div");d.className="task"+(t.done?" done":"");
+  d.innerHTML=`<div class="cb" onclick="toggle(${t.id},event)">${t.done?'✓':''}</div><div class="txt">${esc(t.text)}</div><div class="xp">+${t.xp}</div>`;tl.appendChild(d);});
+}
+function toggle(id,e){const mk=S.months[S.currentMonth];const t=mk.tasks.find(x=>x.id===id);t.done=!t.done;save();render();
+ if(t.done){floatXp("+"+t.xp+" XP",e);confetti();if(mk.tasks.every(x=>x.done)&&!mk.stampUnlocked){mk.stampUnlocked=true;save();setTimeout(()=>openChest(mk),400);}}else toast("已收回 XP");}
+function addTask(){const tx=document.getElementById("nt").value.trim();if(!tx)return;const mk=S.months[S.currentMonth];
+ const id=Math.max(0,...mk.tasks.map(t=>t.id))+1;mk.tasks.push({id,text:tx,xp:parseInt(document.getElementById("nx").value)||80,done:false});save();render();toast("支线已加入");}
+function setFilmTheme(){const v=document.getElementById("ft").value.trim();if(!v)return;S.months[S.currentMonth].filmTheme=v;save();render();toast("本月观影主题已更新");}
+
+// 成就墙
+let STAMP_MILES=[];
+function renderStamps(main){
+ const all=[];for(let mo=1;mo<=12;mo++)all.push("2026-"+String(mo).padStart(2,"0"));
+ const unlocked=all.filter(k=>S.months[k]&&S.months[k].stampUnlocked).length;
+ const xp=totalXp();
+ const renoDone=S.renovation.stages.filter(s=>s.done).length;
+ const readDone=S.reading.filter(b=>b.status==="已读").length;
+ const filmDone=S.film.filter(f=>f.status==="已看").length;
+ const pubDone=S.writing.filter(w=>w.status==="已发布").length;
+ const holdings=S.stocks.holdings.map(h=>{const pr=STOCK_DATA.prices[h.code]||h.price||h.cost;return (h.shares*pr)-(h.shares*h.cost);});
+ const stp=holdings.reduce((a,x)=>a+x,0);
+ const recPct=Math.min(100,Math.round((S.stocks.targetRecovery-Math.abs(Math.min(0,stp)))/S.stocks.targetRecovery*100));
+ const miles=[
+  {i:"📚",n:"书虫",d:"读完 10 本",cur:readDone,req:10,ok:readDone>=10},
+  {i:"🎬",n:"观影人",d:"看完 10 部",cur:filmDone,req:10,ok:filmDone>=10},
+  {i:"💪",n:"自律星",d:"健身连续 7 天",cur:S.fitness.streak,req:7,ok:S.fitness.streak>=7},
+  {i:"🔥",n:"打卡王",d:"连续打卡 7 天",cur:checkinStreak(),req:7,ok:checkinStreak()>=7},
+  {i:"✍️",n:"创作者",d:"发布 1 篇",cur:pubDone,req:1,ok:pubDone>=1},
+  {i:"🏗",n:"装修匠",d:"完成 1 阶段",cur:renoDone,req:1,ok:renoDone>=1},
+  {i:"📈",n:"回本路",d:"回本过半",cur:recPct,req:50,ok:recPct>=50},
+  {i:"🏅",n:"月度达人",d:"解锁 3 印章",cur:unlocked,req:3,ok:unlocked>=3}
+ ];
+ STAMP_MILES=miles;
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>🏅 成就墙</h2>
+  <div class="stat-strip">
+   <div class="stat"><b>${unlocked}/12</b><span>月度印章</span></div>
+   <div class="stat"><b>${xp}</b><span>总经验</span></div>
+   <div class="stat"><b>${checkinStreak()}</b><span>连续打卡</span></div>
+   <div class="stat"><b>${recPct}%</b><span>回本进度</span></div>
+  </div>
+  <div class="overall"><i style="width:${Math.round(unlocked/12*100)}%"></i></div>
+  <h3 style="margin-top:12px">🎖 里程碑（点击看详情）</h3>
+  <div class="chips">${miles.map((m,idx)=>`<span class="tagchip${m.ok?' active':''}" onclick="openBadgeDetail(${idx})" title="${esc(m.d)}" style="cursor:pointer">${m.i} ${m.n}${m.ok?'':' ✗'}</span>`).join("")}</div>
+  <h3 style="margin-top:12px">📅 月份印章（点击补盖 / 撤销）</h3><div class="stamps" id="sw"></div>`;
+ main.appendChild(c);
+ const sw=document.getElementById("sw");
+ all.forEach(k=>{let m=S.months[k];if(!m){m=S.months[k]={stampUnlocked:false,main:"本月主线待定",reward:"",stampName:""};}
+  const on=m&&m.stampUnlocked;const el=document.createElement("div");el.className="stamp"+(on?" on":"");
+  el.innerHTML=`<div class="seal">${on?m.stampName:"❔"}</div><div style="font-size:11px;color:#888">${k.slice(5)}月</div>${on?'<div style="font-size:10px;color:#9c5b52">已解锁</div>':'<div style="font-size:10px;color:#aaa">点击补盖</div>'}`;
+  el.onclick=()=>toggleStamp(k);sw.appendChild(el);});
+ // 达成时间线
+ const tl=document.createElement("div");tl.className="card";
+ const earned=all.filter(k=>S.months[k]&&S.months[k].stampUnlocked).map(k=>({k,m:S.months[k]}));
+ let tlh=`<h3>📜 达成时间线</h3>`;
+ if(earned.length){
+  tlh+=`<div class="badge-detail" style="display:flex;flex-direction:column;gap:6px">`+earned.map(x=>`<div style="display:flex;gap:8px;align-items:center"><span style="font-size:18px">${esc(x.m.stampName||"🌟")}</span><span style="font-size:13px;color:#7a4a44"><b>${x.k.slice(5)}月</b> · ${esc(x.m.main||"")}</span></div>`).join("")+`</div>`;
+ }else{
+  tlh+=`<div style="font-size:12px;color:#aaa">还没有解锁的月份印章，完成当月主线后盖印吧。</div>`;
+ }
+ const gotMiles=miles.filter(m=>m.ok).length;
+ tlh+=`<div style="font-size:12px;color:#6a5a55;margin-top:8px">已点亮里程碑 <b>${gotMiles}/${miles.length}</b></div>`;
+ tl.innerHTML=tlh;main.appendChild(tl);
+}
+function openBadgeDetail(idx){const m=STAMP_MILES[idx];if(!m)return;
+ const pct=Math.min(100,Math.round(m.cur/m.req*100));
+ const html=`<div class="badge-detail">
+   <div style="font-size:22px">${m.i} <b>${m.n}</b></div>
+   <div style="font-size:13px;color:#7a4a44;margin:6px 0">${esc(m.d)}</div>
+   <div style="font-size:13px;color:#6a5a55">进度：<b>${m.cur}</b> / ${m.req}</div>
+   <div class="overall" style="margin-top:6px"><i style="width:${pct}%"></i></div>
+   <div style="margin-top:6px;font-weight:bold;color:${m.ok?'#3c6b4a':'#9a3a2a'}">${m.ok?'✅ 已达成！':'⏳ 尚未达成，继续加油'}</div>
+  </div>`;
+ openDModal("🏅 里程碑详情",html);}
+function toggleStamp(k){const m=S.months[k];if(!m)return;
+ if(m.stampUnlocked){m.stampUnlocked=false;save();render();toast("已撤销印章 · "+k.slice(5)+"月");}
+ else{m.stampUnlocked=true;if(!m.stampName)m.stampName="✨ 自盖印章";if(!m.reward)m.reward="你手动补盖了一枚印章，继续向目标迈进！";save();render();
+  document.getElementById("mTitle").textContent="🎉 补盖成功！";document.getElementById("mBody").innerHTML="盖下 <b>"+esc(m.stampName)+"</b>！<br>"+esc(m.reward||"");document.getElementById("modal").classList.add("show");}}
+
+// 炒股回本
+function renderStocks(main){
+ const holdings=S.stocks.holdings.map(h=>{
+  const price=STOCK_DATA.prices[h.code]||h.price||h.cost;
+  const mv=h.shares*price; const cost=h.shares*h.cost; const pl=mv-cost;
+  return {...h,price,mv,cost,pl};
+ });
+ const totalCost=holdings.reduce((a,h)=>a+h.cost,0);
+ const totalMv=holdings.reduce((a,h)=>a+h.mv,0);
+ const totalPl=totalMv-totalCost;
+ const isLoss=totalPl<0;
+ const recoveryGap=Math.max(0,-totalPl); // 距回本（盈亏归零）还差多少
+ const recoveryPct=Math.min(100,Math.round((S.stocks.targetRecovery-Math.abs(Math.min(0,totalPl)))/S.stocks.targetRecovery*100));
+ // 摘要卡片
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>📈 股市</h2>
+  <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:10px 0">
+   <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(${isLoss?'#8fd0a0':'#f4a8a8'} ${recoveryPct}%,#f0e9dd 0);display:flex;align-items:center;justify-content:center;flex-direction:column">
+    <div style="font-size:13px;color:#888">回本</div><div style="font-size:18px;font-weight:bold;color:#7a4a44">${recoveryPct}%</div>
+   </div>
+   <div style="flex:1;min-width:180px">
+    <div style="font-size:14px;color:#7a4a44">总市值 <b>¥${totalMv.toLocaleString()}</b> · 总成本 <b>¥${totalCost.toLocaleString()}</b></div>
+    <div style="font-size:14px;margin:4px 0">浮动盈亏 <b style="color:${isLoss?'#3c6b4a':'#b03021'}">${totalPl>=0?'+':''}¥${totalPl.toLocaleString()}</b></div>
+    <div style="font-size:12px;color:#888">目标：从亏损 ¥${S.stocks.targetRecovery.toLocaleString()} 回本 · 还差 <b>¥${recoveryGap.toLocaleString()}</b></div>
+    <div style="font-size:11px;color:#aaa;margin-top:4px">数据更新：${STOCK_DATA.updated||"未同步"}</div>
+   </div>
+  </div>`;
+ main.appendChild(c);
+ // 仓位占比饼图 + 超限预警
+ const palette=["#b03021","#8fd0a0","#cfe3f2","#fcebc2","#e3d4f0","#f4c7c3","#cde8d2","#f8d2a8","#d9c2e8","#bcd9d0","#e8c2c2","#c2cde8","#d8e8c2"];
+ let acc=0;const pie=holdings.map((h,i)=>{const p=h.mv/totalMv*100;const s=acc;acc+=p;return {h,pct:p,start:s,col:palette[i%palette.length]};});
+ const grad="conic-gradient("+(pie.length?pie.map(s=>`${s.col} ${s.start.toFixed(2)}% ${s.start+s.pct.toFixed(2)}%`).join(","):"#f0e9dd 0 100%")+")";
+ const secMap={};holdings.forEach(h=>{const k=h.sector||"未分类";secMap[k]=(secMap[k]||0)+h.mv;});
+ const secs=Object.keys(secMap).map(k=>({k,v:secMap[k]/totalMv*100})).filter(x=>x.k!=="未分类");
+ const hotSec=secs.filter(x=>x.v>30);
+ const pieCard=document.createElement("div");pieCard.className="card";
+ pieCard.innerHTML=`<h3>🥧 仓位占比（按市值）</h3>
+  <div class="pie-wrap">
+   <div style="width:120px;height:120px;border-radius:50%;background:${grad};flex:0 0 auto"></div>
+   <div class="pie-legend">${holdings.slice().sort((a,b)=>b.mv-a.mv).map(h=>`<div class="${h.mv/totalMv*100>15?'hot':''}"><span>${esc(h.name||h.code)}</span><span>${((h.mv/totalMv)*100).toFixed(1)}%${h.mv/totalMv*100>15?' ⚠':''}</span></div>`).join("")}</div>
+  </div>
+  <div style="margin-top:8px;font-size:12px;color:#7a4a44">
+   ${secs.length?`行业分布：`+secs.sort((a,b)=>b.v-a.v).map(s=>`${esc(s.k)} ${s.v.toFixed(0)}%`).join(" · ")+`${hotSec.length?` · <b style="color:#b03021">⚠ ${hotSec.map(x=>x.k).join("/")} 集中度>30%</b>`:" · 分散合理"}`:`未填写行业，可在添加持仓时补充 sector 以监控行业集中度`}
+  </div>`;
+ main.appendChild(pieCard);
+ // 回本所需涨幅计算器
+ const reqGain=totalPl<0?(-totalPl)/totalMv*100:0;
+ const recCard=document.createElement("div");recCard.className="card";
+ recCard.innerHTML=`<h3>🎯 回本所需涨幅</h3>
+  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+   <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(${totalPl<0?'#b03021':'#8fd0a0'} ${Math.min(100,reqGain)}%,#f0e9dd 0);display:flex;align-items:center;justify-content:center;flex-direction:column">
+    <div style="font-size:11px;color:#888">需涨</div><div style="font-size:16px;font-weight:bold;color:#7a4a44">${reqGain.toFixed(1)}%</div></div>
+   <div style="flex:1;min-width:180px;font-size:13px;color:#7a4a44">
+    ${totalPl<0?`当前浮亏 <b style="color:#3c6b4a">¥${(-totalPl).toLocaleString()}</b>，市值 ¥${totalMv.toLocaleString()}，需整体上涨 <b>${reqGain.toFixed(1)}%</b> 才回本。`:`当前已盈利，回本目标已达成 ✅`}
+    <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">若再跌 <input id="recDrop" type="number" style="width:64px;padding:3px 6px;border:2px dashed var(--line);border-radius:8px;font-family:inherit;font-size:12px" placeholder="%"> % → <b id="recNew" style="color:#b03021"></b></div>
+   </div>
+  </div>
+  <div style="margin-top:8px;font-size:12px;color:#888">亏损 ↔ 回本所需涨幅对照：亏10%需涨11% · 20%→25% · 30%→43% · 40%→67% · 50%→100%（亏越深越难回）。</div>`;
+ main.appendChild(recCard);
+ // 补仓后回本价计算器
+ const totalShares=holdings.reduce((a,h)=>a+h.shares,0);
+ const avgP=totalShares?totalCost/totalShares:0;
+ const beCard=document.createElement("div");beCard.className="card";
+ beCard.innerHTML=`<h3>➕ 补仓后回本价</h3>
+  <div style="font-size:12px;color:#888;margin-bottom:6px">当前均价 <b>¥${avgP.toFixed(3)}</b> · 总股数 <b>${totalShares.toLocaleString()}</b>（补仓可摊低/抬高回本价）</div>
+  <div class="addrow">
+   <input id="beShares" type="number" placeholder="补仓股数" value="${Math.round(totalShares*0.2)||1000}">
+   <input id="bePrice" type="number" placeholder="补仓价" value="${avgP.toFixed(2)}">
+   <button class="btn sm" id="beCalc">算一下</button>
+  </div>
+  <div id="beOut" style="margin-top:8px;font-size:13px;color:#7a4a44"></div>`;
+ main.appendChild(beCard);
+ const beSharesEl=document.getElementById("beShares"),bePriceEl=document.getElementById("bePrice"),beOut=document.getElementById("beOut");
+ function calcBE(){const sh=parseFloat(beSharesEl.value)||0;const pr=parseFloat(bePriceEl.value)||0;if(sh<=0||pr<=0){beOut.textContent="请输入补仓股数与价格";return;}
+  const nCost=totalCost+sh*pr,nSh=totalShares+sh,nBE=nCost/nSh;const curP=totalShares?totalMv/totalShares:0;const need=curP>0?((nBE-curP)/curP*100):0;
+  beOut.innerHTML=`补仓后：总成本 <b>¥${Math.round(nCost).toLocaleString()}</b> · 总股数 <b>${Math.round(nSh).toLocaleString()}</b><br>👉 <b style="color:#b03021">回本价 ¥${nBE.toFixed(2)}</b>（组合盈亏归零所需卖出价）<br>较当前均价 ¥${curP.toFixed(2)} 需涨 <b>${need>=0?'+':''}${need.toFixed(1)}%</b>`;}
+ const beBtn=document.getElementById("beCalc");if(beBtn)beBtn.onclick=calcBE;
+ if(beSharesEl)beSharesEl.oninput=calcBE;if(bePriceEl)bePriceEl.oninput=calcBE;
+ calcBE();
+ const rd=document.getElementById("recDrop");if(rd)rd.oninput=e=>{const x=parseFloat(e.target.value)||0;const nm=totalMv*(1-x/100);const nl=totalCost-nm;document.getElementById("recNew").textContent=nl>0?("需涨 "+(nl/nm*100).toFixed(1)+"% 回本"):"已回本";};
+ // 持仓
+ const hcard=document.createElement("div");hcard.className="card";
+ hcard.innerHTML=`<h3>📊 持仓明细</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:8px">`+
+  holdings.map((h,i)=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
+   <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:bold;color:#7a4a44">${esc(h.name||h.code)}</span><span style="font-size:11px;color:#888">${h.code}</span></div>
+   <div style="font-size:12px;color:#888;margin:4px 0">${h.shares} 股 · 成本 ¥${h.cost.toLocaleString()}</div>
+   <div style="font-size:12px;color:#888">现价 <b>¥${h.price.toLocaleString()}</b></div>
+   <div style="font-size:13px;margin-top:4px;color:${h.pl<0?'#3c6b4a':'#b03021'}">盈亏 ${h.pl>=0?'+':''}¥${h.pl.toLocaleString()}</div>
+   ${((stop)=>{if(!h.stop&&!h.target)return"";let s="";if(h.stop){const dd=(h.price-h.stop)/h.price*100,br=h.price<=h.stop;s+=`<div style="font-size:11px;margin-top:3px;color:${br?'#b03021':'#888'}">${br?'🚨 已破止损':'距止损 '+dd.toFixed(1)+'%'}（¥${h.stop}）</div>`;}if(h.target){const up=(h.target-h.price)/h.price*100,hit=h.price>=h.target;s+=`<div style="font-size:11px;color:${hit?'#3c6b4a':'#888'}">${hit?'✅ 已止盈':'距止盈 '+up.toFixed(1)+'%'}（¥${h.target}）</div>`;}return s;})()}
+  </div>`).join("")+`</div>
+  ${holdings.length?'<h3 style="margin-top:12px">🏆 贡献排行</h3>'+(()=>{
+   const sorted=[...holdings].sort((a,b)=>b.pl-a.pl);
+   return `<div style="font-size:13px">${sorted.map((h,r)=>`<div>${r+1}. ${esc(h.name||h.code)} · ${h.pl>=0?'+':''}¥${h.pl.toLocaleString()}</div>`).join("")}</div>`;
+  })():''}`;
+ main.appendChild(hcard);
+ // 止损/止盈预警清单
+ const alerts=holdings.filter(h=>h.stop||h.target).map(h=>{
+  const breached=h.stop&&h.price<=h.stop;const hit=h.target&&h.price>=h.target;
+  const near=h.stop&&!breached&&(h.price-h.stop)/h.price*100<=5;
+  const txt=breached?"🚨 已破止损":(hit?"✅ 已到止盈":(near?"⚠ 接近止损":"监控中"));
+  const col=breached?"#b03021":(hit?"#3c6b4a":"#b5651d");
+  return `<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px dotted #ece3d6"><span style="color:#7a4a44">${esc(h.name||h.code)}</span><span style="color:${col}">${txt}</span></div>`;
+ }).join("");
+ const alertCard=document.createElement("div");alertCard.className="card";
+ alertCard.innerHTML=`<h3>🔔 止损/止盈预警</h3>${alerts?alerts:`<div style="color:#aaa;font-size:13px">尚未设置止损/止盈线，在下方添加持仓时填入即可。</div>`}`;
+ main.appendChild(alertCard);
+ // 盈亏贡献条形图
+ const maxAbs=Math.max(1,...holdings.map(h=>Math.abs(h.pl)));
+ const bar=document.createElement("div");bar.className="card";
+ bar.innerHTML=`<h3>📊 盈亏贡献（谁在拖后腿）</h3>`+
+  holdings.slice().sort((a,b)=>a.pl-b.pl).map(h=>{
+   const w=Math.round(Math.abs(h.pl)/maxAbs*100);
+   const col=h.pl>=0?"#b03021":"#3c6b4a";
+   const sign=h.pl>=0?"+":"";
+   return `<div style="margin:7px 0">
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:#7a4a44"><span>${esc(h.name||h.code)}</span><span style="color:${col}">${sign}¥${h.pl.toLocaleString()}</span></div>
+    <div style="height:10px;background:#f0e9dd;border-radius:6px;overflow:hidden"><div style="height:100%;width:${w}%;background:${col}"></div></div>
+   </div>`;
+  }).join("");
+ main.appendChild(bar);
+ // 知识点
+ const kcard=document.createElement("div");kcard.className="card";
+ const kidx=((new Date().getDate()-1)%S.stocks.knowledgeCards.length);
+ kcard.innerHTML=`<h3>💡 今日必备知识点</h3>
+  <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:10px;font-size:13px;line-height:1.7">${esc(S.stocks.knowledgeCards[kidx])}</div>
+  <div style="margin-top:8px;font-size:12px;color:#888">共 ${S.stocks.knowledgeCards.length} 条，每日轮换</div>`;
+ main.appendChild(kcard);
+ // 资讯
+ const ncard=document.createElement("div");ncard.className="card";
+ const news=S.stocks.dailyNews.length?S.stocks.dailyNews:(STOCK_DATA.news||[]);
+ ncard.innerHTML=`<h3>📰 持仓相关资讯</h3>`+
+  (news.length?news.map(n=>`<div style="border-bottom:1px dotted #ece3d6;padding:6px 0;font-size:13px"><a href="${esc(n.url||'#')}" target="_blank" style="color:#7a4a44;text-decoration:none">${esc(n.title)}</a><div style="font-size:11px;color:#aaa">${esc(n.source||"")} ${esc(n.time||"")}</div></div>`).join("")
+   :`<div style="color:#888;font-size:13px">暂无今日资讯。可运行 sync_stocks.py 同步最新新闻与行情。</div>`);
+ main.appendChild(ncard);
+ // 交易复盘日志
+ const tr=S.stocks.trades||[];
+ const tn=tr.length;
+ const wins=tr.filter(t=>(t.pl||0)>0).length;
+ const winRate=tn?Math.round(wins/tn*100):0;
+ const avgPl=tn?tr.reduce((a,t)=>a+(t.pl||0),0)/tn:0;
+ let eq=0,peak=0,maxDD=0;tr.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{eq+=(t.pl||0);if(eq>peak)peak=eq;const dd=peak-eq;if(dd>maxDD)maxDD=dd;});
+ const avgScore=tn?Math.round(tr.reduce((a,t)=>a+(+t.score||0),0)/tn*10)/10:0;
+ const statCard=document.createElement("div");statCard.className="card";
+ statCard.innerHTML=`<h2>📓 交易复盘日志</h2>
+  <div class="stat-strip">
+   <div class="stat"><b>${tn}</b><span>交易笔数</span></div>
+   <div class="stat"><b>${winRate}%</b><span>胜率</span></div>
+   <div class="stat"><b>${avgPl>=0?'+':''}¥${Math.round(avgPl).toLocaleString()}</b><span>平均盈亏</span></div>
+   <div class="stat"><b>¥${Math.round(maxDD).toLocaleString()}</b><span>最大回撤</span></div>
+   <div class="stat"><b>${avgScore}</b><span>过程分均值</span></div>
+  </div>
+  <div style="font-size:12px;color:#888;margin-top:6px">风控铁律：单笔亏损≤5% · 总仓位≤80%留现金 · 每周看盈亏统计。过程分(0-10)比盈亏更重要——一致性来自行为而非结果。</div>`;
+ main.appendChild(statCard);
+ const fcard=document.createElement("div");fcard.className="card";
+ fcard.innerHTML=`<h3>➕ 记一笔交易</h3>
+  <div class="addrow" style="align-items:stretch">
+   <input id="trDate" type="date" value="${todayStr()}" style="flex:0 0 140px">
+   <input id="trTicker" placeholder="品种/代码">
+   <select id="trDir"><option>多</option><option>空</option></select>
+   <input id="trEntry" placeholder="进场价" type="number">
+   <input id="trExit" placeholder="出场价" type="number">
+   <input id="trShares" placeholder="股数" type="number">
+   <input id="trStop" placeholder="止损价(选)" type="number">
+  </div>
+  <div class="addrow" style="margin-top:6px">
+   <select id="trHabit"><option value="无">坏习惯：无</option><option>追高</option><option>扛单</option><option>重仓</option><option>临时改计划</option><option>频繁交易</option></select>
+   <select id="trMood"><option>情绪：平静</option><option>兴奋</option><option>焦虑</option><option>犹豫</option><option>报复性</option></select>
+   <label style="font-size:12px;color:#7a4a44;display:flex;align-items:center;gap:4px"><input id="trDisc" type="checkbox"> 守纪律</label>
+   <input id="trScore" placeholder="过程分0-10" type="number" style="flex:0 0 110px">
+  </div>
+  <textarea id="trLesson" class="note" placeholder="一句话教训 / 复盘心得…" style="min-height:40px;margin-top:6px;width:100%"></textarea>
+  <button class="btn sm" style="margin-top:6px" onclick="addTrade()">📝 记录</button>`;
+ main.appendChild(fcard);
+ const lcard=document.createElement("div");lcard.className="card";
+ lcard.innerHTML=`<h3>🗒 交易记录（${tn} 笔）</h3>`+(tn?tr.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(t=>`<div style="border-bottom:1px dotted #ece3d6;padding:8px 0">
+   <div style="display:flex;justify-content:space-between;align-items:center"><b style="color:#7a4a44;font-size:13px">${esc(t.ticker)}</b><span style="font-size:11px;color:#c98b83;cursor:pointer" onclick="delTrade(${t.id})">✕</span></div>
+   <div style="font-size:12px;color:#888;margin-top:2px">${esc(t.date)} · ${t.dir<0?'空':'多'} · 进场¥${t.entry}→出场¥${t.exit} · <b style="color:${t.pl>=0?'#b03021':'#3c6b4a'}">${t.pl>=0?'+':''}¥${Math.round(t.pl).toLocaleString()}</b> · 过程分${t.score}${t.disc?' · 守纪律':''}${t.habit&&t.habit!=='无'?' · '+esc(t.habit):''}</div>
+   ${t.lesson?`<div style="font-size:12px;color:#9c5b52;margin-top:3px">💡 ${esc(t.lesson)}</div>`:""}
+  </div>`).join(""):`<div style="color:#aaa;font-size:13px">还没有交易记录，收盘后记一笔吧。</div>`);
+ main.appendChild(lcard);
+ // 操作
+ const op=document.createElement("div");op.className="card";
+ op.innerHTML=`<h3>➕ 添加 / 修改持仓</h3>
+  <div class="addrow">
+   <input id="shCode" placeholder="代码 如 sh600519">
+   <input id="shName" placeholder="名称">
+   <input id="shShares" placeholder="股数" type="number">
+   <input id="shCost" placeholder="成本价" type="number">
+   <input id="shPrice" placeholder="现价（可选）" type="number">
+   <input id="shSector" placeholder="行业(选)">
+   <input id="shStop" placeholder="止损价(选)" type="number">
+   <input id="shTarget" placeholder="止盈价(选)" type="number">
+   <button class="btn sm" onclick="addHolding()">添加</button>
+  </div>
+  <div style="margin-top:8px;font-size:12px;color:#888">💡 自动同步：把同花顺导出文件放到 OneDrive，运行 sync_stocks.py 即可更新持仓与行情。</div>`;
+ main.appendChild(op);
+}
+function addHolding(){const code=document.getElementById("shCode").value.trim();const name=document.getElementById("shName").value.trim();const shares=parseFloat(document.getElementById("shShares").value)||0;const cost=parseFloat(document.getElementById("shCost").value)||0;const price=parseFloat(document.getElementById("shPrice").value)||0;if(!code||!shares)return;const sector=document.getElementById("shSector").value.trim();const stop=parseFloat(document.getElementById("shStop").value)||null;const target=parseFloat(document.getElementById("shTarget").value)||null;const idx=S.stocks.holdings.findIndex(h=>h.code===code);if(idx>=0){const o=S.stocks.holdings[idx];S.stocks.holdings[idx]={code,name:name||o.name,shares,cost,price:price||cost,group:"A股",sector:sector||o.sector,stop:stop||null,target:target||null};}else{S.stocks.holdings.push({code,name:name||code,shares,cost,price:price||cost,group:"A股",sector,stop,target});}save();render();toast("持仓已更新");}
+function addTrade(){const g=id=>document.getElementById(id);const ticker=g("trTicker").value.trim();if(!ticker)return;const dir=g("trDir").value==="空"?-1:1;const entry=parseFloat(g("trEntry").value)||0;const exit=parseFloat(g("trExit").value)||0;const shares=parseFloat(g("trShares").value)||0;const pl=(exit-entry)*shares*dir;const t={id:Date.now(),date:g("trDate").value||todayStr(),ticker,dir,entry,exit,shares,stop:parseFloat(g("trStop").value)||null,pl,disc:g("trDisc").checked,habit:g("trHabit").value,mood:g("trMood").value,score:parseFloat(g("trScore").value)||0,lesson:g("trLesson").value.trim()};S.stocks.trades.push(t);save();render();toast("复盘已记录");}
+function delTrade(id){S.stocks.trades=S.stocks.trades.filter(t=>t.id!==id);save();render();}
+// 健身
+function renderFitness(main){
+ const dayIdx=new Date().getDay();
+ const ex=FITNESS_PLAN[dayIdx];
+ const done=S.fitness.lastDone===todayStr();
+ const ov=S.fitness.videoOverride||{};
+ const vidRaw=ov[dayIdx]||ex.video||"";
+ const vidSrc=vidRaw?toEmbed(vidRaw):"";
+ if(fitTimer.sets===0){fitTimer.work=ex.work||30;fitTimer.rest=ex.rest||15;fitTimer.sets=ex.setsCount||1;}
+ // 1. 体态诊断
+ const diag=document.createElement("div");diag.className="card";
+ diag.innerHTML=`<h2>💪 体态诊断</h2>
+  <div style="font-size:13px;color:#7a4a44;line-height:1.7">你列出的问题：<b>肋骨外翻、驼背、脖子前倾、小腹突出</b>，共同根源多为久坐 + 呼吸浅 + 核心无力。策略：每天只练 1 个动作，靠坚持重建体态。</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">${S.fitness.issues.map(x=>`<span style="background:#fcebc2;border-radius:10px;padding:3px 9px;font-size:12px;color:#9a5a1d">${esc(x)}</span>`).join("")}</div>`;
+ main.appendChild(diag);
+ // 2. 今日动作卡（分解+注意+视频）
+ const c=document.createElement("div");c.className="card";
+ const stepsHtml=(ex.steps||[]).map(s=>`<li>${esc(s)}</li>`).join("");
+ const cautHtml=(ex.cautions||[]).map(s=>`<li>${esc(s)}</li>`).join("");
+ const vidHtml=vidSrc?`<iframe class="vidframe" src="${esc(vidSrc)}" allow="autoplay;encrypted-media" allowfullscreen></iframe>`:`<div style="font-size:12px;color:#888;margin-top:6px">暂无嵌入视频。点上面按钮看真实教学，或在下方粘贴 B站/YouTube 链接嵌入。</div>`;
+ c.innerHTML=`<h2>📍 今日动作 · 周${["日","一","二","三","四","五","六"][dayIdx]}</h2>
+  <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:12px;margin:8px 0">
+   <div style="font-family:'Ma Shan Zheng',cursive;color:#b5651d;font-size:18px">${esc(ex.name)}</div>
+   <div style="font-size:13px;color:#7a4a44;margin:4px 0"><b>针对：</b>${esc(ex.focus||"")} · <b>计划：</b>${esc(ex.sets)}</div>
+   <div style="font-size:12px;color:#888">🎬 可叠加：${esc(ex.while||"")}</div>
+  </div>
+  <div class="fit-block"><div class="fit-h">🧩 分解步骤</div><ol class="fit-steps">${stepsHtml}</ol></div>
+  <div class="fit-block"><div class="fit-h" style="color:#b03021">⚠ 注意事项（千万别错）</div><ul class="fit-caut">${cautHtml}</ul></div>
+  <div class="vid">
+   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0">
+    <button class="btn sm" onclick="openFitVideo(${dayIdx})">▶ 看教学视频</button>
+    <span style="font-size:11px;color:#aaa">（在 B站/YouTube 搜真实教学）</span>
+   </div>
+   ${vidHtml}
+   <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+    <input id="vidUrl" class="search" style="flex:1;min-width:160px;margin:0" placeholder="粘贴 B站/YouTube 链接嵌入">
+    <button class="btn sm" onclick="setFitVideo(${dayIdx})">嵌入</button>
+   </div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
+   <button class="btn ${done?'green':'"'}" onclick="checkinFitness()">${done?'✅ 今日已练':'💪 完成今日动作 +10 XP'}</button>
+   <span class="xptxt">连续坚持 ${S.fitness.streak} 天</span>
+  </div>`;
+ main.appendChild(c);
+ // 3. 训练计时器
+ const t=document.createElement("div");t.className="card";
+ t.innerHTML=`<h3>⏱ 训练计时器（${esc(ex.name)}）</h3>
+  <div class="fit-timer" id="fitTimer">
+   <div class="fit-phase" id="fitPhase">准备</div>
+   <div class="fit-big" id="fitBig">${ex.setsCount} 组 × ${fmtSec(ex.work)}</div>
+   <div class="fit-sub" id="fitSub">第 0/${ex.setsCount} 组 · 休息 ${ex.rest}s</div>
+  </div>
+  <div class="focus-btns" style="margin-top:10px">
+   <button class="btn" id="fitStart" onclick="fitStart()">▶ 开始</button>
+   <button class="btn ghost" id="fitPause" onclick="fitPause()">⏸ 暂停</button>
+   <button class="btn ghost" id="fitReset" onclick="fitReset()">↺ 重置</button>
+  </div>`;
+ main.appendChild(t);
+ // 4. 本周课表
+ const cal=document.createElement("div");cal.className="card";
+ cal.innerHTML=`<h3>📅 本周课表</h3>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px">`+
+   FITNESS_PLAN.map((x,i)=>`<div style="background:${i===dayIdx?'#fff7e8':'#fffdfa'};border:2px ${i===dayIdx?'solid #e0b96a':'dashed var(--line)'};border-radius:10px;padding:6px;font-size:11px;text-align:center">
+    <div style="color:#888">${["日","一","二","三","四","五","六"][i]}</div>
+    <div style="color:#7a4a44;margin-top:3px;font-weight:bold">${esc((x.name||"").split("+")[0])}</div>
+   </div>`).join("")+`</div>`;
+ main.appendChild(cal);
+ // 5. 坚持热力图
+ const hm=document.createElement("div");hm.className="card";
+ const hd=(S.fitness.history||[]).length;
+ hm.innerHTML=`<h3>🔥 坚持热力图（近 17 周）</h3>
+  ${heatmapHtml(S.fitness.history,17)}
+  <div class="heat-legend"><i style="background:#8fd0a0"></i> 打卡日 · 累计 <b>${hd}</b> 天 · 连续 <b>${S.fitness.streak}</b> 天</div>`;
+ main.appendChild(hm);
+ paintFit();
+}
+function fmtSec(s){const m=Math.floor((s||0)/60),ss=(s||0)%60;return m?`${m}分${ss?ss+"秒":""}`:`${ss}秒`;}
+function toEmbed(u){u=(u||"").trim();let m;if(m=u.match(/[?&]v=([\w-]+)/))return "https://www.youtube.com/embed/"+m[1];if(m=u.match(/youtu\.be\/([\w-]+)/))return "https://www.youtube.com/embed/"+m[1];if(m=u.match(/bilibili\.com\/video\/(BV[\w]+)/))return "https://player.bilibili.com/player.html?bvid="+m[1]+"&page=1";if(m=u.match(/bvid=([\w]+)/))return "https://player.bilibili.com/player.html?bvid="+m[1]+"&page=1";return u;}
+function openFitVideo(i){const n=(FITNESS_PLAN[i]&&FITNESS_PLAN[i].name)||"健身";const q=encodeURIComponent(n+" 教学 正确做法");window.open("https://search.bilibili.com/all?keyword="+q,"_blank");window.open("https://www.youtube.com/results?search_query="+q,"_blank");}
+function setFitVideo(i){const u=document.getElementById("vidUrl").value.trim();if(!u)return;S.fitness.videoOverride=S.fitness.videoOverride||{};S.fitness.videoOverride[i]=u;save();render();toast("已嵌入视频");}
+let fitTimer={sets:0,setIdx:0,phase:"work",remaining:0,running:false,iv:null,work:0,rest:0};
+function fitStart(){const ex=FITNESS_PLAN[new Date().getDay()];if(!ex)return;fitTimer.work=ex.work||30;fitTimer.rest=ex.rest||15;fitTimer.sets=ex.setsCount||1;fitTimer.setIdx=0;fitTimer.phase="work";fitTimer.remaining=fitTimer.work;fitTimer.running=true;beep(880);
+ if(fitTimer.iv)clearInterval(fitTimer.iv);fitTimer.iv=setInterval(fitTick,1000);paintFit();}
+function fitPause(){if(!fitTimer.sets){const ex=FITNESS_PLAN[new Date().getDay()];if(ex){fitTimer.work=ex.work||30;fitTimer.rest=ex.rest||15;fitTimer.sets=ex.setsCount||1;}}if(fitTimer.running){fitTimer.running=false;if(fitTimer.iv){clearInterval(fitTimer.iv);fitTimer.iv=null;}}else{fitTimer.running=true;if(!fitTimer.iv)fitTimer.iv=setInterval(fitTick,1000);}paintFit();}
+function fitReset(){if(fitTimer.iv)clearInterval(fitTimer.iv);fitTimer={sets:0,setIdx:0,phase:"work",remaining:0,running:false,iv:null,work:0,rest:0};paintFit();}
+function fitTick(){if(!fitTimer.running)return;fitTimer.remaining--;if(fitTimer.remaining<=0){
+  if(fitTimer.phase==="work"){fitTimer.setIdx++;if(fitTimer.setIdx>=fitTimer.sets){if(fitTimer.iv)clearInterval(fitTimer.iv);fitTimer.iv=null;fitTimer.running=false;fitTimer.phase="done";beep(1320);paintFit();toast("🎉 今日动作完成！点‘完成今日动作’打卡 +10XP");return;}fitTimer.phase="rest";fitTimer.remaining=fitTimer.rest;beep(660);}
+  else{fitTimer.phase="work";fitTimer.remaining=fitTimer.work;beep(880);}
+ }paintFit();}
+function paintFit(){const ph=document.getElementById("fitPhase"),big=document.getElementById("fitBig"),sub=document.getElementById("fitSub");if(!ph)return;
+ const colors={work:"#f4a8a8",rest:"#cfe3f2",done:"#cde8d2",ready:"#f0e9dd"};const labels={work:"🔴 训练中",rest:"🔵 休息",done:"✅ 完成",ready:"准备"};
+ const st=fitTimer.phase==="done"?"done":(fitTimer.running?fitTimer.phase:"ready");
+ ph.textContent=labels[st];ph.style.background=colors[st];
+ if(st==="done"){big.textContent="全部完成 💪";sub.textContent="去打卡 +10 XP";}
+ else if(st==="ready"){big.textContent=fitTimer.sets+" 组 × "+fmtSec(fitTimer.work);sub.textContent="第 0/"+fitTimer.sets+" 组 · 休息 "+fitTimer.rest+"s";}
+ else{big.textContent=fmtSec(Math.max(0,fitTimer.remaining));sub.textContent="第 "+Math.min(fitTimer.setIdx+(fitTimer.phase==="rest"?1:1),fitTimer.sets)+"/"+fitTimer.sets+" 组 · "+(fitTimer.phase==="work"?"训练中":"休息");}}
+function beep(freq){try{if(!window.AudioContext&&!window.webkitAudioContext)return;const C=window.AudioContext||window.webkitAudioContext;const ctx=beep._c||(beep._c=new C());const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=freq;o.connect(g);g.connect(ctx.destination);g.gain.value=0.06;o.start();setTimeout(()=>o.stop(),160);}catch(e){}}
+function checkinFitness(){if(S.fitness.lastDone===todayStr())return;S.fitness.lastDone=todayStr();S.fitness.streak=(S.fitness.history.length&&S.fitness.history[S.fitness.history.length-1]===yesterdayStr())?S.fitness.streak+1:1;S.fitness.history.push(todayStr());S.fitness.history=S.fitness.history.slice(-30);S.checkinXp+=10;save();confetti();toast("健身打卡 +10 XP 💪");render();}
+function yesterdayStr(){const d=new Date();d.setDate(d.getDate()-1);return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+// 阅读
+let READ_FILTER="全部";
+function renderReading(main){
+ const all=S.reading;
+ const total=all.length,read=all.filter(b=>b.status==="已读").length,reading=all.filter(b=>b.status==="在读").length;
+ const goal=S.readingGoal;const rp=goal?Math.round(read/goal*100):0;
+ const tags={};all.forEach(b=>(b.tags||"").split("/").forEach(t=>{t=t.trim();if(t)tags[t]=(tags[t]||0)+1;}));
+ // 顶部：目标进度 + 统计 + 筛选 + 标签
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>📚 我的书架</h2>
+  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:6px 0">
+   <div class="ring" style="--p:${rp}">${rp}%</div>
+   <div style="flex:1;min-width:180px">
+    <div class="xptxt" style="font-size:13px">年度目标 <b>${goal}</b> 本 · 已读 <b style="color:#3c6b4a">${read}</b> · 在读 <b>${reading}</b> · 待读 ${total-read-reading}</div>
+    <div class="goalbar"><i style="width:${Math.min(100,rp)}%"></i></div>
+   </div>
+  </div>
+  <div class="stat-strip">
+   <div class="stat"><b>${total}</b><span>总本数</span></div>
+   <div class="stat"><b>${read}</b><span>已读</span></div>
+   <div class="stat"><b>${reading}</b><span>在读</span></div>
+   <div class="stat"><b>${total-read-reading}</b><span>待读</span></div>
+   <div class="stat"><b>${readStreak()}</b><span>连续打卡</span></div>
+  </div>
+  <div class="tabs" style="margin-top:8px">${["全部","想读","在读","已读"].map(s=>`<span class="tab${READ_FILTER===s?' active':''}" onclick="setReadFilter('${s}')">${s}</span>`).join("")}</div>
+  <div class="chips" style="margin-top:6px">${Object.keys(tags).map(t=>`<span class="chip">${esc(t)} ${tags[t]}</span>`).join("")||'<span style="font-size:12px;color:#aaa">暂无标签</span>'}</div>`;
+ main.appendChild(c);
+ // 今日读什么
+ const cand=all.filter(b=>b.status!=="已读");
+ if(cand.length){const pick=cand[Math.floor(Math.random()*cand.length)];
+  const card=document.createElement("div");card.className="card";
+  card.innerHTML=`<div style="background:var(--blue);border-radius:12px;padding:12px"><b>📍 今日读什么</b><div style="margin-top:6px;font-size:14px;color:#7a4a44;font-weight:bold">${esc(pick.title)}</div><div style="font-size:12px;color:#888">${esc(pick.author||"")} · 当前：${pick.status}</div></div>`;
+  main.appendChild(card);}
+ // 书架（可点击进详情）
+ const filt=READ_FILTER==="全部"?all:all.filter(b=>b.status===READ_FILTER);
+ const grid=document.createElement("div");grid.className="card";
+ let h=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">`;
+ filt.forEach((b,i)=>{const gi=all.indexOf(b);const bg=b.status==="已读"?"#cde8d2":(b.status==="在读"?"#cfe3f2":"#fcebc2");
+  h+=`<div class="bk-card" onclick="openBookDetail(${gi})">
+   <div style="font-weight:bold;color:#7a4a44;font-size:14px;margin-bottom:4px">${esc(b.title)}</div>
+   <div style="font-size:12px;color:#888;margin-bottom:4px">${esc(b.author||"")}</div>
+   ${b.rating?`<div style="color:#e0a93b;font-size:13px;margin:2px 0">${"★".repeat(b.rating)}${"☆".repeat(5-b.rating)}</div>`:""}
+   ${b.progress?`<div class="goalbar" style="margin:4px 0"><i style="width:${b.progress}%"></i></div><div style="font-size:10px;color:#888">进度 ${b.progress}%</div>`:""}
+   <span style="display:inline-block;font-size:11px;padding:1px 8px;border-radius:10px;background:${bg}">${b.status}</span>
+  </div>`;});
+ h+=`</div>`;
+ if(!filt.length)h=`<div style="color:#aaa;font-size:13px;padding:8px">这个分类下还没有书。</div>`;
+ grid.innerHTML=h;main.appendChild(grid);
+ const add=document.createElement("div");add.className="card";
+ add.innerHTML=`<h3>➕ 添加新书</h3><div class="addrow"><input id="nbTitle" placeholder="书名"><input id="nbAuthor" placeholder="作者"><input id="nbTags" placeholder="标签"><button class="btn sm" onclick="addBook()">添加</button></div>`;
+ main.appendChild(add);
+}
+function readStreak(){const set=new Set(S.readingLog||[]);if(!set.has(todayStr()))return 0;let n=0,d=new Date();while(set.has(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate())){n++;d.setDate(d.getDate()-1);}return n;}
+function setReadFilter(s){READ_FILTER=s;render();}
+function openBookDetail(i){const b=S.reading[i];if(!b)return;
+ const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:8px"><b>${esc(b.title)}</b> · ${esc(b.author||"")}</div>
+  <div style="margin:6px 0">状态：<span class="tab" onclick="cycleBookStatus(${i});openBookDetail(${i})">${b.status}（点击切换）</span></div>
+  <div style="margin:8px 0">评分：${starsInput('rateBook',i,b.rating||0,'openBookDetail')}</div>
+  <div style="margin:8px 0">阅读进度：<input id="bkProg" type="number" min="0" max="100" value="${b.progress||0}" style="width:70px;padding:3px 6px;border:2px dashed var(--line);border-radius:8px">% <button class="btn sm" onclick="setBookProgress(${i})">保存</button></div>
+  <div style="margin:6px 0">笔记：<textarea id="bkNote" class="note-inline">${esc(b.note||"")}</textarea></div>
+  <div style="display:flex;gap:8px;margin-top:10px"><button class="btn green" onclick="logRead(${i});closeDModal()">📖 打卡读了一章 +5XP</button><button class="btn ghost" onclick="delBook(${i})">🗑 删除</button></div>`;
+ openDModal("📖 书籍详情",html);}
+function starsInput(fn,i,r,reopen){let s="";for(let k=1;k<=5;k++)s+=`<span style="font-size:20px;cursor:pointer;color:${k<=r?'#e0a93b':'#ccc'}" onclick="${fn}(${i},${k});${reopen}(${i})">${k<=r?'★':'☆'}</span>`;return s;}
+function rateBook(i,r){S.reading[i].rating=r;save();render();}
+function setBookProgress(i){const v=Math.max(0,Math.min(100,parseInt(document.getElementById("bkProg").value)||0));S.reading[i].progress=v;if(v>=100&&S.reading[i].status!=="已读")S.reading[i].status="已读";save();render();toast("已保存进度");}
+function delBook(i){S.reading.splice(i,1);save();render();closeDModal();}
+function logRead(i){if(!S.readingLog)S.readingLog=[];if(!S.readingLog.includes(todayStr())){S.readingLog.push(todayStr());S.checkinXp+=5;save();confetti();toast("阅读打卡 +5 XP 📖");render();}else{toast("今日已阅读打卡");render();}}
+function cycleBookStatus(i){const s=["已读","在读","待读"];const cur=S.reading[i].status;S.reading[i].status=s[(s.indexOf(cur)+1)%s.length];save();render();}
+function addBook(){const t=document.getElementById("nbTitle").value.trim();const a=document.getElementById("nbAuthor").value.trim();const g=document.getElementById("nbTags").value.trim();if(!t)return;S.reading.push({title:t,author:a,status:"待读",tags:g,note:"",rating:0,progress:0});save();render();toast("已添加");}
+
+// 影视
+let FILM_FILTER="全部";
+function renderFilm(main){
+ const c=document.createElement("div");c.className="card";
+ const total=S.film.length,seen=S.film.filter(f=>f.status==="已看").length;
+ const goal=S.filmGoal||24;
+ const fp=Math.min(100,Math.round(seen/goal*100));
+ const rated=S.film.filter(f=>f.status==="已看"&&(f.rating>0));
+ const avg=rated.length?Math.round(rated.reduce((a,b)=>a+b.rating,0)/rated.length*10)/10:0;
+ const types=["全部",...new Set(S.film.map(f=>f.type).filter(Boolean))];
+ const mk=S.months[S.currentMonth];const theme=(mk&&mk.filmTheme)||"人文历史纪录片";
+ let h=`<h2>🎬 影视片单</h2>
+  <div style="font-size:13px;color:#6a5a55;margin:2px 0 6px">年度目标 <b>${goal}</b> 部 · 已看 <b style="color:#3c6b4a">${seen}</b> / 共 <b>${total}</b> 部（${fp}%）</div>
+  <div class="goalbar"><i style="width:${fp}%"></i></div>
+  <div class="stat-strip" style="margin-top:12px">
+   <div class="stat"><b>${total}</b><span>片库</span></div>
+   <div class="stat"><b>${seen}</b><span>已看</span></div>
+   <div class="stat"><b>${total-seen}</b><span>待看</span></div>
+   <div class="stat"><b>${avg?avg+"★":"—"}</b><span>均分</span></div>
+  </div>
+  <div class="tabs" style="margin-top:10px">${types.map(t=>`<span class="tab${FILM_FILTER===t?' active':''}" onclick="setFilmFilter('${esc(t)}')">${esc(t)}</span>`).join("")}</div>`;
+ // 每日推荐（按本月主题联动）
+ const themeKey=Object.keys(FILM_THEME_POOL).find(k=>theme.includes(k)||k.includes(theme))||"人文历史纪录片";
+ const themed=FILM_THEME_POOL[themeKey]||[];
+ const pool=S.film.filter(f=>f.status!=="已看").map(f=>({title:f.title,type:f.type,tags:f.tags}))
+  .concat(themed.map(t=>({title:t,type:"纪录片",tags:theme})));
+ const pick=pool[Math.floor(Math.random()*pool.length)];
+ const d=new Date();const isWed=d.getDay()===3;
+ h+=`<div style="background:var(--lilac);border-radius:12px;padding:12px;margin:12px 0">
+  <div style="font-family:'Ma Shan Zheng',cursive;color:#5a3a6a;font-size:16px;margin-bottom:6px">🎞 今日推荐 · 本月主题「${esc(theme)}」${isWed?"（周三·书店后适合看）":""}</div>
+  <div style="font-weight:bold;color:#7a4a44">${esc(pick.title)}</div>
+  <div style="font-size:12px;color:#888">${esc(pick.type||"")} ${pick.tags?"· "+esc(pick.tags):""}</div>
+  <div style="font-size:12px;color:#9c5b52;margin-top:6px">💡 观影时可同步：梳头100次 / 靠墙站5分钟</div>
+ </div>`;
+ const filt=FILM_FILTER==="全部"?S.film:S.film.filter(f=>f.type===FILM_FILTER);
+ h+=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:6px">`;
+ filt.forEach(f=>{
+  const i=S.film.indexOf(f);
+  const bg=f.status==="已看"?"#cde8d2":"#fcebc2";
+  const stars=f.rating>0?"★".repeat(f.rating):"";
+  h+=`<div class="film-card" onclick="openFilmDetail(${i})">
+   <div style="font-weight:bold;color:#7a4a44;font-size:14px;margin-bottom:4px">${esc(f.title)}</div>
+   <div style="font-size:12px;color:#888;margin-bottom:6px">${esc(f.type||"")}</div>
+   <div style="font-size:11px;color:#9c5b52;margin-bottom:8px">${esc(f.tags||"")}</div>
+   <div style="display:flex;justify-content:space-between;align-items:center">
+     <span style="display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:${bg}">${f.status}</span>
+     <span style="font-size:13px;color:#e0a93b">${stars}</span>
+   </div>
+  </div>`;
+ });
+ h+=`</div>`;
+ c.innerHTML=h;main.appendChild(c);
+ const add=document.createElement("div");add.className="card";
+ add.innerHTML=`<h3>➕ 添加新片</h3><div class="addrow"><input id="nfTitle" placeholder="片名"><input id="nfType" placeholder="类型"><input id="nfTags" placeholder="标签"><button class="btn sm" onclick="addFilm()">添加</button></div>`;
+ main.appendChild(add);
+}
+function setFilmFilter(s){FILM_FILTER=s;render();}
+function openFilmDetail(i){const f=S.film[i];if(!f)return;
+ const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:8px"><b>${esc(f.title)}</b> · ${esc(f.type||"")} · ${esc(f.tags||"")}</div>
+  <div style="margin:6px 0">状态：<span class="tab" onclick="cycleFilmStatus(${i});openFilmDetail(${i})">${f.status}（点击切换）</span></div>
+  <div style="margin:8px 0">评分：${starsInput('rateFilm',i,f.rating||0,'openFilmDetail')}</div>
+  <div style="margin:8px 0">观影日期：<input id="fmDate" type="date" value="${esc(f.date||'')}" style="padding:3px 6px;border:2px dashed var(--line);border-radius:8px" onchange="setFilmDate(${i})"></div>
+  <div style="margin:6px 0">短评：<textarea id="fmReview" class="note-inline" onchange="setFilmReview(${i})">${esc(f.review||'')}</textarea></div>
+  <div style="display:flex;gap:8px;margin-top:10px"><button class="btn ghost" onclick="delFilm(${i})">🗑 删除</button></div>`;
+ openDModal("🎬 影片详情",html);}
+function rateFilm(i,r){S.film[i].rating=r;if(r>0&&S.film[i].status!=="已看")S.film[i].status="已看";save();render();}
+function setFilmDate(i){S.film[i].date=document.getElementById("fmDate").value;save();toast("已记录观影日期");}
+function setFilmReview(i){S.film[i].review=document.getElementById("fmReview").value;save();toast("短评已保存");}
+function delFilm(i){S.film.splice(i,1);save();render();closeDModal();}
+function cycleFilmStatus(i){const s=["已看","待看"];const cur=S.film[i].status;S.film[i].status=s[(s.indexOf(cur)+1)%s.length];save();render();}
+function addFilm(){const t=document.getElementById("nfTitle").value.trim();const y=document.getElementById("nfType").value.trim();const g=document.getElementById("nfTags").value.trim();if(!t)return;S.film.push({title:t,type:y,status:"待看",tags:g,rating:0,date:"",review:""});save();render();toast("已添加");}
+
+// 自媒体矩阵（独立重做：粉丝目标 + 平台分布条 + 可编辑账号）
+function renderSocial(main){
+ const c=document.createElement("div");c.className="card";
+ const arr=S.social||[];
+ const totalFans=arr.reduce((a,x)=>a+(parseInt(x.fans)||0),0);
+ const daily=arr.filter(x=>x.freq&&x.freq.includes("日")).length;
+ const goal=S.socialGoal||50000;
+ const fp=Math.min(100,Math.round(totalFans/goal*100));
+ const byPlat={};arr.forEach(x=>{const p=x.platform||"未分类";byPlat[p]=(byPlat[p]||0)+(parseInt(x.fans)||0);});
+ const maxPlat=Math.max(1,...Object.values(byPlat));
+ let h=`<h2>📱 自媒体矩阵</h2>
+  <div style="font-size:13px;color:#6a5a55;margin:2px 0 6px">粉丝总目标 <b>${goal.toLocaleString()}</b> · 当前 <b style="color:#3c6b4a">${totalFans.toLocaleString()}</b>（${fp}%）</div>
+  <div class="goalbar"><i style="width:${fp}%"></i></div>
+  <div class="stat-strip" style="margin-top:12px">
+   <div class="stat"><b>${arr.length}</b><span>账号数</span></div>
+   <div class="stat"><b>${totalFans.toLocaleString()}</b><span>总粉丝</span></div>
+   <div class="stat"><b>${daily}</b><span>日更</span></div>
+   <div class="stat"><b>${Object.keys(byPlat).length}</b><span>平台</span></div>
+  </div>
+  <div style="margin-top:12px;font-size:13px;color:#6a5a55;font-weight:bold">各平台粉丝分布</div>
+  <div style="margin-top:6px">${Object.entries(byPlat).sort((a,b)=>b[1]-a[1]).map(([p,v])=>`<div class="platbar"><span style="min-width:64px;color:#7a4a44">${esc(p)}</span><span class="track"><i style="width:${Math.round(v/maxPlat*100)}%"></i></span><span class="n">${v.toLocaleString()}</span></div>`).join("")}</div>`;
+ c.innerHTML=h;main.appendChild(c);
+ const list=document.createElement("div");list.className="card";
+ let cards=arr.map((it,i)=>`<div class="social-card" onclick="openSocialEdit(${i})">
+   <div class="pf">${esc(it.platform||"")} <span style="font-size:12px;color:#888">· ${esc(it.name||"")}</span></div>
+   <div class="row"><span>频率</span><span>${esc(it.freq||"—")}</span></div>
+   <div class="row"><span>粉丝</span><span>${esc(it.fans||"—")}</span></div>
+   ${it.note?`<div style="font-size:12px;color:#7a4a44;margin:4px 0">${esc(it.note)}</div>`:""}
+   <div style="font-size:11px;color:#aa9;margin-top:4px">点击编辑 ✎</div>
+  </div>`).join("");
+ if(!cards)cards=`<div style="color:#aaa;font-size:13px;padding:8px">还没有账号，下面添加一个吧。</div>`;
+ list.innerHTML=`<h3>账号清单</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">${cards}</div>`;
+ main.appendChild(list);
+ const add=document.createElement("div");add.className="card";
+ add.innerHTML=`<h3>➕ 新增账号</h3><div class="addrow"><input id="saPlatform" placeholder="平台"><input id="saName" placeholder="账号"><input id="saFreq" placeholder="频率"><input id="saFans" placeholder="粉丝数"><input id="saNote" placeholder="备注"><button class="btn sm" onclick="addSocial()">添加</button></div>`;
+ main.appendChild(add);
+}
+function openSocialEdit(i){const it=S.social[i];if(!it)return;
+ const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:8px"><b>${esc(it.platform||"")}</b> · ${esc(it.name||"")}</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+   <div>平台<input id="sePlatform" class="note-inline" value="${esc(it.platform||"")}"></div>
+   <div>账号名<input id="seName" class="note-inline" value="${esc(it.name||"")}"></div>
+   <div>频率<input id="seFreq" class="note-inline" value="${esc(it.freq||"")}"></div>
+   <div>粉丝数<input id="seFans" class="note-inline" value="${esc(it.fans||"")}"></div>
+  </div>
+  <div style="margin-top:6px">备注<textarea id="seNote" class="note-inline">${esc(it.note||"")}</textarea></div>
+  <div style="display:flex;gap:8px;margin-top:10px"><button class="btn green" onclick="saveSocial(${i})">💾 保存</button><button class="btn ghost" onclick="delSocial(${i})">🗑 删除</button></div>`;
+ openDModal("📱 编辑账号",html);}
+function saveSocial(i){const it=S.social[i];if(!it)return;
+ it.platform=val("sePlatform");it.name=val("seName");it.freq=val("seFreq");it.fans=val("seFans");it.note=val("seNote");save();render();closeDModal();toast("已保存");}
+function delSocial(i){if(S.social[i]){S.social.splice(i,1);save();render();closeDModal();}}
+
+// 写作追踪（独立重做：字数目标 + 打卡热力图 + 灵感织机 + 看板）
+let CURRENT_WRITE_PROMPT="";
+function renderWriting(main){
+ const arr=S.writing||[];
+ const totalW=arr.reduce((a,x)=>a+(parseInt(x.words)||0),0);
+ const goal=S.writingGoal||100000;
+ const fp=Math.min(100,Math.round(totalW/goal*100));
+ const published=arr.filter(x=>x.status==="已发布").length;
+ const drafting=arr.filter(x=>x.status==="写作中").length;
+ const idea=arr.filter(x=>x.status==="灵感").length;
+ const heat=heatmapHtml(S.writingLog||[],12);
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>✍️ 写作追踪</h2>
+  <div style="font-size:13px;color:#6a5a55;margin:2px 0 6px">年度字数目标 <b>${goal.toLocaleString()}</b> · 已写 <b style="color:#3c6b4a">${totalW.toLocaleString()}</b> 字（${fp}%）</div>
+  <div class="goalbar"><i style="width:${fp}%"></i></div>
+  <div class="stat-strip" style="margin-top:12px">
+   <div class="stat"><b>${totalW.toLocaleString()}</b><span>总字数</span></div>
+   <div class="stat"><b>${published}</b><span>已发布</span></div>
+   <div class="stat"><b>${drafting}</b><span>写作中</span></div>
+   <div class="stat"><b>${idea}</b><span>灵感</span></div>
+  </div>
+  <div style="margin-top:12px;font-size:13px;color:#6a5a55;font-weight:bold">写作打卡热力图</div>
+  <div style="margin-top:6px">${heat}</div>`;
+ main.appendChild(c);
+ // 灵感织机
+ CURRENT_WRITE_PROMPT=WRITING_PROMPTS[Math.floor(Math.random()*WRITING_PROMPTS.length)];
+ const loom=document.createElement("div");loom.className="card";
+ loom.innerHTML=`<h3>🧵 灵感织机</h3>
+  <div class="review-q">${esc(CURRENT_WRITE_PROMPT)}</div>
+  <div style="display:flex;gap:8px;margin-top:6px">
+   <button class="btn sm" onclick="render()">🎲 换一条</button>
+   <button class="btn sm green" onclick="writingPromptAdd()">➕ 存为灵感</button>
+  </div>`;
+ main.appendChild(loom);
+ // 标准写作视图（搜索 + 看板 + 添加）
+ renderSimple(main);
+}
+function writingPromptAdd(){if(!CURRENT_WRITE_PROMPT)return;S.writing.push({title:CURRENT_WRITE_PROMPT,type:"灵感",status:"灵感",words:0,note:""});save();render();toast("已存为灵感 ✍️");}
+
+// 知识库（独立重做：SM-2 间隔复习队列 + 可编辑条目）
+function renderKnowledge(main){
+ const arr=S.knowledge||[];
+ const cats=new Set(arr.map(x=>x.cat).filter(Boolean)).size;
+ const due=reviewDue();
+ const mature=arr.filter(x=>(x.interval||0)>=21).length;
+ const qc=document.createElement("div");qc.className="card";
+ let qh=`<h2>🧠 知识库 · 间隔复习</h2>
+  <div class="stat-strip" style="margin-top:6px">
+   <div class="stat"><b>${arr.length}</b><span>主题</span></div>
+   <div class="stat"><b>${cats}</b><span>分类</span></div>
+   <div class="stat"><b>${due.length}</b><span>今日待复习</span></div>
+   <div class="stat"><b>${mature}</b><span>已掌握</span></div>
+  </div>`;
+ if(due.length){
+  qh+=`<div style="margin-top:12px;font-size:13px;color:#6a5a55;font-weight:bold">🔔 今日复习队列（${due.length}）</div><div style="margin-top:6px">`+
+   due.map(k=>{const i=arr.indexOf(k);const iv=Math.max(1,k.interval||0);
+    return `<div class="kcard" onclick="openReview(${i})">
+     <div style="font-weight:bold;color:#7a4a44">${esc(k.topic||"")}</div>
+     <div style="font-size:11px;color:#888">${esc(k.cat||"")} · 间隔 ${iv} 天${k.due&&k.due<todayStr()?" · <span style='color:#c0392b'>逾期</span>":""}</div>
+    </div>`;}).join("")+`</div>`;
+ }else{
+  qh+=`<div style="margin-top:12px;color:#3c6b4a;font-size:13px">🎉 今天没有待复习的，去下方「新增知识」补充或复习已掌握项吧。</div>`;
+ }
+ qc.innerHTML=qh;main.appendChild(qc);
+ renderSimple(main);
+}
+function reviewDue(){const t=todayStr();return (S.knowledge||[]).filter(k=>!k.due||k.due<=t);}
+function openReview(i){const k=S.knowledge[i];if(!k)return;
+ const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:6px"><b>${esc(k.topic||"")}</b> · ${esc(k.cat||"")}</div>
+  <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:10px;padding:10px;font-size:14px;color:#7a4a44;margin-bottom:10px">${esc(k.q||k.note||"（无问题，凭记忆回顾这条笔记）")}</div>
+  <div style="font-size:12px;color:#888;margin-bottom:6px">凭记忆回想后，选择掌握程度：</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+   <button class="btn sm" style="background:#fde2e0;color:#c0392b" onclick="gradeKnowledge(${i},'again')">😵 忘了</button>
+   <button class="btn sm" style="background:#fcebc2" onclick="gradeKnowledge(${i},'hard')">😅 吃力</button>
+   <button class="btn sm green" onclick="gradeKnowledge(${i},'good')">🙂 不错</button>
+   <button class="btn sm" style="background:#cde8d2" onclick="gradeKnowledge(${i},'easy')">😎 轻松</button>
+  </div>`;
+ openDModal("🧠 复习："+esc(k.topic||""),html);}
+function gradeKnowledge(i,g){const k=S.knowledge[i];if(!k)return;
+ const today=todayStr();let iv=k.interval||0,reps=k.reps||0,ease=k.ease||2.5;
+ if(g==="again"){iv=1;reps=0;ease=Math.max(1.3,ease-0.2);}
+ else if(g==="hard"){iv=reps===0?1:Math.max(1,Math.round(iv*1.2));reps=Math.max(1,reps);ease=Math.max(1.3,ease-0.15);}
+ else if(g==="good"){iv=reps===0?1:Math.round(iv*2.5);reps+=1;ease=Math.min(3.0,ease+0.05);}
+ else if(g==="easy"){iv=reps===0?4:Math.round(iv*3.5);reps+=1;ease=Math.min(3.2,ease+0.15);}
+ k.interval=iv;k.reps=reps;k.ease=Math.round(ease*100)/100;k.last=today;k.due=addDaysStr(today,iv);
+ save();closeDModal();render();toast("已记录 · 下次复习 "+k.due);}
+function addDaysStr(dateStr,n){const d=new Date(dateStr);d.setDate(d.getDate()+n);return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function openKnowledgeEdit(i){const k=S.knowledge[i];if(!k)return;
+ const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:6px">编辑知识条目</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+   <div>主题<input id="keTopic" class="note-inline" value="${esc(k.topic||"")}"></div>
+   <div>分类<input id="keCat" class="note-inline" value="${esc(k.cat||"")}"></div>
+   <div>来源<input id="keSrc" class="note-inline" value="${esc(k.src||"")}"></div>
+   <div>间隔(天)<input id="keIv" class="note-inline" value="${k.interval||0}"></div>
+  </div>
+  <div style="margin-top:6px">问题/自测<input id="keQ" class="note-inline" value="${esc(k.q||"")}"></div>
+  <div style="margin-top:6px">笔记<textarea id="keNote" class="note-inline">${esc(k.note||"")}</textarea></div>
+  <div style="display:flex;gap:8px;margin-top:10px"><button class="btn green" onclick="saveKnowledge(${i})">💾 保存</button><button class="btn ghost" onclick="delKnowledge(${i})">🗑 删除</button></div>`;
+ openDModal("🧠 编辑知识",html);}
+function saveKnowledge(i){const k=S.knowledge[i];if(!k)return;
+ k.topic=val("keTopic");k.cat=val("keCat");k.src=val("keSrc");k.q=val("keQ");k.note=val("keNote");
+ const iv=parseInt(val("keIv"));if(!isNaN(iv))k.interval=iv;save();render();closeDModal();toast("已保存");}
+function delKnowledge(i){if(S.knowledge[i]){S.knowledge.splice(i,1);save();render();closeDModal();}}
+
+// 简单模块（自媒体 / 写作 / 知识库）—— 卡片 + 看板 + 搜索筛选
+let SW_FILTER={},SW_TAG={};
+function renderSimple(main){
+ const map={
+  social:{t:"📱 自媒体矩阵",searchLabel:"账号/平台",tagKey:"platform",tagLabel:"平台",searchKeys:["platform","name","freq","fans","note"],
+   stat:arr=>`<div class="stat"><b>${arr.length}</b><span>账号数</span></div><div class="stat"><b>${arr.reduce((a,x)=>a+(parseInt(x.fans)||0),0).toLocaleString()}</b><span>总粉丝</span></div><div class="stat"><b>${arr.filter(x=>x.freq&&x.freq.includes("日")).length}</b><span>日更</span></div>`},
+  writing:{t:"✍️ 写作追踪",searchLabel:"作品",tagKey:null,searchKeys:["title","type","note"],
+   stat:arr=>`<div class="stat"><b>${arr.reduce((a,x)=>a+(parseInt(x.words)||0),0).toLocaleString()}</b><span>总字数</span></div><div class="stat"><b>${arr.filter(x=>x.status==="已发布").length}</b><span>已发布</span></div><div class="stat"><b>${arr.filter(x=>x.status==="写作中").length}</b><span>写作中</span></div>`},
+  knowledge:{t:"🧠 知识库索引",searchLabel:"主题",tagKey:"cat",tagLabel:"分类",searchKeys:["topic","cat","src","note"],
+   stat:arr=>`<div class="stat"><b>${arr.length}</b><span>主题数</span></div><div class="stat"><b>${new Set(arr.map(x=>x.cat).filter(Boolean)).size}</b><span>分类数</span></div>`}
+ };
+ const m=map[view];if(!S[view])S[view]=[];
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>${m.t}</h2><div class="stat-strip">${m.stat(S[view])}</div>`;main.appendChild(c);
+ const f=document.createElement("div");f.className="card";
+ let html=`<input class="search" id="swSearch" placeholder="🔍 搜索${m.searchLabel}…" value="${esc(SW_FILTER[view]||"")}">`;
+ if(m.tagKey){
+  const tags=[...new Set(S[view].map(x=>x[m.tagKey]).filter(Boolean))];
+  html+=`<div class="chips" id="swTags">${tags.map(t=>`<span class="tagchip${SW_TAG[view]===t?' active':''}" data-t="${esc(t)}">${esc(t)}</span>`).join("")||'<span style="font-size:12px;color:#aaa">暂无标签可筛选</span>'}</div>`;
+ }
+ f.innerHTML=html;main.appendChild(f);
+ const list=document.createElement("div");list.id="swList";main.appendChild(list);
+ renderSimpleList(view,m);
+ const sb=document.getElementById("swSearch");if(sb)sb.oninput=e=>{SW_FILTER[view]=e.target.value;renderSimpleList(view,m);};
+ document.querySelectorAll("#swTags .tagchip").forEach(ch=>ch.onclick=()=>{const t=ch.dataset.t;SW_TAG[view]=SW_TAG[view]===t?"":t;
+  document.querySelectorAll("#swTags .tagchip").forEach(x=>x.classList.toggle("active",x.dataset.t===SW_TAG[view]));renderSimpleList(view,m);});
+ const add=document.createElement("div");add.className="card";add.innerHTML=swAddForm(view);main.appendChild(add);
+}
+function renderSimpleList(view,m){
+ const list=document.getElementById("swList");if(!list)return;
+ const arr=S[view]||[];const q=(SW_FILTER[view]||"").trim().toLowerCase();const tag=SW_TAG[view]||"";
+ const filtered=arr.filter(it=>{const hay=(m.searchKeys||[]).map(k=>it[k]||"").join(" ").toLowerCase();const okQ=!q||hay.includes(q);const okT=!tag||(it[m.tagKey]===tag);return okQ&&okT;});
+ if(view==="writing"){
+  const cols=["灵感","写作中","已发布"];const maxW=Math.max(1,...filtered.map(it=>+(it.words||0)));
+  if(!filtered.length){list.innerHTML=`<div style="color:#aaa;font-size:13px;padding:8px">暂无匹配作品，下面添加一条吧。</div>`;return;}
+  list.innerHTML=`<div class="kanban">`+cols.map(col=>{
+   const cards=filtered.filter(it=>it.status===col);
+   return `<div class="kanban-col"><h4>${col} · ${cards.length}</h4>`+cards.map(it=>{const gi=arr.indexOf(it);const w=Math.min(100,(+(it.words||0))/maxW*100);
+    return `<div class="kanban-card" onclick="cycleWritingStatus(${gi})" title="点击切换状态">
+     <div style="font-weight:bold;color:#7a4a44">${esc(it.title||"无标题")}</div>
+     <div style="font-size:11px;color:#888;margin:3px 0">${esc(it.type||"")} · ${esc(it.words||0)} 字</div>
+     ${it.note?`<div style="font-size:11px;color:#aaa">${esc(it.note)}</div>`:""}
+     ${w>0?`<div class="w"><i style="width:${w}%"></i></div>`:""}
+    </div>`;}).join("")+`</div>`;}).join("")+`</div>`;
+  return;
+ }
+ if(!filtered.length){list.innerHTML=`<div style="color:#aaa;font-size:13px;padding:8px">没有匹配项，调整搜索或标签。</div>`;return;}
+ const cards=filtered.map(it=>{const gi=arr.indexOf(it);
+  if(view==="social")return `<div class="social-card">
+    <div class="pf">${esc(it.platform||"")} <span style="font-size:12px;color:#888">· ${esc(it.name||"")}</span></div>
+    <div class="row"><span>频率</span><span>${esc(it.freq||"—")}</span></div>
+    <div class="row"><span>粉丝</span><span>${esc(it.fans||"—")}</span></div>
+    ${it.note?`<div style="font-size:12px;color:#7a4a44;margin:4px 0">${esc(it.note)}</div>`:""}
+    <div class="row-actions"><button onclick="delSw(${gi})">✕ 删除</button></div>
+   </div>`;
+  return `<div class="social-card" onclick="openKnowledgeEdit(${gi})">
+    <div class="pf">${esc(it.topic||"")}</div>
+    ${(it.cat||it.src)?`<div class="row"><span>${esc(it.cat||"")}</span><span style="color:#5a3a6a">${esc(it.src||"")}</span></div>`:""}
+    ${it.note?`<div style="font-size:12px;color:#7a4a44;margin:4px 0;line-height:1.5">${esc(it.note)}</div>`:""}
+    <div class="row-actions"><button onclick="event.stopPropagation();delSw(${gi})">✕ 删除</button></div>
+    <div style="font-size:11px;color:#aa9;margin-top:2px">点击编辑 ✎</div>
+   </div>`;
+ }).join("");
+ list.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">${cards}</div>`;
+}
+function swAddForm(view){
+ if(view==="social")return `<h3>➕ 新增账号</h3><div class="addrow"><input id="saPlatform" placeholder="平台"><input id="saName" placeholder="账号"><input id="saFreq" placeholder="频率"><input id="saFans" placeholder="粉丝数"><input id="saNote" placeholder="备注"><button class="btn sm" onclick="addSocial()">添加</button></div>`;
+ if(view==="writing")return `<h3>➕ 新增作品</h3><div class="addrow"><input id="saTitle" placeholder="作品名"><input id="saType" placeholder="类型"><input id="saWords" placeholder="字数" type="number"><input id="saNote" placeholder="备注"><select id="saStatus"><option>灵感</option><option>写作中</option><option>已发布</option></select><button class="btn sm" onclick="addWriting()">添加</button></div>`;
+ return `<h3>➕ 新增知识</h3><div class="addrow"><input id="saTopic" placeholder="主题"><input id="saCat" placeholder="分类"><input id="saSrc" placeholder="来源"><input id="saNote" placeholder="备注"><button class="btn sm" onclick="addKnowledge()">添加</button></div>`;
+}
+function delSw(gi){if(S[view]&&S[view][gi]){S[view].splice(gi,1);save();render();}}
+function cycleWritingStatus(gi){const s=["灵感","写作中","已发布"];const cur=S.writing[gi].status;S.writing[gi].status=s[(s.indexOf(cur)+1)%s.length];save();render();}
+function addSocial(){const o={platform:val("saPlatform"),name:val("saName"),freq:val("saFreq"),fans:val("saFans"),note:val("saNote")};if(!o.platform&&!o.name)return;S.social.push(o);save();render();toast("已添加账号");}
+function addWriting(){const w=parseInt(val("saWords"))||0;const o={title:val("saTitle"),type:val("saType"),status:(document.getElementById("saStatus")||{}).value||"灵感",words:w,note:val("saNote")};if(!o.title)return;S.writing.push(o);save();render();toast("已添加作品");}
+function addKnowledge(){const o={topic:val("saTopic"),cat:val("saCat"),src:val("saSrc"),note:val("saNote")};if(!o.topic)return;S.knowledge.push(o);save();render();toast("已添加知识");}
+function val(id){const e=document.getElementById(id);return e?e.value.trim():"";}
+// 补充默认值（首次进入简单模块）
+S.social=S.social||[];S.writing=S.writing||[];S.reading=S.reading||[];S.film=S.film||[];S.knowledge=S.knowledge||[];
+if(!S.reading.length)S.reading=DEFAULT_BOOKS.slice();
+if(!S.film.length)S.film=DEFAULT_FILMS.slice();
+S.readingGoal=S.readingGoal||12;S.filmGoal=S.filmGoal||24;S.writingGoal=S.writingGoal||100000;S.writingLog=S.writingLog||[];S.socialGoal=S.socialGoal||50000;
+S.reading.forEach(b=>{if(b.rating===undefined)b.rating=0;if(b.progress===undefined)b.progress=0;});
+S.film.forEach(f=>{if(f.rating===undefined)f.rating=0;if(f.date===undefined)f.date="";if(f.review===undefined)f.review="";});
+S.knowledge.forEach(k=>{if(k.q===undefined)k.q="";if(k.due===undefined)k.due="";if(k.last===undefined)k.last="";if(k.ease===undefined)k.ease=2.5;if(k.interval===undefined)k.interval=0;if(k.reps===undefined)k.reps=0;});
+S.renovation=S.renovation||{};
+S.renovation.photos=S.renovation.photos||[];
+S.renovation.defectLog=S.renovation.defectLog||[];
+S.renovation.startDate=S.renovation.startDate||"2026-07-20";
+S.renovation.logs=S.renovation.logs||[];
+const RENO_PLAN={打拆:3,水电:10,泥瓦:15,木工:8,油漆:12,安装:7,软装:5,竣工验收:3};
+const RENO_METRICS={
+ 打拆:[{k:"承重墙",v:"零开凿，轻体墙拆后基层平整度≤3mm/2m"},{k:"线槽",v:"深度≥35mm 且横平竖直"}],
+ 水电:[{k:"打压",v:"冷热水管≥0.8MPa 稳压30min 压降≤0.05MPa"},{k:"强弱电间距",v:"≥300mm，交叉处金属屏蔽"},{k:"绝缘电阻",v:"≥0.5MΩ"},{k:"接地电阻",v:"≤4Ω"},{k:"闭水",v:"防水闭水≥48h 楼下无渗漏"}],
+ 泥瓦:[{k:"墙砖空鼓率",v:"≤5%（单片≤15%）"},{k:"地砖空鼓率",v:"≤3%"},{k:"墙面平整度",v:"≤3mm/2m"},{k:"地漏坡度",v:"≥1%（乒乓球可滚向地漏）"},{k:"防水涂膜",v:"厚度≥1.5mm"}],
+ 木工:[{k:"吊顶主龙骨",v:"间距≤800mm"},{k:"副龙骨",v:"间距≤300mm"},{k:"柜体背板",v:"厚度≥9mm"},{k:"石膏板缝",v:"留3–5mm 倒V槽+抗裂绷带"}],
+ 油漆:[{k:"墙面平整度",v:"≤2mm/2m"},{k:"乳胶漆",v:"≥2遍，无砂眼≤0.5mm/流坠/色差"},{k:"阴阳角",v:"顺直误差≤2mm"}],
+ 安装:[{k:"铰链/滑轨",v:"开合无异响，滑轨承重≥45kg顺畅"},{k:"相位",v:"零火不反，卫生间插座装防水盒"},{k:"洁具",v:"无渗漏，打胶饱满"}],
+ 软装:[{k:"窗帘",v:"离地2–3cm"},{k:"家具",v:"尺寸与预留空间匹配，无磕碰"}],
+ 竣工验收:[{k:"环保",v:"甲醛≤0.08mg/m³"},{k:"尾项",v:"全屋问题清零，尾款前验收签字"}]
+};
+(S.renovation.stages||[]).forEach(s=>{if(!s.plan)s.plan=RENO_PLAN[s.name]||7;if(!s.metrics)s.metrics=RENO_METRICS[s.name]||[];});
+S.stocks=S.stocks||{mode:"tonghuashun",holdings:[],targetRecovery:67000,dailyNews:[],knowledgeCards:[],knowledgeIdx:0,trades:[]};
+S.stocks.trades=S.stocks.trades||[];
+S.stocks.holdings.forEach(h=>{if(h.stop===undefined)h.stop=null;if(h.target===undefined)h.target=null;if(!h.sector)h.sector="";});
+// 若 stockSeed 已注入 holdings.json 的持仓，则自动同步到本地
+if(STOCK_DATA.holdings && STOCK_DATA.holdings.length){S.stocks.holdings=STOCK_DATA.holdings;}
+if(STOCK_DATA.targetRecovery){S.stocks.targetRecovery=STOCK_DATA.targetRecovery;}
+if(!S.stocks.knowledgeCards||!S.stocks.knowledgeCards.length)S.stocks.knowledgeCards=[
+"仓位管理：永远不满仓，留 30% 现金应对回撤。",
+"止损纪律：单只股票亏损超 8% 强制止损。",
+"情绪周期：别人恐惧我贪婪，别人贪婪我恐惧——但前提是现金流。",
+"ETF vs 个股：拿不准行业就买 ETF，分散风险。",
+"回本心态：越想回本越容易追高，先止住亏损再谈回本。",
+"定投解套：对基本面没变的持仓，用定投摊低成本。",
+"止盈：浮盈 20% 考虑分批卖出。",
+"复盘：每天收盘写一条「今日做错什么」。"
+];
+S.fitness=S.fitness||{issues:["肋骨外翻","驼背","脖子前倾","小腹突出"],today:{name:"",sets:"",tip:"",while:""},streak:0,lastDone:"",history:[],videoOverride:{}};
+S.schedule=S.schedule||{wednesday:{afternoon:"覔书店",evening:"电影/纪录片"},daily:{evening:"电影/纪录片"}};
+S.focus=S.focus||[];S.checkinDays=S.checkinDays||[];
+
+// 特效
+function floatXp(t,e){const f=document.createElement("div");f.className="float";f.textContent=t;
+ const r=(e&&e.currentTarget?e.currentTarget:document.body).getBoundingClientRect();f.style.left=(r.left||100)+"px";f.style.top=(r.top||100)+"px";document.body.appendChild(f);setTimeout(()=>f.remove(),1000);}
+function confetti(){const cols=["#f4c7c3","#cde8d2","#cfe3f2","#fcebc2","#f8d2a8","#e3d4f0"];
+ for(let i=0;i<36;i++){const c=document.createElement("div");c.className="confetti";c.style.left=Math.random()*100+"vw";c.style.background=cols[i%cols.length];
+  c.style.animationDuration=(1.4+Math.random()*1.5)+"s";c.style.transform="rotate("+Math.random()*360+"deg)";document.body.appendChild(c);setTimeout(()=>c.remove(),3000);}}
+function openChest(mk){document.getElementById("mTitle").textContent="🎉 本月主线达标！";document.getElementById("mBody").innerHTML="盖下 <b>"+mk.stampName+"</b>！<br>"+esc(mk.reward);document.getElementById("modal").classList.add("show");render();}
+function openStage(n){document.getElementById("mTitle").textContent="🏅 "+n+" 阶段验收通过！";document.getElementById("mBody").innerHTML="本阶段盖下一枚章，装修进度+1！";document.getElementById("modal").classList.add("show");}
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800);}
+function openDModal(title,html){document.getElementById("dmTitle").textContent=title;document.getElementById("dmBody").innerHTML=html;document.getElementById("dmodal").classList.add("show");}
+function closeDModal(){document.getElementById("dmodal").classList.remove("show");}
+
+// ---------- 专注番茄钟 ----------
+let focusState={total:25*60,remaining:25*60,running:false,iv:null};
+function todayFocus(){return (S.focus||[]).filter(d=>d===todayStr()).length;}
+function focusToggle(){
+ if(focusState.running){focusState.running=false;clearInterval(focusState.iv);paintFocus();return;}
+ focusState.running=true;
+ if(focusState.remaining<=0)focusState.remaining=focusState.total;
+ paintFocus();
+ focusState.iv=setInterval(()=>{
+  focusState.remaining--;
+  if(focusState.remaining<=0){
+   clearInterval(focusState.iv);focusState.running=false;focusState.remaining=focusState.total;
+   S.focus.push(todayStr());S.checkinXp+=5;save();
+   toast("🍅 专注完成 +5 XP");confetti();paintFocus();
+   const cnt=document.getElementById("fCount");if(cnt)cnt.textContent=todayFocus();
+  }else paintFocus();
+ },1000);
+}
+function focusReset(){focusState.running=false;clearInterval(focusState.iv);focusState.remaining=focusState.total;paintFocus();}
+function paintFocus(){
+ const total=focusState.total,rem=focusState.remaining,r=60,circ=2*Math.PI*r;
+ const arc=document.getElementById("fArc");
+ if(arc){arc.style.strokeDasharray=circ+" "+circ;arc.style.strokeDashoffset=circ*(1-Math.max(0,rem)/total);}
+ const t=document.getElementById("fTime");
+ if(t){const m=Math.floor(rem/60),s=rem%60;t.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+ const btn=document.getElementById("fToggle");
+ if(btn)btn.textContent=focusState.running?"⏸ 暂停":"▶ 开始";
+}
+// ---------- 能量语 ----------
+const QUOTES=[
+ "你不是在过日子，你是在一砖一瓦地建设自己。",
+ "建设新中国靠的是一代人的笨功夫，建设自己也是。",
+ "今天多流的汗，是明天少流的泪。",
+ "慢就是快，久就是力。坚持本身，就是复利。",
+ "把大目标拆成每天能做的一件小事，就赢了一半。",
+ "身体是革命的本钱，体态是自律的招牌。",
+ "账面浮亏只是暂时的，认知到账才是真的赚到。",
+ "家是最小的国，把自己这间屋子装修好，也是一种建国。",
+ "别等灵感，先动手；行动会喂养热爱。",
+ "回本靠的不是运气，是纪律和耐心。",
+ "读书是给大脑装修，看不见但最保值。",
+ "每天看一部好片子，是把别人的人生装进自己的眼睛。"
+];
+function dailyQuote(){return QUOTES[(new Date().getDate()+new Date().getMonth())%QUOTES.length];}
+// ---------- 打卡连续天数 ----------
+function checkinStreak(){
+ const set=new Set(S.checkinDays||[]);
+ if(!set.has(todayStr()))return 0;
+ let n=0,d=new Date();
+ while(set.has(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate())){n++;d.setDate(d.getDate()-1);}
+ return n;
+}
+// ---------- 习惯热力图 ----------
+function heatmapHtml(datesArr,weeks){
+ const set=new Set(datesArr||[]);
+ const today=new Date();const days=weeks*7;
+ const start=new Date(today);start.setDate(today.getDate()-(days-1));
+ let cells="";
+ for(let i=0;i<days;i++){
+  const d=new Date(start);d.setDate(start.getDate()+i);
+  const key=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+  const on=set.has(key);
+  const future=d>today;
+  cells+=`<div class="heat-cell${on?' on':''}" style="${future?'opacity:.35':''}" title="${key}${on?' ✅':''}"></div>`;
+ }
+ return `<div class="heat">${cells}</div>`;
+}
+function renderFocusCard(main){
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h2>⏳ 专注番茄钟</h2>
+  <div class="focus">
+   <div class="focus-circle">
+    <svg width="140" height="140" viewBox="0 0 140 140">
+     <circle cx="70" cy="70" r="60" fill="none" stroke="#f0e9dd" stroke-width="10"/>
+     <circle id="fArc" cx="70" cy="70" r="60" fill="none" stroke="#8fd0a0" stroke-width="10" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+     <text id="fTime" x="70" y="78" text-anchor="middle" font-size="26" fill="#7a4a44" font-weight="bold">25:00</text>
+    </svg>
+   </div>
+   <div class="focus-btns">
+    <button class="btn" id="fToggle" onclick="focusToggle()">▶ 开始</button>
+    <button class="btn ghost" onclick="focusReset()">↺ 重置</button>
+   </div>
+  </div>
+  <div class="xptxt" style="text-align:center">今日已完成 <b id="fCount">${todayFocus()}</b> 个专注番茄 · 累计 ${S.focus.length} 次（每完成 +5 XP）</div>`;
+ main.appendChild(c);
+ paintFocus();
+}
+
+
+// 工具栏
+document.getElementById("checkin").onclick=()=>{if(S.lastCheckin===todayStr())return;S.checkinXp+=20;S.lastCheckin=todayStr();if(!S.checkinDays.includes(todayStr()))S.checkinDays.push(todayStr());save();confetti();toast("今日打卡 +20 XP 🌱");render();};
+document.getElementById("newmonth").onclick=()=>{const mm=prompt("新月份主线条（例：2026-09 金秋收官）","2026-09 新主线");if(!mm)return;const a=mm.split(/\s+/);const k=a[0];const t=a.slice(1).join(" ")||"新主线";
+ if(!/^\d{4}-\d{2}$/.test(k)){toast("月份格式应为 2026-09");return;}if(S.months[k]){toast("该月份已存在");return;}
+ S.months[k]={main:t,reward:"自定义犒劳",stampName:"✨ 新印记",tasks:[]};S.currentMonth=k;save();render();toast("已开启 "+k);};
+document.getElementById("export").onclick=()=>{const b=JSON.stringify(S);const u=URL.createObjectURL(new Blob([b],{type:"application/json"}));const a=document.createElement("a");a.href=u;a.download="闯关进度.json";a.click();toast("已导出");};
+document.getElementById("import").onclick=()=>document.getElementById("file").click();
+document.getElementById("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{S=JSON.parse(r.result);save();render();toast("已导入");}catch(_){toast("格式错误");}};r.readAsText(f);};
+
+// ---- 云同步 UI 事件 ----
+document.getElementById("cloudBtn").onclick=openCloudModal;
+function openCloudModal(){
+ const c=cloudCfg();
+ document.getElementById("ckKey").value=c.k;
+ document.getElementById("ckBin").value=c.b;
+ document.getElementById("ckStatus").textContent=c.on?("✅ 已连接 · 当前 Bin："+c.b):"尚未连接（填好 Key 后点保存）";
+ document.getElementById("cloudModal").classList.add("show");
+}
+document.getElementById("ckSave").onclick=async()=>{
+ const k=document.getElementById("ckKey").value.trim();
+ let bin=document.getElementById("ckBin").value.trim();
+ if(!k){document.getElementById("ckStatus").textContent="❌ 请填写 API Key";return;}
+ if(!bin){
+  try{
+   const r=await fetch(API_ROOT,{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":k},body:JSON.stringify(S)});
+   if(!r.ok)throw new Error("新建失败 "+r.status);
+   const j=await r.json();bin=j.metadata.id;
+   document.getElementById("ckStatus").textContent="✅ 已自动新建 Bin："+bin;
+  }catch(e){document.getElementById("ckStatus").textContent="❌ 建 Bin 失败："+e.message;return;}
+ }
+ localStorage.setItem(CLOUD_KEY,k);localStorage.setItem(CLOUD_BIN,bin);
+ document.getElementById("ckBin").value=bin;
+ setCloudStatus("已连接 ☁","ok");
+ await cloudPull(true);
+ toast("云同步已开启");
+};
+document.getElementById("ckPull").onclick=()=>cloudPull(false);
+document.getElementById("ckPush").onclick=()=>{S.__updatedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(S));cloudSave();toast("已上传到云端");};
+document.getElementById("ckClear").onclick=()=>{localStorage.removeItem(CLOUD_KEY);localStorage.removeItem(CLOUD_BIN);setCloudStatus("云端未配置","off");document.getElementById("ckStatus").textContent="已断开（本机数据保留）";toast("已断开云同步");};
+
+document.getElementById("d").textContent="今天 "+todayStr();
+render();
+initCloudSync();
+</script>
+</body>
+</html>

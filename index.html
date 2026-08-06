@@ -15,74 +15,96 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#fffdf7;--ink:#4a4a4a;--pink:#f4c7c3;--green:#cde8d2;--blue:#cfe3f2;--yellow:#fcebc2;--orange:#f8d2a8;--lilac:#e3d4f0;--line:#d8cfc4}
+:root{
+ --bg:#F3EFE6;--paper:#F3EFE6;--card:#FFFFFF;--card2:#FAF7F0;
+ --ink:#3A3D3A;--ink2:#5A5D5A;--muted:#8A8D88;
+ --accent:#6E94A6;--accent-weak:#E3ECF0;--accent-ink:#3F6E80;
+ --red:#C58A8A;--red2:#B03021;--purple:#9A8FB0;--warm:#B5651D;
+ --line:#E2DDD2;--line-dash:#D8CFC4;--track:#EDE9E0;--ok:#3c6b4a;--bad:#b03021;
+ --yellow:#F4ECD8;--pink:#F0E2DF;--green:#DCEBE0;--blue:#E2ECF2;--lilac:#ECE6F0;--orange:#F4E6D6;
+ --radius:16px;--shadow:0 2px 10px rgba(60,50,40,.07)
+}
+[data-theme="dark"]{
+ --bg:#26282A;--paper:#26282A;--card:#323436;--card2:#2E3032;
+ --ink:#E8E6E0;--ink2:#C7C9C5;--muted:#9A9C98;
+ --accent:#8FB6C6;--accent-weak:#33424A;--accent-ink:#BFE0EC;
+ --red:#C99A9A;--red2:#D98B8B;--purple:#A99FBE;--warm:#D6A86A;
+ --line:#3A3D3A;--line-dash:#4A4D4A;--track:#2E3032;--ok:#8FC7A0;--bad:#E08A8A;
+ --yellow:#3A3526;--pink:#3A2A2A;--green:#2A3A30;--blue:#26323A;--lilac:#332F3A;--orange:#3A3226;
+ --shadow:0 2px 12px rgba(0,0,0,.35)
+}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at 18% 12%,#fff7ef 0,transparent 42%),radial-gradient(circle at 85% 0%,#fdeef3 0,transparent 38%),var(--paper);
- font-family:"ZCOOL KuaiLe","楷体",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);font-size:14px}
-.wrap{max-width:1080px;margin:0 auto;padding:10px 10px 70px}
+body{margin:0;background:var(--bg);
+ font-family:"ZCOOL KuaiLe","楷体",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);font-size:16px;line-height:1.6}
+.wrap{max-width:420px;margin:0 auto;padding:12px 12px 80px}
 header{position:relative;text-align:center;margin-bottom:8px}
-header h1{font-family:"Ma Shan Zheng","ZCOOL KuaiLe",cursive;font-size:26px;margin:2px 0;color:#9c5b52}
+header h1{font-family:"Ma Shan Zheng","ZCOOL KuaiLe",cursive;font-size:24px;margin:2px 0;color:var(--accent)}
 .tape{position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(-2deg);width:120px;height:20px;background:repeating-linear-gradient(45deg,#f4c7c3,#f4c7c3 8px,#f8d2a8 8px,#f8d2a8 16px);opacity:.85;border-radius:3px}
 .date{display:inline-block;background:var(--yellow);padding:2px 12px;border-radius:18px;font-size:12px}
-.banner{position:sticky;top:0;z-index:30;background:#fff4f1;border:2px dashed #c98b83;border-radius:12px;padding:6px 12px;margin:6px 0;font-size:13px;color:#9c5b52;box-shadow:2px 3px 0 rgba(0,0,0,.06)}
+.banner{position:sticky;top:0;z-index:30;background:var(--card2);border:2px dashed var(--accent);border-radius:12px;padding:8px 12px;margin:6px 0;font-size:15px;color:var(--accent-ink);box-shadow:var(--shadow)}
 .app{display:flex;gap:10px;align-items:flex-start}
-.nav{width:128px;flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
-.nav button{text-align:left;padding:9px 10px;border:2px dashed var(--line);border-radius:12px;background:#fffdfa;color:#6a5a55;font-family:inherit;font-size:13px;cursor:pointer;transition:.15s}
-.nav button.active{background:#9c5b52;color:#fff;border-color:#9c5b52;transform:translateX(3px)}
-.nav .dot{font-size:15px;margin-right:5px}
+.nav{width:132px;flex:0 0 auto;display:flex;flex-direction:column;gap:6px;transition:width .2s}
+.nav.collapsed{width:58px}
+.nav button{display:flex;align-items:center;gap:10px;text-align:left;padding:11px 12px;min-height:46px;border:2px dashed var(--line);border-radius:12px;background:var(--card);color:var(--ink2);font-family:inherit;font-size:14px;cursor:pointer;transition:.15s}
+.nav button .ico{width:20px;height:20px;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.nav button .ico svg{width:20px;height:20px}
+.nav button .lbl{flex:1;white-space:nowrap;overflow:hidden}
+.nav button.active{background:var(--accent-weak);color:var(--accent-ink);border-color:var(--accent);border-left:3px solid var(--accent)}
+.nav.collapsed button .lbl{display:none}
+.nav button:hover{border-color:var(--accent)}
 .main{flex:1;min-width:0}
-.card{background:#fffdfa;border:2px dashed var(--line);border-radius:14px;padding:12px;margin-bottom:12px;box-shadow:3px 4px 0 rgba(0,0,0,.05)}
-.card h2{font-family:"Ma Shan Zheng",cursive;font-size:19px;margin:0 0 8px;color:#9c5b52}
-.card h3{font-size:15px;color:#7a4a44;margin:10px 0 4px}
+.card{background:var(--card);border:2px dashed var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card h2{font-family:"Ma Shan Zheng",cursive;font-size:20px;margin:0 0 8px;color:var(--accent)}
+.card h3{font-size:16px;color:var(--ink2);margin:10px 0 4px}
 .sub{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.sub button{padding:5px 10px;border:2px dashed var(--line);border-radius:10px;background:#fffdfa;font-family:inherit;font-size:12px;cursor:pointer;color:#6a5a55}
+.sub button{padding:5px 10px;border:2px dashed var(--line);border-radius:10px;background:#fffdfa;font-family:inherit;font-size:12px;cursor:pointer;color:var(--muted)}
 .sub button.active{background:var(--lilac);color:#5a3a6a;border-color:#c9a9d8}
 /* status */
 .hero{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .plant{width:96px;height:112px;flex:0 0 auto}
 .lvbox{flex:1;min-width:180px}
-.lv b{font-family:"Ma Shan Zheng",cursive;font-size:20px;color:#c0392b}
+.lv b{font-family:"Ma Shan Zheng",cursive;font-size:20px;color:var(--bad)}
 .xpbar{height:14px;background:#f0e9dd;border-radius:9px;overflow:hidden;margin:4px 0}
 .xpbar>i{display:block;height:100%;background:linear-gradient(90deg,#8fd0a0,#5fae74);transition:width .5s}
-.xptxt{font-size:11px;color:#888}
+.xptxt{font-size:11px;color:var(--muted)}
 /* quest */
-.qtitle{font-weight:bold;color:#7a4a44}
-.reward{font-size:12px;color:#b5651d;background:var(--yellow);border-radius:8px;padding:5px 9px;margin:6px 0;transform:rotate(-.3deg)}
+.qtitle{font-weight:bold;color:var(--accent-ink)}
+.reward{font-size:12px;color:var(--warm);background:var(--yellow);border-radius:8px;padding:5px 9px;margin:6px 0;transform:rotate(-.3deg)}
 .ring{width:50px;height:50px;border-radius:50%;background:conic-gradient(#8fd0a0 calc(var(--p)*1%),#eee 0);display:flex;align-items:center;justify-content:center;font-size:11px;color:#5fae74;flex:0 0 auto}
 .task{display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px dotted #ece3d6}
 .cb{width:20px;height:20px;border:2px solid #c9bcae;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#5fae74;background:#fff;flex:0 0 auto}
 .task.done .cb{background:#cde8d2;border-color:#8fd0a0}
 .task.done .txt{text-decoration:line-through;color:#aab}
-.txt{flex:1}.xp{font-size:11px;color:#b5651d;background:var(--orange);border-radius:10px;padding:1px 7px;flex:0 0 auto}
+.txt{flex:1}.xp{font-size:11px;color:var(--warm);background:var(--orange);border-radius:10px;padding:1px 7px;flex:0 0 auto}
 .add{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .add input,.add select{padding:6px 8px;border:2px dashed var(--line);border-radius:9px;font-family:inherit;font-size:12px;background:#fffdfa;flex:1;min-width:120px}
-.btn{padding:6px 12px;border:none;border-radius:11px;background:#9c5b52;color:#fff;font-family:inherit;font-size:13px;cursor:pointer;box-shadow:2px 3px 0 rgba(0,0,0,.12)}
-.btn.sm{padding:4px 10px;font-size:12px}.btn.alt{background:#c98b83}.btn.green{background:#7fae8c}.btn.ghost{background:#fff;color:#9c5b52;border:2px dashed #c98b83}
+.btn{padding:9px 14px;min-height:44px;border:none;border-radius:11px;background:var(--accent);color:#fff;font-family:inherit;font-size:14px;cursor:pointer;box-shadow:var(--shadow)}
+.btn.sm{padding:5px 12px;font-size:13px;min-height:38px}.btn.alt{background:var(--accent-weak);color:var(--accent-ink)}.btn.green{background:#7fae8c}.btn.ghost{background:var(--card);color:var(--accent-ink);border:2px dashed var(--accent)}
 /* stages */
 .stagecur{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .stagecur button{padding:4px 9px;border-radius:10px;border:2px solid var(--line);background:#fffdfa;font-family:inherit;font-size:12px;cursor:pointer}
-.stagecur button.active{background:#cde8d2;border-color:#8fd0a0;color:#3c6b4a;font-weight:bold}
+.stagecur button.active{background:#cde8d2;border-color:#8fd0a0;color:var(--ok);font-weight:bold}
 .remind{background:var(--blue);border-radius:10px;padding:8px 10px;font-size:13px;margin:6px 0}
 .pit{background:#fde2c4;border-radius:10px;padding:8px 10px;font-size:12px;margin:6px 0;color:#9a5a1d}
-.stampmini{display:inline-block;font-size:12px;background:#cde8d2;border-radius:10px;padding:2px 9px;color:#3c6b4a}
+.stampmini{display:inline-block;font-size:12px;background:#cde8d2;border-radius:10px;padding:2px 9px;color:var(--ok)}
 /* tables */
 .tbl{border-collapse:collapse;width:100%;font-size:12px;margin-top:4px}
 .tbl th{background:#9aa0a6;color:#fff;padding:5px 6px;text-align:left;font-weight:normal}
 .tbl td{border:1px solid #ece3d6;padding:5px 6px;vertical-align:top}
 .tbl td[contenteditable]{background:#fffdfa;outline:none}
 .tbl td[contenteditable]:focus{background:#fff7e8}
-.x{cursor:pointer;color:#c98b83;font-weight:bold;padding:0 4px}
+.x{cursor:pointer;color:var(--red);font-weight:bold;padding:0 4px}
 .addrow{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
 .addrow input{flex:1;min-width:80px;padding:5px 7px;border:2px dashed var(--line);border-radius:8px;font-family:inherit;font-size:12px}
 /* stamps */
 .stamps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .stamp{aspect-ratio:1;border-radius:12px;border:2px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:#fffdfa;cursor:pointer}
 .stamp .seal{font-size:22px;filter:grayscale(1);opacity:.35}
-.stamp.on{border-color:#c98b83;background:#fff4f1}.stamp.on .seal{filter:none;opacity:1;animation:stampin .5s}
+.stamp.on{border-color:var(--red);background:#fff4f1}.stamp.on .seal{filter:none;opacity:1;animation:stampin .5s}
 @keyframes stampin{0%{transform:scale(2.4) rotate(-18deg);opacity:0}60%{transform:scale(.9) rotate(-6deg)}100%{transform:scale(1) rotate(-8deg)}}
 /* morning */
 .morning{background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:10px;font-size:13px;line-height:1.7;white-space:pre-wrap}
-.morning .h{font-family:"Ma Shan Zheng",cursive;color:#b5651d;font-size:16px;margin-bottom:4px}
+.morning .h{font-family:"Ma Shan Zheng",cursive;color:var(--warm);font-size:16px;margin-bottom:4px}
 textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-radius:9px;font-family:inherit;font-size:12px;padding:6px;background:#fffdfa}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:8px}
 .float{position:fixed;font-family:"Ma Shan Zheng",cursive;color:#5fae74;font-size:18px;pointer-events:none;animation:floatup 1s forwards;z-index:50}
@@ -91,59 +113,59 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 @keyframes fall{to{transform:translateY(105vh) rotate(540deg)}}
 .modal{position:fixed;inset:0;background:rgba(60,40,40,.45);display:none;align-items:center;justify-content:center;z-index:80}
 .modal.show{display:flex}
-.box{background:#fffdfa;border:3px dashed #c98b83;border-radius:18px;padding:20px;max-width:300px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:pop .4s}
+.box{background:var(--card);border:3px dashed var(--accent);border-radius:18px;padding:20px;max-width:300px;text-align:center;box-shadow:var(--shadow);animation:pop .4s}
 .box.wide{max-width:440px;text-align:left;max-height:80vh;overflow:auto}
 @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
-.box .big{font-size:42px}.box h3{font-family:"Ma Shan Zheng",cursive;color:#9c5b52;margin:6px 0}.box p{font-size:13px;color:#7a4a44}
-.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#9c5b52;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.3s;z-index:90}
+.box .big{font-size:42px}.box h3{font-family:"Ma Shan Zheng",cursive;color:var(--accent-ink);margin:6px 0}.box p{font-size:13px;color:var(--accent-ink)}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:9px 18px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;z-index:90}
 .toast.show{opacity:1}
 /* ---- 云同步 UI ---- */
-.cloud-status{font-size:12px;padding:3px 10px;border-radius:20px;background:#fff;border:2px dashed #c98b83;color:#9c5b52;white-space:nowrap}
+.cloud-status{font-size:12px;padding:4px 12px;border-radius:20px;background:var(--card);border:2px dashed var(--accent);color:var(--accent-ink);white-space:nowrap}
 .cloud-status.off{background:#f3ede4;color:#a08a7e}
 .cloud-status.ok{background:#eaf5ee;border-color:#7fae8c;color:#3f7a55}
 .cloud-status.syncing{background:#fff7e6;border-color:#e0b15a;color:#a9772a}
 .cloud-status.err{background:#fdecec;border-color:#d98b8b;color:#b14b4b}
-.ck-lbl{display:block;font-size:12px;color:#7a4a44;margin:10px 0 4px;font-weight:bold}
+.ck-lbl{display:block;font-size:12px;color:var(--accent-ink);margin:10px 0 4px;font-weight:bold}
 .ck-inp{width:100%;box-sizing:border-box;padding:8px 10px;border:2px solid #e3d6c6;border-radius:10px;font-family:inherit;font-size:13px;color:#5a3b36;background:#fffdfa}
-.ck-inp:focus{outline:none;border-color:#c98b83}
-.ck-status{font-size:12px;margin:10px 0;min-height:16px;color:#7a4a44}
+.ck-inp:focus{outline:none;border-color:var(--red)}
+.ck-status{font-size:12px;margin:10px 0;min-height:16px;color:var(--accent-ink)}
 .ck-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .ck-btns .btn{flex:1 1 auto}
 .ck-hint{font-size:11px;color:#b09a8e;line-height:1.5;margin-top:6px}
 /* overview stat strip */
 .stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin:8px 0}
 .stat{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:8px 6px;text-align:center}
-.stat b{display:block;font-size:18px;color:#9c5b52;font-family:'Ma Shan Zheng',cursive}
-.stat span{font-size:11px;color:#888}
+.stat b{display:block;font-size:18px;color:var(--accent-ink);font-family:'Ma Shan Zheng',cursive}
+.stat span{font-size:11px;color:var(--muted)}
 /* quote / energy */
-.quote{background:linear-gradient(135deg,#fff7e8,#fdeef3);border:2px dashed #e0b96a;border-radius:12px;padding:12px;font-size:14px;color:#7a4a44;line-height:1.7}
-.quote .q{font-family:'Ma Shan Zheng',cursive;color:#b5651d;font-size:16px;margin-bottom:4px}
+.quote{background:linear-gradient(135deg,#fff7e8,#fdeef3);border:2px dashed #e0b96a;border-radius:12px;padding:12px;font-size:14px;color:var(--accent-ink);line-height:1.7}
+.quote .q{font-family:'Ma Shan Zheng',cursive;color:var(--warm);font-size:16px;margin-bottom:4px}
 /* focus timer */
 .focus{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center;margin:10px 0}
 .focus-circle{position:relative;width:140px;height:140px}
 .focus-circle .t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
-.focus-circle .t .tm{font-size:26px;font-weight:bold;color:#7a4a44;font-family:'Ma Shan Zheng',cursive}
+.focus-circle .t .tm{font-size:26px;font-weight:bold;color:var(--accent-ink);font-family:'Ma Shan Zheng',cursive}
 .focus-btns{display:flex;gap:8px;flex-wrap:wrap}
 /* heatmap (github style) */
 .heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);gap:3px;overflow-x:auto;padding:4px 0}
 .heat-cell{width:13px;height:13px;border-radius:3px;background:#f0e9dd}
 .heat-cell.on{background:#8fd0a0}
 .heat-cell.on2{background:#5fae74}
-.heat-legend{font-size:11px;color:#888;margin-top:4px;display:flex;gap:6px;align-items:center}
+.heat-legend{font-size:11px;color:var(--muted);margin-top:4px;display:flex;gap:6px;align-items:center}
 .heat-legend i{display:inline-block;width:11px;height:11px;border-radius:3px}
 /* kanban */
 .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
 .kanban-col{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:8px;min-height:80px}
-.kanban-col h4{margin:0 0 6px;font-size:12px;color:#9c5b52;text-align:center}
-.kanban-card{background:#fff; border:1px solid #ece3d6;border-radius:9px;padding:7px;margin-bottom:6px;font-size:12px;color:#7a4a44;cursor:pointer;box-shadow:1px 1px 0 rgba(0,0,0,.04)}
+.kanban-col h4{margin:0 0 6px;font-size:12px;color:var(--accent-ink);text-align:center}
+.kanban-card{background:#fff; border:1px solid #ece3d6;border-radius:9px;padding:7px;margin-bottom:6px;font-size:12px;color:var(--accent-ink);cursor:pointer;box-shadow:1px 1px 0 rgba(0,0,0,.04)}
 .kanban-card .w{height:6px;background:#f0e9dd;border-radius:4px;margin-top:5px;overflow:hidden}
 .kanban-card .w i{display:block;height:100%;background:#8fd0a0}
 /* social card */
 .social-card{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;position:relative}
-.social-card .pf{font-weight:bold;color:#7a4a44;font-size:15px}
-.social-card .row{display:flex;justify-content:space-between;font-size:12px;color:#888;margin:4px 0}
+.social-card .pf{font-weight:bold;color:var(--accent-ink);font-size:15px}
+.social-card .row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:4px 0}
 .tagchip{display:inline-block;font-size:11px;padding:3px 9px;border-radius:10px;background:#e3d4f0;color:#5a3a6a;cursor:pointer;margin:2px}
-.tagchip.active{background:#9c5b52;color:#fff}
+.tagchip.active{background:var(--accent);color:#fff}
 .search{width:100%;padding:7px 9px;border:2px dashed var(--line);border-radius:9px;font-family:inherit;font-size:13px;background:#fffdfa;margin-bottom:8px}
 /* renovation overall progress */
 .overall{height:16px;background:#f0e9dd;border-radius:9px;overflow:hidden;margin:6px 0}
@@ -151,8 +173,8 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 /* renovation gantt */
 .gantt{display:flex;height:34px;border-radius:8px;overflow:hidden;border:2px solid var(--line);margin-top:8px;position:relative}
 .g-seg{display:flex;align-items:center;justify-content:center;font-size:12px;color:#5a3a2a;border-right:1px solid #fffdfa;min-width:0;overflow:hidden}
-.g-now{position:absolute;top:-4px;bottom:-4px;width:3px;background:#b03021}
-.g-now::after{content:"今";position:absolute;top:-15px;left:-7px;font-size:10px;color:#b03021;font-weight:bold}
+.g-now{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--bad)}
+.g-now::after{content:"今";position:absolute;top:-15px;left:-7px;font-size:10px;color:var(--bad);font-weight:bold}
 /* budget warning */
 .warnbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px;border-radius:12px;font-size:13px;margin-bottom:10px}
 .warnbar.over{background:#fceae8;border:2px solid #e7a59f}
@@ -162,7 +184,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .pie-wrap{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:8px}
 .pie-legend{flex:1;min-width:160px;font-size:12px}
 .pie-legend div{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #ece3d6}
-.pie-legend .hot{color:#b03021;font-weight:bold}
+.pie-legend .hot{color:var(--bad);font-weight:bold}
 @media(max-width:680px){.kanban{grid-template-columns:1fr}}
 /* renovation acceptance */
 .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:4px;vertical-align:middle}
@@ -171,61 +193,112 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .badge-nor{background:#e9e9e9;color:#666}
 .badge-type{background:#cfe3f2;color:#3a5a7a}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
-.chip{font-size:11px;padding:4px 9px;border-radius:10px;background:#fff7e8;border:2px dashed #e0b96a;color:#7a4a44}
-.guide summary{cursor:pointer;color:#9c5b52;font-size:13px;font-weight:bold}
-.guide ul{margin:6px 0;padding-left:18px;font-size:12px;color:#7a4a44;line-height:1.6}
+.chip{font-size:11px;padding:4px 9px;border-radius:10px;background:#fff7e8;border:2px dashed #e0b96a;color:var(--accent-ink)}
+.guide summary{cursor:pointer;color:var(--accent-ink);font-size:13px;font-weight:bold}
+.guide ul{margin:6px 0;padding-left:18px;font-size:12px;color:var(--accent-ink);line-height:1.6}
 .guide .defect-row{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
 .guide .defect-item{background:#fffdfa;border:2px dashed var(--line);border-radius:10px;padding:6px 9px;font-size:12px;flex:1;min-width:120px}
 .metrics{display:flex;flex-direction:column;gap:4px;margin-top:4px}
 .metric{display:flex;gap:8px;background:#fffdfa;border:1px dashed var(--line);border-radius:8px;padding:5px 8px;font-size:12px}
-.metric b{color:#9c5b52;flex:0 0 88px}
-.metric span{color:#7a4a44}
+.metric b{color:var(--accent-ink);flex:0 0 88px}
+.metric span{color:var(--accent-ink)}
 .defect{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;margin-bottom:8px;border-left:5px solid #f4c7c3;position:relative}
 .defect-status-0{border-left-color:#f4c7c3}
 .defect-status-1{border-left-color:#fcebc2}
 .defect-status-2{border-left-color:#cde8d2}
 .mini-photo{width:44px;height:44px;object-fit:cover;border-radius:6px;border:2px dashed var(--line);cursor:pointer;margin:2px}
 .row-actions{display:flex;gap:6px;align-items:center;justify-content:flex-end;margin-top:6px}
-.row-actions button{font-size:11px;padding:2px 7px;border-radius:8px;border:2px dashed #c9bcae;background:#fffdfa;color:#7a4a44;cursor:pointer;font-family:inherit}
+.row-actions button{font-size:11px;padding:2px 7px;border-radius:8px;border:2px dashed #c9bcae;background:#fffdfa;color:var(--accent-ink);cursor:pointer;font-family:inherit}
 .note-inline{width:100%;min-height:46px;border:2px dashed var(--line);border-radius:9px;font-family:inherit;font-size:12px;padding:6px;background:#fffdfa;margin-top:6px}
 .shot-list{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
 .shot-tag{font-size:11px;padding:3px 8px;border-radius:10px;background:#e3d4f0;color:#5a3a6a}
-@media(max-width:680px){.app{flex-direction:column}.nav{width:100%;flex-direction:row;overflow-x:auto;gap:5px}.nav button{white-space:nowrap}.nav button.active{transform:none}.stamps{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:680px){.stamps{grid-template-columns:repeat(3,1fr)}.nav{width:118px}}
 /* fitness redesign */
 .fit-block{margin:8px 0;padding:8px 10px;background:#fffdfa;border:2px dashed var(--line);border-radius:10px}
-.fit-h{font-size:12px;font-weight:bold;color:#7a4a44;margin-bottom:4px}
+.fit-h{font-size:12px;font-weight:bold;color:var(--accent-ink);margin-bottom:4px}
 .fit-steps{margin:0;padding-left:18px;font-size:12px;color:#5a4a44;line-height:1.7}
-.fit-caut{margin:0;padding-left:18px;font-size:12px;color:#9a3a2a;line-height:1.7}
+.fit-caut{margin:0;padding-left:18px;font-size:12px;color:var(--red2);line-height:1.7}
 .fit-timer{display:flex;flex-direction:column;align-items:center;gap:6px;background:#f0e9dd;border-radius:12px;padding:14px;margin:8px 0}
-.fit-phase{padding:4px 14px;border-radius:20px;background:#fffdfa;font-size:13px;color:#7a4a44;font-weight:bold}
-.fit-big{font-size:30px;font-weight:bold;font-family:'Ma Shan Zheng',cursive;color:#7a4a44}
-.fit-sub{font-size:12px;color:#888}
+.fit-phase{padding:4px 14px;border-radius:20px;background:#fffdfa;font-size:13px;color:var(--accent-ink);font-weight:bold}
+.fit-big{font-size:30px;font-weight:bold;font-family:'Ma Shan Zheng',cursive;color:var(--accent-ink)}
+.fit-sub{font-size:12px;color:var(--muted)}
 .vid{margin-top:8px}
 .vidframe{width:100%;aspect-ratio:16/9;border:2px dashed var(--line);border-radius:10px;background:#000;margin-top:6px}
 /* reading / film / knowledge / stamps redesign */
 .goalbar{height:10px;background:#f0e9dd;border-radius:6px;overflow:hidden;margin-top:4px}
 .goalbar i{display:block;height:100%;background:linear-gradient(90deg,#8fd0a0,#5fae74)}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.tab{display:inline-block;font-size:12px;padding:3px 12px;border-radius:12px;background:#fffdfa;border:2px dashed var(--line);color:#6a5a55;cursor:pointer}
-.tab.active{background:#9c5b52;color:#fff;border-color:#9c5b52}
+.tab{display:inline-block;font-size:12px;padding:3px 12px;border-radius:12px;background:#fffdfa;border:2px dashed var(--line);color:var(--muted);cursor:pointer}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .bk-card{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;cursor:pointer;position:relative}
-.bk-card:hover{border-color:#c98b83}
+.bk-card:hover{border-color:var(--red)}
 .film-card{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;cursor:pointer;position:relative}
-.film-card:hover{border-color:#c98b83}
+.film-card:hover{border-color:var(--red)}
 .platbar{display:flex;align-items:center;gap:6px;margin:4px 0;font-size:12px}
 .platbar .track{flex:1;height:12px;background:#f0e9dd;border-radius:7px;overflow:hidden}
-.platbar .track i{display:block;height:100%;background:#9c5b52}
-.platbar .n{color:#888;min-width:54px;text-align:right}
+.platbar .track i{display:block;height:100%;background:var(--accent)}
+.platbar .n{color:var(--muted);min-width:54px;text-align:right}
 .kcard{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;cursor:pointer;position:relative}
-.kcard:hover{border-color:#c98b83}
-.review-q{background:#fff7e8;border:2px dashed #e0b96a;border-radius:10px;padding:8px 10px;font-size:13px;color:#7a4a44;margin:6px 0}
+.kcard:hover{border-color:var(--red)}
+.review-q{background:#fff7e8;border:2px dashed #e0b96a;border-radius:10px;padding:8px 10px;font-size:13px;color:var(--accent-ink);margin:6px 0}
 .badge-detail{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px;margin:6px 0}
-.badge-detail .ok{color:#3c6b4a;font-weight:bold}
+.badge-detail .ok{color:var(--ok);font-weight:bold}
+/* theme toggle + nav toggle */
+.theme-btn{width:40px;height:40px;border-radius:11px;border:2px dashed var(--accent);background:var(--card);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
+.theme-btn svg{width:20px;height:20px}
+.nav-toggle{width:40px;height:40px;border-radius:11px;border:2px dashed var(--line);background:var(--card);color:var(--ink2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
+.nav-toggle svg{width:20px;height:20px}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
+.hdr-top h1{margin:0;text-align:left}
+.hdr-actions{display:flex;gap:6px;flex:0 0 auto}
+/* focus fullscreen overlay (iOS-safe fixed layer) */
+.focus-overlay{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px}
+.focus-overlay.show{display:flex}
+.focus-overlay .big-ring{position:relative;width:240px;height:240px}
+.focus-overlay .big-ring svg{width:240px;height:240px}
+.focus-overlay .big-ring .tt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.focus-overlay .big-ring .tt .tm{font-size:52px;font-weight:bold;color:var(--ink);font-family:'Ma Shan Zheng',cursive}
+.focus-overlay .big-ring .tt .sub{font-size:15px;color:var(--muted)}
+.focus-overlay .fbtns{display:flex;gap:12px}
+.focus-overlay .fbtns .btn{min-width:120px}
+/* settings module */
+.set-sec{font-size:13px;color:var(--muted);margin:4px 2px 6px}
+.set-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.set-row .k{font-size:14px;color:var(--ink2);min-width:80px}
+.set-seg{display:flex;gap:6px;flex-wrap:wrap}
+.set-seg button{padding:8px 14px;border-radius:10px;border:2px dashed var(--line);background:var(--card);font-family:inherit;font-size:13px;cursor:pointer;color:var(--ink2);min-height:40px}
+.set-seg button.on{background:var(--accent-weak);color:var(--accent-ink);border-color:var(--accent)}
+.swatch{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);cursor:pointer;display:inline-block;vertical-align:middle}
+.swatch.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-weak)}
+.avatar-box{width:54px;height:54px;border-radius:50%;background:var(--accent-weak);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;flex:0 0 auto}
+.navorder{background:var(--card2);border:2px dashed var(--line);border-radius:12px;padding:8px}
+.navorder .item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;font-size:14px;color:var(--ink);background:var(--card);margin-bottom:6px;border:1px solid var(--line)}
+.navorder .item .ico{width:18px;height:18px;color:var(--accent);flex:0 0 auto}
+.navorder .item .mv{margin-left:auto;display:flex;gap:4px}
+.navorder .item .mv button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--card2);color:var(--ink2);cursor:pointer;font-size:14px}
+.ai-card{background:var(--card2);border:2px dashed var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+.ai-card label{display:block;font-size:13px;color:var(--ink2);margin:8px 0 4px}
+.ai-card input{width:100%;box-sizing:border-box;padding:9px 11px;border:2px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;background:var(--card);color:var(--ink)}
+.ai-note{font-size:11px;color:var(--muted);margin-top:6px}
+.weekend-card{background:var(--card2);border:2px dashed var(--accent);border-radius:12px;padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.weekend-card .day{font-size:20px;font-weight:bold;color:var(--accent-ink)}
+.linkbtn{display:inline-flex;align-items:center;gap:6px;color:var(--accent-ink);font-size:13px;text-decoration:none;border:2px dashed var(--accent);border-radius:10px;padding:7px 12px;background:var(--accent-weak);cursor:pointer;min-height:38px}
+/* dark mode cascade: re-skin remaining pastel containers + brown text */
+[data-theme="dark"] .social-card,[data-theme="dark"] .bk-card,[data-theme="dark"] .film-card,[data-theme="dark"] .kcard,[data-theme="dark"] .kanban-col,[data-theme="dark"] .kanban-card,[data-theme="dark"] .defect,[data-theme="dark"] .metric,[data-theme="dark"] .fit-block,[data-theme="dark"] .badge-detail,[data-theme="dark"] .add input,[data-theme="dark"] .add select,[data-theme="dark"] .addrow input,[data-theme="dark"] .search,[data-theme="dark"] .note-inline,[data-theme="dark"] .mini-photo,[data-theme="dark"] .tbl td,[data-theme="dark"] .row-actions button,[data-theme="dark"] .defect-item,[data-theme="dark"] .fit-phase,[data-theme="dark"] .stamp,[data-theme="dark"] .stat,[data-theme="dark"] .sub button,[data-theme="dark"] .guide .defect-item,[data-theme="dark"] .quote,[data-theme="dark"] .morning,[data-theme="dark"] .pit,[data-theme="dark"] .remind,[data-theme="dark"] .reward,[data-theme="dark"] .chip,[data-theme="dark"] .box{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important}
+[data-theme="dark"] .card h3,[data-theme="dark"] .social-card .pf,[data-theme="dark"] .qtitle,[data-theme="dark"] .fit-h,[data-theme="dark"] .focus-circle .t .tm,[data-theme="dark"] .stat span,[data-theme="dark"] .heat-legend,[data-theme="dark"] .xptxt,[data-theme="dark"] .fit-sub,[data-theme="dark"] .social-card .row,[data-theme="dark"] .txt,[data-theme="dark"] .morning .h,[data-theme="dark"] .x,[data-theme="dark"] .kanban-col h4,[data-theme="dark"] .tbl th{color:var(--muted)!important}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header><div class="tape"></div><h1>🗺 我的闯关工作台</h1><span class="date" id="d"></span></header>
+<header><div class="tape"></div>
+ <div class="hdr-top">
+  <h1 id="wbTitle">🗺 我的闯关工作台</h1>
+  <div class="hdr-actions">
+   <button class="nav-toggle" id="navToggle" onclick="toggleNav()" title="收起/展开导航" aria-label="导航"></button>
+   <button class="theme-btn" id="themeToggle" onclick="cycleTheme()" title="切换主题" aria-label="主题"></button>
+  </div>
+ </div>
+ <span class="date" id="d"></span></header>
 <div class="toolbar">
   <button class="btn green" id="checkin">✅ 今日打卡 +20</button>
   <button class="btn alt" id="newmonth">➕ 新月份</button>
@@ -244,9 +317,23 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 </div>
 <div class="modal" id="modal"><div class="box"><div class="big">🎁</div><h3 id="mTitle"></h3><p id="mBody"></p><button class="btn" onclick="document.getElementById('modal').classList.remove('show')">收下啦</button></div></div>
 <div class="toast" id="toast"></div>
+<div class="focus-overlay" id="focusOverlay">
+ <div class="big-ring">
+  <svg viewBox="0 0 240 240">
+   <circle cx="120" cy="120" r="104" fill="none" stroke="var(--track)" stroke-width="14"/>
+   <circle id="fArc2" cx="120" cy="120" r="104" fill="none" stroke="var(--accent)" stroke-width="14" stroke-linecap="round" transform="rotate(-90 120 120)"/>
+  </svg>
+  <div class="tt"><div class="tm" id="fTime2">25:00</div><div class="sub">沉浸式专注</div></div>
+ </div>
+ <div class="fbtns">
+  <button class="btn" id="fToggle2" onclick="focusToggle()">▶ 开始</button>
+  <button class="btn ghost" onclick="focusReset()">↺ 重置</button>
+  <button class="btn ghost" onclick="closeFocusOverlay()">✕ 退出</button>
+ </div>
+</div>
 <div class="modal" id="cloudModal"><div class="box wide">
  <h3>☁ 云同步设置</h3>
- <p class="muted" style="font-size:12px;color:#7a4a44">开启后，电脑与手机会<b>自动读写同一份数据</b>（后端 JSONBin.io）。密钥仅存你本机浏览器，<b>不会</b>进入网页源码，公开网址也不会泄露。</p>
+ <p class="muted" style="font-size:12px;color:var(--accent-ink)">开启后，电脑与手机会<b>自动读写同一份数据</b>（后端 JSONBin.io）。密钥仅存你本机浏览器，<b>不会</b>进入网页源码，公开网址也不会泄露。</p>
  <label class="ck-lbl">API Key（X-Master-Key）</label>
  <input class="ck-inp" id="ckKey" type="text" placeholder="粘贴你的 JSONBin Master Key" autocomplete="off">
  <label class="ck-lbl">Bin ID（数据容器）</label>
@@ -262,9 +349,9 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  <div class="ck-hint">① 到 jsonbin.io 注册并复制 API Key；② 填 Key、Bin ID 留空会自动建一个；③ 两端（电脑/手机）填<b>同一组</b> Key+Bin 即共享数据。未联网时自动退回本机，不影响使用。</div>
 </div></div>
 
-<script type="application/json" id="morningSeed">{"text": "今天最重要的一件事：逼盛居给出水电整改的书面计划——你口述\"水电至今未整改\"，这是 07-30 验收遗留的最大隐患，再拖会卡死后续铺贴。\n\n🔴 今日必办（P0）\n🔴 水电整改确认：现场/电话向盛居（陶工/徐工）核对 07-30 验收问题清单与整改时限，要求给出书面/微信整改计划，杜绝无留痕。\n🔴 地插高度 1710/1690 最终拍板：在微信/现场书面确认，锁死不再变动。\n🔴 窗户单扇\"太憋气/打不开\"定性：问汉森张生是保护态还是真卡死，真卡死立即安排维修。\n\n🟠 关键推进（P1）\n🟠 瓷砖铺贴排期：催陶工给具体开工日期（砖已到货验收通过，不应再拖）。\n🟠 海棠角文字尺寸：要求装修公司给加工厂能用的文字版（CAD 加工厂看不懂）。\n🟠 主卧窗室内胶补缝：确认 07-23 张生所说\"里面还要补缝\"是否已补完。\n🟠 全屋智能点位回执：向付广金确认 07-30 现场核对清单已交付。\n🟠 预算记账：瓷砖尾款 ¥2,444（已付）+ 运费上楼 ¥650 录入表，刷新看板缓存。\n\n🟡 顺手跟（P2）\n🟡 壹玖效果图：按\"贴砖后复尺再签约\"催终版，不阻塞硬装。\n🟡 派雅门窗退房间门 + 卫生间门。\n🟡 地面找平层空鼓是否重做（与师傅确认）。\n\n💰 预算：总超支 ¥25,828.46（+12.9%），若补录瓷砖尾款+运费后约 ¥28,972.46（+14.5%）。\n\n详细复盘见 装修进度日报_2026-08-04.md。"}</script>
+<script type="application/json" id="morningSeed">{"text": "一句话结论：今天最关键——催盛居交付「水电竣工图」（整改已完成，但必须先出图再正式验收），收到图才能约最终验收。\n\n🔴 今日必办（P0）\n- 催盛居交水电竣工图：整改已完，但要求先出图再验收，陶工/徐工已量尺安排出图，今天跟进交付，收到即约正式验收。\n- 地插高度 1710/1690 拍板：微信或现场书面锁死，不再变动（07-27 至今无书面确认）。\n- 窗户单扇「太憋气/打不开」定性：问汉森张生是保护态还是真卡死，真卡死立即维修。\n\n🟠 关键推进（P1）\n- 泥水师傅补某处：确认 08-05 14:58 所说「我没补」的具体位置，今天是否补完（铺贴前前置）。\n- 瓷砖铺贴排期：催陶工给具体开工日期，砖已到货验收通过，不应再拖。\n- 海棠角文字尺寸：要求装修公司给加工厂能用的文字版（CAD 加工厂看不懂）。\n- 主卧窗室内胶补缝：确认 07-23 张生所说「里面还要补缝」是否已补完。\n- 全屋智能点位回执：向付广金确认 07-30 现场核对清单已交付。\n- 预算记账：瓷砖尾款 ¥2,444 + 运费上楼 ¥650 录入表，刷新看板（补录后已付≈¥97,972、超支≈+14.5%）。\n- 壹玖效果图催终版：按「贴砖后复尺再签约」推进，不阻塞硬装。\n\n🟡 顺手跟（P2）\n- 全屋定制签约回填：贴砖完成约诗尼曼+派雅复尺再启动（共 ¥41,200 全预估待付）。\n- 派雅门窗退房间门 + 卫生间门。\n- 地面找平层空鼓是否重做，与师傅确认。\n\n💰 预算：总超支 ¥25,828.46（+12.9%）；补录瓷砖尾款+运费后约 +14.5%（¥29,972.46）。\n\n详细复盘见 装修进度日报_2026-08-05.md。"}</script>
 
-<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 34.1, "name": "紫金矿业", "open": 32.39, "high": 34.22, "low": 32.38, "preClose": 32.12, "change": 1.98, "changePct": 6.16, "amplitude": 5.73, "volumeRatio": 1.78, "amount": 1444480.0, "time": "20260805152957"}, "sh601717": {"price": 16.04, "name": "中创智领", "open": 15.93, "high": 16.1, "low": 15.89, "preClose": 15.99, "change": 0.05, "changePct": 0.31, "amplitude": 1.31, "volumeRatio": 0.7, "amount": 25174.0, "time": "20260805152957"}, "sh600879": {"price": 15.9, "name": "航天电子", "open": 15.67, "high": 16.07, "low": 15.67, "preClose": 15.59, "change": 0.31, "changePct": 1.99, "amplitude": 2.57, "volumeRatio": 1.07, "amount": 141840.0, "time": "20260805152957"}, "sh600501": {"price": 14.73, "name": "航天晨光", "open": 14.56, "high": 14.79, "low": 14.51, "preClose": 14.55, "change": 0.18, "changePct": 1.24, "amplitude": 1.92, "volumeRatio": 0.92, "amount": 8574.0, "time": "20260805152957"}, "sz002270": {"price": 21.05, "name": "华明装备", "open": 20.58, "high": 21.15, "low": 20.34, "preClose": 20.64, "change": 0.41, "changePct": 1.99, "amplitude": 3.92, "volumeRatio": 0.81, "amount": 52883.0, "time": "20260805152900"}, "sz000429": {"price": 14.2, "name": "粤高速Ａ", "open": 14.33, "high": 14.37, "low": 13.94, "preClose": 14.34, "change": -0.14, "changePct": -0.98, "amplitude": 3.0, "volumeRatio": 0.94, "amount": 14708.0, "time": "20260805152930"}, "sh605166": {"price": 8.59, "name": "聚合顺", "open": 8.44, "high": 8.63, "low": 8.44, "preClose": 8.53, "change": 0.06, "changePct": 0.7, "amplitude": 2.23, "volumeRatio": 1.31, "amount": 4411.0, "time": "20260805152956"}, "sh600343": {"price": 19.01, "name": "航天动力", "open": 18.7, "high": 19.16, "low": 18.7, "preClose": 18.64, "change": 0.37, "changePct": 1.98, "amplitude": 2.47, "volumeRatio": 0.98, "amount": 45627.0, "time": "20260805152959"}, "sz002997": {"price": 27.28, "name": "瑞鹄模具", "open": 27.0, "high": 27.47, "low": 26.85, "preClose": 26.93, "change": 0.35, "changePct": 1.3, "amplitude": 2.3, "volumeRatio": 0.85, "amount": 5943.0, "time": "20260805152915"}, "sz159928": {"price": 0.674, "name": "消费ETF汇添富", "open": 0.677, "high": 0.679, "low": 0.668, "preClose": 0.679, "change": -0.005, "changePct": -0.74, "amplitude": 1.62, "volumeRatio": 1.2, "amount": 58062.0, "time": "20260805152945"}, "sh513130": {"price": 0.615, "name": "恒生科技ETF华泰柏瑞", "open": 0.609, "high": 0.616, "low": 0.607, "preClose": 0.607, "change": 0.008, "changePct": 1.32, "amplitude": 1.48, "volumeRatio": 0.95, "amount": 343293.0, "time": "20260805152957"}, "sh562800": {"price": 0.95, "name": "稀有金属ETF嘉实", "open": 0.914, "high": 0.951, "low": 0.913, "preClose": 0.903, "change": 0.047, "changePct": 5.2, "amplitude": 4.21, "volumeRatio": 2.17, "amount": 44265.0, "time": "20260805152959"}, "sh601012": {"price": 12.97, "name": "隆基绿能", "open": 13.05, "high": 13.09, "low": 12.86, "preClose": 13.07, "change": -0.1, "changePct": -0.77, "amplitude": 1.76, "volumeRatio": 0.85, "amount": 144834.0, "time": "20260805152959"}}, "news": [], "updated": "2026-08-05 15:30", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
+<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 35.35, "name": "紫金矿业", "open": 35.38, "high": 35.8, "low": 35.22, "preClose": 34.1, "change": 1.25, "changePct": 3.67, "amplitude": 1.7, "volumeRatio": 18.88, "amount": 318244.0, "time": "20260806093350"}, "sh601717": {"price": 16.0, "name": "中创智领", "open": 16.05, "high": 16.05, "low": 15.98, "preClose": 16.04, "change": -0.04, "changePct": -0.25, "amplitude": 0.44, "volumeRatio": 1.56, "amount": 880.0, "time": "20260806093351"}, "sh600879": {"price": 16.07, "name": "航天电子", "open": 15.77, "high": 16.14, "low": 15.7, "preClose": 15.9, "change": 0.17, "changePct": 1.07, "amplitude": 2.77, "volumeRatio": 7.08, "amount": 16408.0, "time": "20260806093352"}, "sh600501": {"price": 14.84, "name": "航天晨光", "open": 14.63, "high": 14.85, "low": 14.6, "preClose": 14.73, "change": 0.11, "changePct": 0.75, "amplitude": 1.7, "volumeRatio": 5.62, "amount": 856.0, "time": "20260806093352"}, "sz002270": {"price": 21.05, "name": "华明装备", "open": 21.04, "high": 21.08, "low": 20.85, "preClose": 21.05, "change": 0.0, "changePct": 0.0, "amplitude": 1.09, "volumeRatio": 2.28, "amount": 2344.0, "time": "20260806093348"}, "sz000429": {"price": 14.15, "name": "粤高速Ａ", "open": 14.18, "high": 14.27, "low": 14.1, "preClose": 14.2, "change": -0.05, "changePct": -0.35, "amplitude": 1.2, "volumeRatio": 2.87, "amount": 764.0, "time": "20260806093348"}, "sh605166": {"price": 8.6, "name": "聚合顺", "open": 8.51, "high": 8.65, "low": 8.51, "preClose": 8.59, "change": 0.01, "changePct": 0.12, "amplitude": 1.63, "volumeRatio": 3.3, "amount": 189.0, "time": "20260806093351"}, "sh600343": {"price": 19.2, "name": "航天动力", "open": 18.91, "high": 19.31, "low": 18.8, "preClose": 19.01, "change": 0.19, "changePct": 1.0, "amplitude": 2.68, "volumeRatio": 6.27, "amount": 4859.0, "time": "20260806093350"}, "sz002997": {"price": 27.19, "name": "瑞鹄模具", "open": 27.28, "high": 27.28, "low": 27.01, "preClose": 27.28, "change": -0.09, "changePct": -0.33, "amplitude": 0.99, "volumeRatio": 2.33, "amount": 261.0, "time": "20260806093348"}, "sz159928": {"price": 0.675, "name": "消费ETF汇添富", "open": 0.674, "high": 0.676, "low": 0.672, "preClose": 0.674, "change": 0.001, "changePct": 0.15, "amplitude": 0.59, "volumeRatio": 3.07, "amount": 2611.0, "time": "20260806093348"}, "sh513130": {"price": 0.608, "name": "恒生科技ETF华泰柏瑞", "open": 0.608, "high": 0.61, "low": 0.606, "preClose": 0.615, "change": -0.007, "changePct": -1.14, "amplitude": 0.65, "volumeRatio": 4.72, "amount": 26849.0, "time": "20260806093352"}, "sh562800": {"price": 0.956, "name": "稀有金属ETF嘉实", "open": 0.974, "high": 0.975, "low": 0.953, "preClose": 0.95, "change": 0.006, "changePct": 0.63, "amplitude": 2.32, "volumeRatio": 14.34, "amount": 6189.0, "time": "20260806093350"}, "sh601012": {"price": 12.9, "name": "隆基绿能", "open": 12.87, "high": 12.95, "low": 12.87, "preClose": 12.97, "change": -0.07, "changePct": -0.54, "amplitude": 0.62, "volumeRatio": 2.29, "amount": 6094.0, "time": "20260806093352"}}, "news": [], "updated": "2026-08-06 09:33", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
 
 <script>
 const MORNING_FALLBACK=`🔴 今天最重要：水电验收前再核一遍智能点位（风管机/米家开关均在待付清单）。
@@ -427,12 +514,21 @@ function plantSVG(s){const g=`<line x1="14" y1="96" x2="92" y2="96" stroke="#c9b
 
 // ---------- 种子 ----------
 function seed(){const m="2026-08";return{version:1,currentMonth:m,checkinXp:0,lastCheckin:"",
- months:{[m]:{main:"盛夏三连击：装修定稿 · 论文投稿 · 故事连载",reward:"达标奖励：一顿大餐 / 一件心仪好物",stampName:"🌿 盛夏印记",filmTheme:"人文历史纪录片",
+ months:{[m]:{main:"盛夏三连击：装修定稿 · 论文投稿 · 故事连载",reward:"达标奖励：一顿大餐 / 一件心仪好物",stampUnlocked:true,stampName:"🌿 盛夏印记",filmTheme:"人文历史纪录片",
   tasks:[{id:1,text:"装修：定制柜内部尺寸图定稿 + 风管机安装排期锁定",xp:300,done:false},
    {id:2,text:"论文：补实验依据 + 润色英文摘要/结论 + 8/20前投稿ASS",xp:300,done:false},
    {id:3,text:"写作：小说第3章初稿 + 小红书/抖音各2更",xp:150,done:false},
    {id:4,text:"阅读：读完《认知觉醒》+ 推进《分析化学》",xp:120,done:false},
    {id:5,text:"习惯：早起/阅读30min/写作500字 全月打卡",xp:150,done:false}]}},
+ social:[
+  {platform:"抖音",name:"暖暖装修手记",freq:"周更",fans:"0",note:"奶油原木风装修日记",link:"https://www.douyin.com/search/暖暖装修手记",xhsId:""},
+  {platform:"小红书",name:"82平奶油日记",freq:"周更",fans:"0",note:"82㎡奶油风装修 + 写作日常",link:"https://www.xiaohongshu.com/user/profile/11830803627",xhsId:"11830803627"}
+ ],
+ writing:[
+  {title:"论文投稿 ASS（8/20 前）",type:"学术",status:"写作中",words:3500,note:"补实验依据 + 润色摘要/结论"},
+  {title:"小说《盛夏》第 3 章",type:"小说",status:"写作中",words:4200,note:"番茄作家助手连载中"},
+  {title:"小红书图文：水电避坑 10 条",type:"自媒体稿",status:"已发布",words:820,note:""}
+ ],
  renovation:{currentStage:"水电",
   budget:{total:200000,spent:149608,pending:8004,cats:[
    {n:"硬装（半包）",cap:70000,spent:68275},{n:"主材",cap:60000,spent:40813},
@@ -546,18 +642,65 @@ async function initCloudSync(){
  await cloudPull(true);
 }
 function R(){return S.renovation;}
-function taskXp(){let t=0;for(const k in S.months)S.months[k].tasks.forEach(x=>{if(x.done)t+=x.xp;});return t;}
+function taskXp(){let t=0;for(const k in S.months){(S.months[k].tasks||[]).forEach(x=>{if(x.done)t+=x.xp;});}return t;}
 function totalXp(){return taskXp()+S.checkinXp;}
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
 function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 
+// ---------- 主题 / 外观 ----------
+function isDarkTheme(){const t=(S.settings&&S.settings.theme)||"light";
+ if(t==="dark")return true;
+ if(t==="auto")return !!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);
+ return false;}
+function applyTheme(){
+ const dark=isDarkTheme();
+ document.documentElement.dataset.theme=dark?"dark":"light";
+ const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",dark?"#26282A":"#F3EFE6");
+ const tt=document.getElementById("themeToggle");if(tt)tt.innerHTML=dark?SUN_ICON:MOON_ICON;
+ applyBg();}
+function cycleTheme(){if(!S.settings)S.settings={};const cur=S.settings.theme||"light";
+ const next=cur==="light"?"dark":cur==="dark"?"auto":"light";
+ S.settings.theme=next;save();applyTheme();toast("主题："+(next==="light"?"浅色":next==="dark"?"深色":"跟随系统"));}
+function applyBg(){const body=document.body;if(!body)return;
+ if(isDarkTheme()){body.style.background="";return;}
+ const b=(S.settings&&S.settings.bg)||"paper";
+ if(b==="mist")body.style.background="linear-gradient(160deg,#E8EFF2,#DCE7EC)";
+ else if(b==="dawn")body.style.background="linear-gradient(160deg,#FBF1E6,#F6E7D8)";
+ else body.style.background="";}
+function updateWbTitle(){const el=document.getElementById("wbTitle");if(el){const st=S.settings||{};el.innerHTML=esc(st.avatar||"🗺")+" "+esc(st.name||"我的闯关工作台");}}
+
 // ---------- 导航 ----------
-const NAV=[{v:"home",t:"⭐ 状态/主线"},{v:"reno",t:"🏗 装修"},{v:"stocks",t:"📈 股市"},{v:"fitness",t:"💪 健身"},
- {v:"reading",t:"📚 阅读"},{v:"film",t:"🎬 影视"},{v:"social",t:"📱 自媒体"},{v:"writing",t:"✍️ 写作"},
- {v:"knowledge",t:"🧠 知识库"},{v:"stamps",t:"🏅 成就墙"}];
+const ICONS={
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>',
+ reno:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/></svg>',
+ stocks:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"/><path d="M21 8v5h-5"/></svg>',
+ fitness:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7v10"/><path d="M4 8v8"/><path d="M18 7v10"/><path d="M20 8v8"/><path d="M6 12h12"/></svg>',
+ reading:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h6v16H6a2 2 0 00-2 2z"/><path d="M20 5a2 2 0 00-2-2h-6v16h6a2 2 0 012 2z"/></svg>',
+ film:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M17 9h4M3 15h4M17 15h4"/></svg>',
+ social:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>',
+ writing:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7-4-4-7 7v4z"/><path d="M16 7l1-1a2 2 0 012 2l-1 1"/><path d="M5 19h4"/></svg>',
+ knowledge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 00-4 10c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0012 3z"/></svg>',
+ stamps:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M8 13l-2 8 6-3 6 3-2-8"/></svg>',
+ settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1l2-1.5-2-3.5-2.4 1a7 7 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.5 2 1.5a7 7 0 000 2l-2 1.5 2 3.5 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.5-2-1.5a7 7 0 00.1-1z"/></svg>'
+};
+const NAV_ICON_MENU='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+const NAV_ICON_COLLAPSE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+const SUN_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>';
+const MOON_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1111.2 3 6.5 6.5 0 0021 12.8z"/></svg>';
+const NAV=[
+ {v:"home",t:"状态/主线",i:"home"},{v:"reno",t:"装修",i:"reno"},{v:"stocks",t:"股市",i:"stocks"},{v:"fitness",t:"健身",i:"fitness"},
+ {v:"reading",t:"阅读",i:"reading"},{v:"film",t:"影视",i:"film"},{v:"social",t:"自媒体",i:"social"},{v:"writing",t:"写作",i:"writing"},
+ {v:"knowledge",t:"知识库",i:"knowledge"},{v:"stamps",t:"成就墙",i:"stamps"},{v:"settings",t:"设置",i:"settings"}];
 function renderNav(){const n=document.getElementById("nav");n.innerHTML="";
- NAV.forEach(it=>{const b=document.createElement("button");b.innerHTML='<span class="dot"></span>'+it.t;b.className=(view===it.v?"active":"");
-  b.onclick=()=>{view=it.v;if(it.v==="reno")sub="today";render();};n.appendChild(b);});}
+ const order=(S.settings&&S.settings.navOrder&&S.settings.navOrder.length)?S.settings.navOrder:NAV.map(x=>x.v);
+ n.classList.toggle("collapsed",!!(S.settings&&S.settings.navCollapsed));
+ order.forEach(v=>{const it=NAV.find(x=>x.v===v);if(!it)return;
+  const b=document.createElement("button");b.innerHTML='<span class="ico">'+ICONS[it.i]+'</span><span class="lbl">'+it.t+'</span>';
+  b.className=(view===it.v?"active":"");
+  b.onclick=()=>{view=it.v;if(it.v==="reno")sub="today";render();};n.appendChild(b);});
+ updateNavToggleIcon();}
+function updateNavToggleIcon(){const b=document.getElementById("navToggle");if(b)b.innerHTML=((S.settings&&S.settings.navCollapsed)?NAV_ICON_COLLAPSE:NAV_ICON_MENU);}
+function toggleNav(){if(!S.settings)S.settings={};S.settings.navCollapsed=!S.settings.navCollapsed;save();renderNav();}
 
 // ---------- 主渲染 ----------
 function render(){
@@ -573,6 +716,7 @@ function render(){
  else if(view==="social")renderSocial(main);
  else if(view==="writing")renderWriting(main);
  else if(view==="knowledge")renderKnowledge(main);
+ else if(view==="settings")renderSettings(main);
  else renderSimple(main);
  updateBanner();
 }
@@ -583,6 +727,80 @@ function todayList(){const r=R();const st=r.stages.find(s=>s.name===r.currentSta
  return checks.concat(r.pendingItems.map(p=>"▢ 待付："+p));}
 function updateBanner(){const n=todayList().length;const b=document.getElementById("banner");
  b.textContent="🔨 今日装修待确认 "+n+" 项（"+R().currentStage+"阶段）— 手机不解锁也能看";}
+
+// ---------- 个性化设置 ----------
+function renderSettings(main){
+ const st=S.settings||{};
+ const card=document.createElement("div");card.className="card";
+ card.innerHTML=`<h2>⚙️ 个性化设置</h2>
+  <div class="set-sec">外观与个性化</div>
+  <div class="set-row"><span class="avatar-box" id="setAvatar">${esc(st.avatar||"🗺")}</span>
+   <div style="flex:1"><div style="font-size:12px;color:var(--muted)">头像（任意 emoji）</div>
+   <input id="setAvatarIn" value="${esc(st.avatar||"🗺")}" style="width:100%;padding:6px 8px;border:2px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;background:var(--card);color:var(--ink)"></div></div>
+  <div class="set-row"><div class="k">工作台名</div><input id="setNameIn" value="${esc(st.name||"我的闯关工作台")}" style="flex:1;padding:8px 10px;border:2px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;background:var(--card);color:var(--ink)"></div>
+  <div class="set-row"><div class="k">主题模式</div><div class="set-seg" id="setThemeSeg">
+    <button data-t="light" class="${(st.theme||"light")==="light"?"on":""}">☀ 浅色</button>
+    <button data-t="dark" class="${st.theme==="dark"?"on":""}">🌙 深色</button>
+    <button data-t="auto" class="${st.theme==="auto"?"on":""}">🌗 自动</button></div></div>
+  <div class="set-row"><div class="k">背景</div><div class="set-seg" id="setBgSeg">
+    <button data-b="paper" class="${(st.bg||"paper")==="paper"?"on":""}">纸感</button>
+    <button data-b="mist" class="${st.bg==="mist"?"on":""}">雾蓝</button>
+    <button data-b="dawn" class="${st.bg==="dawn"?"on":""}">晨光</button></div></div>
+  <button class="btn" style="width:100%;margin-top:10px" onclick="saveAppearance()">💾 保存外观</button>`;
+ main.appendChild(card);
+ const setThemeSeg=card.querySelector("#setThemeSeg"),setBgSeg=card.querySelector("#setBgSeg");
+ setThemeSeg.querySelectorAll("button").forEach(b=>b.onclick=()=>{setThemeSeg.querySelectorAll("button").forEach(x=>x.classList.remove("on"));b.classList.add("on");if(!S.settings)S.settings={};S.settings.theme=b.dataset.t;save();applyTheme();});
+ setBgSeg.querySelectorAll("button").forEach(b=>b.onclick=()=>{setBgSeg.querySelectorAll("button").forEach(x=>x.classList.remove("on"));b.classList.add("on");if(!S.settings)S.settings={};S.settings.bg=b.dataset.b;save();applyBg();});
+
+ // AI 大模型配置
+ const ai=JSON.parse(localStorage.getItem("wb_ai_cfg")||"{}");
+ const aiCard=document.createElement("div");aiCard.className="card";
+ aiCard.innerHTML=`<h2>🤖 AI 大模型配置</h2>
+  <div class="ai-card">
+   <div style="font-size:12px;color:var(--muted);margin-bottom:6px">密钥仅存本机浏览器（localStorage），<b>不会</b>写入云端同步数据，也不会进入网页源码。换设备需重新填。</div>
+   <label>API Key</label><input id="aiKey" type="password" placeholder="sk-..." value="${esc(ai.key||"")}">
+   <label>Base URL</label><input id="aiBase" placeholder="https://api.openai.com/v1" value="${esc(ai.base||"")}">
+   <label>模型名</label><input id="aiModel" placeholder="gpt-4o / deepseek-chat ..." value="${esc(ai.model||"")}">
+   <button class="btn sm" style="margin-top:8px" onclick="saveAiCfg()">💾 保存 AI 配置（本机）</button>
+  </div>`;
+ main.appendChild(aiCard);
+
+ // 写作助手入口
+ const wCard=document.createElement("div");wCard.className="card";
+ wCard.innerHTML=`<h2>🍅 写作助手入口</h2>
+  <div class="set-row"><div class="k">作家助手</div><input id="writerUrlIn" value="${esc(st.writerUrl||"https://writer.fanqie.com/")}" style="flex:1;padding:8px 10px;border:2px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;background:var(--card);color:var(--ink)"></div>
+  <button class="btn" style="width:100%" onclick="saveWriterUrl()">💾 保存</button>
+  <a class="linkbtn" onclick="openWriter()" style="width:100%;margin-top:10px;justify-content:center;cursor:pointer">🚀 打开番茄作家助手</a>`;
+ main.appendChild(wCard);
+
+ // 导航顺序
+ const navCard=document.createElement("div");navCard.className="card";
+ const order=(st.navOrder&&st.navOrder.length)?st.navOrder:NAV.map(x=>x.v);
+ const navItems=order.map((v,idx)=>{const it=NAV.find(x=>x.v===v);if(!it)return"";
+   return `<div class="item"><span class="ico">${ICONS[it.i]}</span><span>${esc(it.t)}</span>
+    <span class="mv"><button onclick="moveNav(${idx},-1)" ${idx===0?"disabled":""}>↑</button><button onclick="moveNav(${idx},1)" ${idx===order.length-1?"disabled":""}>↓</button></span></div>`;}).join("");
+ navCard.innerHTML=`<h2>🧭 导航顺序</h2><div class="set-sec">调整顺序影响侧边栏排列（设置始终在最后）</div><div class="navorder">${navItems}</div>`;
+ main.appendChild(navCard);
+
+ // 周末博物馆习惯
+ const wk=document.createElement("div");wk.className="card";
+ wk.innerHTML=`<h2>🏛 周末充电</h2>
+  <div class="weekend-card"><span class="day">每周六</span><div style="flex:1;font-size:13px;color:var(--ink2)">安排一天去博物馆 / 文化馆学习，把输入变成输出的养分。</div></div>
+  <div style="font-size:12px;color:var(--muted);margin-top:8px">已在「首页 · 本周固定节奏」固定展示，并由早间自动化每周提醒。</div>`;
+ main.appendChild(wk);
+}
+function saveAppearance(){if(!S.settings)S.settings={};
+ const av=val("setAvatarIn")||"🗺",nm=val("setNameIn")||"我的闯关工作台";
+ S.settings.avatar=av;S.settings.name=nm;
+ const ts=document.querySelector("#setThemeSeg button.on");if(ts)S.settings.theme=ts.dataset.t;
+ const bs=document.querySelector("#setBgSeg button.on");if(bs)S.settings.bg=bs.dataset.b;
+ save();applyTheme();applyBg();updateWbTitle();render();toast("外观已保存");}
+function saveAiCfg(){const cfg={key:(document.getElementById("aiKey").value||"").trim(),base:(document.getElementById("aiBase").value||"").trim(),model:(document.getElementById("aiModel").value||"").trim()};
+ localStorage.setItem("wb_ai_cfg",JSON.stringify(cfg));toast("AI 配置已存本机");}
+function saveWriterUrl(){if(!S.settings)S.settings={};S.settings.writerUrl=(document.getElementById("writerUrlIn").value||"").trim()||"https://writer.fanqie.com/";save();toast("作家助手链接已保存");}
+function openWriter(){if(!S.settings)S.settings={};const u=(document.getElementById("writerUrlIn")?document.getElementById("writerUrlIn").value.trim():"")||S.settings.writerUrl||"https://writer.fanqie.com/";S.settings.writerUrl=u;save();window.open(u,"_blank");}
+function moveNav(idx,dir){if(!S.settings)S.settings={};let o=(S.settings.navOrder&&S.settings.navOrder.length)?S.settings.navOrder.slice():NAV.map(x=>x.v);
+ const j=idx+dir;if(j<0||j>=o.length)return;const t=o[idx];o[idx]=o[j];o[j]=t;S.settings.navOrder=o;save();render();}
 
 // 装修模块
 const RENO_SUB=[{k:"today",t:"📌 今日待确认"},{k:"stages",t:"🪜 阶段验收"},{k:"finance",t:"💰 财务"},{k:"materials",t:"🧱 主材"},
@@ -625,7 +843,7 @@ function renderReno(main){
    <div class="stat"><b>${esc(R().currentStage)}</b><span>当前阶段</span></div>
   </div>
   <div class="gantt">${segs}${marker}</div>
-  <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px"><span>开工日 ${esc(sd||"未设")}</span><span>🟢已完成 · 🟡进行中 · ⚪未开始</span></div>`;
+  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>开工日 ${esc(sd||"未设")}</span><span>🟢已完成 · 🟡进行中 · ⚪未开始</span></div>`;
  main.appendChild(gantt);
  const body=document.createElement("div");main.appendChild(body);
  if(sub==="today")renderToday(body);
@@ -644,7 +862,7 @@ function renderToday(body){
  const c1=document.createElement("div");c1.className="card";
  const mv=(localStorage.getItem("wb_morning_override")||MORNING_DEFAULT);
  c1.innerHTML=`<h2>🌅 早间复盘（自动同步）</h2><div class="morning" id="mv">${esc(mv)}</div>
-  <details style="margin-top:8px"><summary style="cursor:pointer;color:#9c5b52;font-size:13px">＋ 我的补充</summary>
+  <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--accent-ink);font-size:13px">＋ 我的补充</summary>
   <textarea class="note" id="mnote" placeholder="补充今天个人的关注点…">${esc(localStorage.getItem("wb_morning_note")||"")}</textarea>
   <button class="btn sm" id="msave" style="margin-top:6px">保存补充</button></div>`;
  body.appendChild(c1);
@@ -676,16 +894,16 @@ function renderStages(body){
  const gcard=document.createElement("div");gcard.className="card guide";
  const tools=(guide.tools||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join("");
  const pass=(guide.pass||[]).map(p=>`<li>${esc(p)}</li>`).join("");
- const defects=(guide.defects||[]).map(d=>`<div class="defect-item"><b>${esc(d.icon)} ${esc(d.name)}</b><div style="font-size:11px;color:#888;margin-top:3px">处理：${esc(d.fix)}</div></div>`).join("");
+ const defects=(guide.defects||[]).map(d=>`<div class="defect-item"><b>${esc(d.icon)} ${esc(d.name)}</b><div style="font-size:11px;color:var(--muted);margin-top:3px">处理：${esc(d.fix)}</div></div>`).join("");
  const shots=(guide.shots||[]).map(s=>`<span class="shot-tag">${esc(s)}</span>`).join("");
  gcard.innerHTML=`<details open>
   <summary>📖 ${esc(cur)}阶段验收指南</summary>
   <div style="margin-top:8px">
-   <div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">🛠 验收工具</div><div class="chips">${tools}</div>
-   <div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">✅ 合格标准</div><ul>${pass}</ul>
-   <div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">🐞 常见缺陷 & 处理</div><div class="defect-row">${defects}</div>
-   <div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">📸 必拍点位</div><div class="shot-list">${shots}</div>
-   ${(guide.metrics&&guide.metrics.length)?`<div style="font-size:12px;color:#7a4a44;font-weight:bold;margin-top:6px">📏 量化验收标准（用数据说话）</div><div class="metrics">${guide.metrics.map(m=>`<div class="metric"><b>${esc(m.k)}</b><span>${esc(m.v)}</span></div>`).join("")}</div>`:""}
+   <div style="font-size:12px;color:var(--accent-ink);font-weight:bold;margin-top:6px">🛠 验收工具</div><div class="chips">${tools}</div>
+   <div style="font-size:12px;color:var(--accent-ink);font-weight:bold;margin-top:6px">✅ 合格标准</div><ul>${pass}</ul>
+   <div style="font-size:12px;color:var(--accent-ink);font-weight:bold;margin-top:6px">🐞 常见缺陷 & 处理</div><div class="defect-row">${defects}</div>
+   <div style="font-size:12px;color:var(--accent-ink);font-weight:bold;margin-top:6px">📸 必拍点位</div><div class="shot-list">${shots}</div>
+   ${(guide.metrics&&guide.metrics.length)?`<div style="font-size:12px;color:var(--accent-ink);font-weight:bold;margin-top:6px">📏 量化验收标准（用数据说话）</div><div class="metrics">${guide.metrics.map(m=>`<div class="metric"><b>${esc(m.k)}</b><span>${esc(m.v)}</span></div>`).join("")}</div>`:""}
   </div>
  </details>`;
  body.appendChild(gcard);
@@ -756,8 +974,8 @@ function renderStages(body){
   return `<div class="defect defect-status-${d.status||0}">
    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
     <div style="min-width:0">
-     <div style="font-weight:bold;color:#7a4a44;font-size:14px">${esc(d.desc)}</div>
-     <div style="font-size:11px;color:#888;margin-top:5px">
+     <div style="font-weight:bold;color:var(--accent-ink);font-size:14px">${esc(d.desc)}</div>
+     <div style="font-size:11px;color:var(--muted);margin-top:5px">
       <span class="badge badge-${sevClass(d.sev)}">${esc(d.sev||"重要")}</span>
       <span class="badge badge-type">${esc(d.type||"其他")}</span>
       <span style="margin-left:6px">${esc(d.date)}</span>
@@ -796,8 +1014,8 @@ function renderStages(body){
     else tag="📝通用";
     return `<div style="position:relative;background:#fffdfa;border:2px dashed var(--line);border-radius:10px;padding:4px">
      <img src="${p.src}" style="width:100%;border-radius:6px;display:block;cursor:pointer" onclick="window.open('${p.src}')">
-     <div style="font-size:10px;color:#888;margin-top:3px">${esc(p.date)} <span style="color:#9c5b52">${tag}</span></div>
-     <span style="position:absolute;top:2px;right:2px;cursor:pointer;background:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#c98b83" onclick="deleteStagePhoto(${i},'${cur}')">✕</span>
+     <div style="font-size:10px;color:var(--muted);margin-top:3px">${esc(p.date)} <span style="color:var(--accent-ink)">${tag}</span></div>
+     <span style="position:absolute;top:2px;right:2px;cursor:pointer;background:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--red)" onclick="deleteStagePhoto(${i},'${cur}')">✕</span>
     </div>`;
    }).join("")+`</div>`;
   body.appendChild(g);
@@ -876,10 +1094,10 @@ function renderRenoLog(body){
  tl.innerHTML=`<h3>🗒 记录流（${logs.length} 条）</h3>`+(logs.length?logs.map(l=>{
    const ph=(l.photos||[]).map(p=>`<img src="${p}" class="mini-photo" onclick="window.open('${p}')">`).join("");
    return `<div style="border-bottom:1px dotted #ece3d6;padding:8px 0">
-     <div style="display:flex;justify-content:space-between;align-items:center"><b style="color:#7a4a44;font-size:13px">${esc(l.date)}</b><span style="font-size:11px;color:#c98b83;cursor:pointer" onclick="deleteLog(${l.id})">✕ 删除</span></div>
+     <div style="display:flex;justify-content:space-between;align-items:center"><b style="color:var(--accent-ink);font-size:13px">${esc(l.date)}</b><span style="font-size:11px;color:var(--red);cursor:pointer" onclick="deleteLog(${l.id})">✕ 删除</span></div>
      <div style="font-size:13px;color:#5a3a2a;margin-top:3px">${esc(l.text)}</div>${ph?`<div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">${ph}</div>`:""}
    </div>`;
-  }).join(""):`<div style="color:#aaa;font-size:13px">还没有记录，今天打第一条吧。</div>`);
+  }).join(""):`<div style="color:var(--muted);font-size:13px">还没有记录，今天打第一条吧。</div>`);
  body.appendChild(tl);
 }
 function addLog(){
@@ -925,29 +1143,29 @@ function renderFinance(body){
  const pct=Math.round(b.spent/b.total*100);
  const r=36,circ=2*Math.PI*r;
  const dash=Math.min(pct,100)/100*circ;
- const ringColor=pct>100?"#b03021":(pct>=90?"#b5651d":"#8fd0a0");
+ const ringColor=pct>100?"var(--bad)":(pct>=90?"var(--warm)":"var(--ok)");
  let rows=b.cats.map(cat=>{const cp=cat.cap?Math.round(cat.spent/(cat.cap||1)*100):0;
-  const st=cat.cap&&cat.spent>cat.cap?'<span style="color:#b03021">超支</span>':(cat.cap&&cp>=90?'<span style="color:#b5651d">预警</span>':'<span style="color:#3c6b4a">正常</span>');
+  const st=cat.cap&&cat.spent>cat.cap?'<span style="color:var(--bad)">超支</span>':(cat.cap&&cp>=90?'<span style="color:var(--warm)">预警</span>':'<span style="color:var(--ok)">正常</span>');
   return `<tr><td>${esc(cat.n)}</td><td>${cat.cap?cat.cap.toLocaleString():'—'}</td><td>${cat.spent.toLocaleString()}</td><td>${cp}%</td><td>${st}</td></tr>`;}).join("");
  c.innerHTML=`<h2>💰 装修财务</h2>
   <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:10px 0">
    <svg width="90" height="90" viewBox="0 0 90 90">
     <circle cx="45" cy="45" r="${r}" fill="none" stroke="#f0e9dd" stroke-width="10"/>
     <circle cx="45" cy="45" r="${r}" fill="none" stroke="${ringColor}" stroke-width="10" stroke-dasharray="${dash} ${circ}" stroke-linecap="round" transform="rotate(-90 45 45)"/>
-    <text x="45" y="48" text-anchor="middle" font-size="16" fill="#7a4a44" font-weight="bold">${pct}%</text>
+    <text x="45" y="48" text-anchor="middle" font-size="16" fill="var(--accent-ink)" font-weight="bold">${pct}%</text>
    </svg>
    <div style="flex:1;min-width:180px">
     <div class="xptxt" style="font-size:14px">总预算 <b>¥${b.total.toLocaleString()}</b></div>
     <div class="xptxt" style="font-size:14px">已花 <b>¥${b.spent.toLocaleString()}</b> · 待付 <b>¥${b.pending.toLocaleString()}</b></div>
-    <div class="xptxt" style="font-size:14px">超支 <b style="color:#b03021">¥${Math.max(0,b.spent-b.total).toLocaleString()}</b></div>
+    <div class="xptxt" style="font-size:14px">超支 <b style="color:var(--bad)">¥${Math.max(0,b.spent-b.total).toLocaleString()}</b></div>
    </div>
   </div>
   <table class="tbl"><thead><tr><th>分类</th><th>预算上限</th><th>已花</th><th>使用率</th><th>状态</th></tr></thead><tbody>${rows}</tbody></table>`;
  body.appendChild(c);
  const p=document.createElement("div");p.className="card";
  const timeline=R().pendingItems.map((t,i)=>`<div style="display:flex;gap:10px;margin:8px 0;align-items:flex-start">
-  <div style="width:10px;height:10px;border-radius:50%;background:#c98b83;margin-top:4px;flex:0 0 auto"></div>
-  <div style="font-size:13px;color:#7a4a44">${esc(t)}</div>
+  <div style="width:10px;height:10px;border-radius:50%;background:var(--red);margin-top:4px;flex:0 0 auto"></div>
+  <div style="font-size:13px;color:var(--accent-ink)">${esc(t)}</div>
  </div>`).join("");
  p.innerHTML=`<h3>🧾 待付款时间线</h3>${timeline}`;
  body.appendChild(p);
@@ -963,10 +1181,10 @@ function renderMaterials(body){
  const c=document.createElement("div");c.className="card";
  c.innerHTML=`<h2>🧱 主材追踪</h2><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:8px">`+
   R().materials.map((m,i)=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
-   <div style="font-weight:bold;color:#7a4a44;font-size:14px">${esc(m.name)}</div>
-   <div style="font-size:12px;color:#888;margin:4px 0">品牌：${esc(m.brand||"—")}</div>
+   <div style="font-weight:bold;color:var(--accent-ink);font-size:14px">${esc(m.name)}</div>
+   <div style="font-size:12px;color:var(--muted);margin:4px 0">品牌：${esc(m.brand||"—")}</div>
    <span style="display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:${statusColor(m.status)}" onclick="cycleMatStatus(${i})">${m.status}</span>
-   <div style="font-size:11px;color:#888;margin-top:6px">${esc(m.note||"")}</div>
+   <div style="font-size:11px;color:var(--muted);margin-top:6px">${esc(m.note||"")}</div>
   </div>`).join("")+`</div>`;
  body.appendChild(c);
  const add=document.createElement("div");add.className="card";
@@ -980,10 +1198,10 @@ function renderAppliances(body){
  const c=document.createElement("div");c.className="card";
  c.innerHTML=`<h2>🔌 家电家具</h2><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:8px">`+
   R().appliances.map((a,i)=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
-   <div style="font-weight:bold;color:#7a4a44;font-size:14px">${esc(a.name)}</div>
-   <div style="font-size:12px;color:#888;margin:4px 0">品牌：${esc(a.brand||"—")}</div>
+   <div style="font-weight:bold;color:var(--accent-ink);font-size:14px">${esc(a.name)}</div>
+   <div style="font-size:12px;color:var(--muted);margin:4px 0">品牌：${esc(a.brand||"—")}</div>
    <span style="display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:${statusColor(a.status)}" onclick="cycleAppStatus(${i})">${a.status}</span>
-   <div style="font-size:11px;color:#888;margin-top:6px">${esc(a.note||"")}</div>
+   <div style="font-size:11px;color:var(--muted);margin-top:6px">${esc(a.note||"")}</div>
   </div>`).join("")+`</div>`;
  body.appendChild(c);
  const add=document.createElement("div");add.className="card";
@@ -997,16 +1215,16 @@ function renderSoftdecor(body){
  const c=document.createElement("div");c.className="card";
  c.innerHTML=`<h2>🛋 软装搭配思路</h2>
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0">
-   <div style="width:60px;height:60px;border-radius:12px;background:#f5f0e6;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:#888">奶油白</div>
+   <div style="width:60px;height:60px;border-radius:12px;background:#f5f0e6;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)">奶油白</div>
    <div style="width:60px;height:60px;border-radius:12px;background:#e3c9a0;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff">原木</div>
    <div style="width:60px;height:60px;border-radius:12px;background:#8fd0a0;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff">绿植</div>
-   <div style="width:60px;height:60px;border-radius:12px;background:#cfe3f2;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:#888">雾霾蓝</div>
+   <div style="width:60px;height:60px;border-radius:12px;background:#cfe3f2;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)">雾霾蓝</div>
   </div>
-  <div style="font-size:13px;color:#7a4a44;margin-bottom:10px">低饱和奶油风 + 原木点缀 + 绿植点睛</div>`;
+  <div style="font-size:13px;color:var(--accent-ink);margin-bottom:10px">低饱和奶油风 + 原木点缀 + 绿植点睛</div>`;
  body.appendChild(c);
  R().softdecor.forEach((idea,i)=>{
   const d=document.createElement("div");d.className="card";
-  d.innerHTML=`<div style="font-weight:bold;color:#7a4a44">${esc(idea.idea)}</div><div style="font-size:12px;color:#888;margin-top:4px">${esc(idea.note)}</div>`;
+  d.innerHTML=`<div style="font-weight:bold;color:var(--accent-ink)">${esc(idea.idea)}</div><div style="font-size:12px;color:var(--muted);margin-top:4px">${esc(idea.note)}</div>`;
   body.appendChild(d);
  });
 }
@@ -1023,18 +1241,18 @@ function renderSmart(body){
   <h3>🏠 联动场景</h3>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:8px 0">`+
    scenes.map(s=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
-    <div style="font-weight:bold;color:#7a4a44;font-size:14px">${esc(s.name)}</div>
-    <div style="font-size:11px;color:#888;margin-top:4px;line-height:1.5">${esc(s.desc)}</div>
+    <div style="font-weight:bold;color:var(--accent-ink);font-size:14px">${esc(s.name)}</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5">${esc(s.desc)}</div>
    </div>`).join("")+`</div>
   <h3>🔌 设备清单</h3>`;
  body.appendChild(c);
  const grid=document.createElement("div");grid.className="card";
  grid.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">`+
   R().smart.map((d,i)=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
-   <div style="font-weight:bold;color:#7a4a44;font-size:13px">${esc(d.device)}</div>
-   <div style="font-size:11px;color:#888;margin:3px 0">${esc(d.room)} · ${esc(d.type)}</div>
+   <div style="font-weight:bold;color:var(--accent-ink);font-size:13px">${esc(d.device)}</div>
+   <div style="font-size:11px;color:var(--muted);margin:3px 0">${esc(d.room)} · ${esc(d.type)}</div>
    <span style="display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:${statusColor(d.status)}" onclick="cycleSmartStatus(${i})">${d.status}</span>
-   <div style="font-size:11px;color:#888;margin-top:4px">${esc(d.note||"")}</div>
+   <div style="font-size:11px;color:var(--muted);margin-top:4px">${esc(d.note||"")}</div>
   </div>`).join("")+`</div>`;
  body.appendChild(grid);
 }
@@ -1102,10 +1320,11 @@ function renderHome(main){
   </div>
   <h3>📅 本周固定节奏</h3>
   <div style="display:flex;gap:6px;flex-wrap:wrap">
-   ${dayNames.map((d,i)=>`<div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px ${i===todayIdx?'solid #9c5b52;background:#fff4f1':'dashed var(--line)'};color:${i===todayIdx?'#9c5b52':'#888'}">${d}</div>`).join("")}
+   ${dayNames.map((d,i)=>{const today=i===todayIdx,wknd=i===6,active=today||wknd;return `<div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px ${active?'solid var(--accent)':'dashed var(--line)'};background:${active?'var(--accent-weak)':'transparent'};color:${active?'var(--accent-ink)':'var(--muted)'}">${d}</div>`;}).join("")}
   </div>
-  <div style="margin-top:8px;font-size:12px;color:#7a4a44">
+  <div style="margin-top:8px;font-size:12px;color:var(--accent-ink)">
    <div>📍 每周三下午：覔书店看书</div>
+   <div>🏛 每周六：安排一天去博物馆 / 文化馆学习（充电日）</div>
    <div>🎬 每天晚上：电影 / 纪录片（本月主题：${esc(mk.filmTheme||"人文历史纪录片")}）</div>
   </div>`;
  main.appendChild(rhythm);
@@ -1114,7 +1333,7 @@ function renderHome(main){
  q.innerHTML=`<h2>🗺 本月主线（${S.currentMonth}）</h2><div class="qtitle">${esc(mk.main)}</div>
   <div class="reward">🎁 ${esc(mk.reward)}</div>
   <div style="display:flex;gap:10px;align-items:center;margin:6px 0"><div class="ring" style="--p:${pct}">${pct}%</div><div class="xptxt">支线 ${done}/${tot}</div></div>
-  <div style="margin:8px 0;font-size:13px;color:#7a4a44">🎬 本月观影主题：<input id="ft" value="${esc(mk.filmTheme||"")}" style="border:2px dashed var(--line);border-radius:8px;padding:3px 6px;font-family:inherit;font-size:12px;width:150px"><button class="btn sm" onclick="setFilmTheme()">保存</button></div>
+  <div style="margin:8px 0;font-size:13px;color:var(--accent-ink)">🎬 本月观影主题：<input id="ft" value="${esc(mk.filmTheme||"")}" style="border:2px dashed var(--line);border-radius:8px;padding:3px 6px;font-family:inherit;font-size:12px;width:150px"><button class="btn sm" onclick="setFilmTheme()">保存</button></div>
   <div id="tl"></div><div class="add"><input id="nt" placeholder="加一条支线…"><select id="nx"><option>80</option><option>120</option><option>150</option><option>200</option><option>300</option></select><button class="btn" onclick="addTask()">添加</button></div>`;
  main.appendChild(q);
  const tl=document.getElementById("tl");mk.tasks.forEach(t=>{const d=document.createElement("div");d.className="task"+(t.done?" done":"");
@@ -1166,29 +1385,29 @@ function renderStamps(main){
  const sw=document.getElementById("sw");
  all.forEach(k=>{let m=S.months[k];if(!m){m=S.months[k]={stampUnlocked:false,main:"本月主线待定",reward:"",stampName:""};}
   const on=m&&m.stampUnlocked;const el=document.createElement("div");el.className="stamp"+(on?" on":"");
-  el.innerHTML=`<div class="seal">${on?m.stampName:"❔"}</div><div style="font-size:11px;color:#888">${k.slice(5)}月</div>${on?'<div style="font-size:10px;color:#9c5b52">已解锁</div>':'<div style="font-size:10px;color:#aaa">点击补盖</div>'}`;
+  el.innerHTML=`<div class="seal">${on?m.stampName:"❔"}</div><div style="font-size:11px;color:var(--muted)">${k.slice(5)}月</div>${on?'<div style="font-size:10px;color:var(--accent-ink)">已解锁</div>':'<div style="font-size:10px;color:var(--muted)">点击补盖</div>'}`;
   el.onclick=()=>toggleStamp(k);sw.appendChild(el);});
  // 达成时间线
  const tl=document.createElement("div");tl.className="card";
  const earned=all.filter(k=>S.months[k]&&S.months[k].stampUnlocked).map(k=>({k,m:S.months[k]}));
  let tlh=`<h3>📜 达成时间线</h3>`;
  if(earned.length){
-  tlh+=`<div class="badge-detail" style="display:flex;flex-direction:column;gap:6px">`+earned.map(x=>`<div style="display:flex;gap:8px;align-items:center"><span style="font-size:18px">${esc(x.m.stampName||"🌟")}</span><span style="font-size:13px;color:#7a4a44"><b>${x.k.slice(5)}月</b> · ${esc(x.m.main||"")}</span></div>`).join("")+`</div>`;
+  tlh+=`<div class="badge-detail" style="display:flex;flex-direction:column;gap:6px">`+earned.map(x=>`<div style="display:flex;gap:8px;align-items:center"><span style="font-size:18px">${esc(x.m.stampName||"🌟")}</span><span style="font-size:13px;color:var(--accent-ink)"><b>${x.k.slice(5)}月</b> · ${esc(x.m.main||"")}</span></div>`).join("")+`</div>`;
  }else{
-  tlh+=`<div style="font-size:12px;color:#aaa">还没有解锁的月份印章，完成当月主线后盖印吧。</div>`;
+  tlh+=`<div style="font-size:12px;color:var(--muted)">还没有解锁的月份印章，完成当月主线后盖印吧。</div>`;
  }
  const gotMiles=miles.filter(m=>m.ok).length;
- tlh+=`<div style="font-size:12px;color:#6a5a55;margin-top:8px">已点亮里程碑 <b>${gotMiles}/${miles.length}</b></div>`;
+ tlh+=`<div style="font-size:12px;color:var(--muted);margin-top:8px">已点亮里程碑 <b>${gotMiles}/${miles.length}</b></div>`;
  tl.innerHTML=tlh;main.appendChild(tl);
 }
 function openBadgeDetail(idx){const m=STAMP_MILES[idx];if(!m)return;
  const pct=Math.min(100,Math.round(m.cur/m.req*100));
  const html=`<div class="badge-detail">
    <div style="font-size:22px">${m.i} <b>${m.n}</b></div>
-   <div style="font-size:13px;color:#7a4a44;margin:6px 0">${esc(m.d)}</div>
-   <div style="font-size:13px;color:#6a5a55">进度：<b>${m.cur}</b> / ${m.req}</div>
+   <div style="font-size:13px;color:var(--accent-ink);margin:6px 0">${esc(m.d)}</div>
+   <div style="font-size:13px;color:var(--muted)">进度：<b>${m.cur}</b> / ${m.req}</div>
    <div class="overall" style="margin-top:6px"><i style="width:${pct}%"></i></div>
-   <div style="margin-top:6px;font-weight:bold;color:${m.ok?'#3c6b4a':'#9a3a2a'}">${m.ok?'✅ 已达成！':'⏳ 尚未达成，继续加油'}</div>
+   <div style="margin-top:6px;font-weight:bold;color:${m.ok?'var(--ok)':'var(--red2)'}">${m.ok?'✅ 已达成！':'⏳ 尚未达成，继续加油'}</div>
   </div>`;
  openDModal("🏅 里程碑详情",html);}
 function toggleStamp(k){const m=S.months[k];if(!m)return;
@@ -1214,13 +1433,13 @@ function renderStocks(main){
  c.innerHTML=`<h2>📈 股市</h2>
   <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:10px 0">
    <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(${isLoss?'#8fd0a0':'#f4a8a8'} ${recoveryPct}%,#f0e9dd 0);display:flex;align-items:center;justify-content:center;flex-direction:column">
-    <div style="font-size:13px;color:#888">回本</div><div style="font-size:18px;font-weight:bold;color:#7a4a44">${recoveryPct}%</div>
+    <div style="font-size:13px;color:var(--muted)">回本</div><div style="font-size:18px;font-weight:bold;color:var(--accent-ink)">${recoveryPct}%</div>
    </div>
    <div style="flex:1;min-width:180px">
-    <div style="font-size:14px;color:#7a4a44">总市值 <b>¥${totalMv.toLocaleString()}</b> · 总成本 <b>¥${totalCost.toLocaleString()}</b></div>
-    <div style="font-size:14px;margin:4px 0">浮动盈亏 <b style="color:${isLoss?'#3c6b4a':'#b03021'}">${totalPl>=0?'+':''}¥${totalPl.toLocaleString()}</b></div>
-    <div style="font-size:12px;color:#888">目标：从亏损 ¥${S.stocks.targetRecovery.toLocaleString()} 回本 · 还差 <b>¥${recoveryGap.toLocaleString()}</b></div>
-    <div style="font-size:11px;color:#aaa;margin-top:4px">数据更新：${STOCK_DATA.updated||"未同步"}</div>
+    <div style="font-size:14px;color:var(--accent-ink)">总市值 <b>¥${totalMv.toLocaleString()}</b> · 总成本 <b>¥${totalCost.toLocaleString()}</b></div>
+    <div style="font-size:14px;margin:4px 0">浮动盈亏 <b style="color:${isLoss?'var(--ok)':'var(--bad)'}">${totalPl>=0?'+':''}¥${totalPl.toLocaleString()}</b></div>
+    <div style="font-size:12px;color:var(--muted)">目标：从亏损 ¥${S.stocks.targetRecovery.toLocaleString()} 回本 · 还差 <b>¥${recoveryGap.toLocaleString()}</b></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px">数据更新：${STOCK_DATA.updated||"未同步"}</div>
    </div>
   </div>`;
  main.appendChild(c);
@@ -1237,8 +1456,8 @@ function renderStocks(main){
    <div style="width:120px;height:120px;border-radius:50%;background:${grad};flex:0 0 auto"></div>
    <div class="pie-legend">${holdings.slice().sort((a,b)=>b.mv-a.mv).map(h=>`<div class="${h.mv/totalMv*100>15?'hot':''}"><span>${esc(h.name||h.code)}</span><span>${((h.mv/totalMv)*100).toFixed(1)}%${h.mv/totalMv*100>15?' ⚠':''}</span></div>`).join("")}</div>
   </div>
-  <div style="margin-top:8px;font-size:12px;color:#7a4a44">
-   ${secs.length?`行业分布：`+secs.sort((a,b)=>b.v-a.v).map(s=>`${esc(s.k)} ${s.v.toFixed(0)}%`).join(" · ")+`${hotSec.length?` · <b style="color:#b03021">⚠ ${hotSec.map(x=>x.k).join("/")} 集中度>30%</b>`:" · 分散合理"}`:`未填写行业，可在添加持仓时补充 sector 以监控行业集中度`}
+  <div style="margin-top:8px;font-size:12px;color:var(--accent-ink)">
+   ${secs.length?`行业分布：`+secs.sort((a,b)=>b.v-a.v).map(s=>`${esc(s.k)} ${s.v.toFixed(0)}%`).join(" · ")+`${hotSec.length?` · <b style="color:var(--bad)">⚠ ${hotSec.map(x=>x.k).join("/")} 集中度>30%</b>`:" · 分散合理"}`:`未填写行业，可在添加持仓时补充 sector 以监控行业集中度`}
   </div>`;
  main.appendChild(pieCard);
  // 回本所需涨幅计算器
@@ -1246,32 +1465,32 @@ function renderStocks(main){
  const recCard=document.createElement("div");recCard.className="card";
  recCard.innerHTML=`<h3>🎯 回本所需涨幅</h3>
   <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-   <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(${totalPl<0?'#b03021':'#8fd0a0'} ${Math.min(100,reqGain)}%,#f0e9dd 0);display:flex;align-items:center;justify-content:center;flex-direction:column">
-    <div style="font-size:11px;color:#888">需涨</div><div style="font-size:16px;font-weight:bold;color:#7a4a44">${reqGain.toFixed(1)}%</div></div>
-   <div style="flex:1;min-width:180px;font-size:13px;color:#7a4a44">
-    ${totalPl<0?`当前浮亏 <b style="color:#3c6b4a">¥${(-totalPl).toLocaleString()}</b>，市值 ¥${totalMv.toLocaleString()}，需整体上涨 <b>${reqGain.toFixed(1)}%</b> 才回本。`:`当前已盈利，回本目标已达成 ✅`}
-    <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">若再跌 <input id="recDrop" type="number" style="width:64px;padding:3px 6px;border:2px dashed var(--line);border-radius:8px;font-family:inherit;font-size:12px" placeholder="%"> % → <b id="recNew" style="color:#b03021"></b></div>
+   <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(${totalPl<0?'var(--bad)':'var(--ok)'} ${Math.min(100,reqGain)}%,var(--track) 0);display:flex;align-items:center;justify-content:center;flex-direction:column">
+    <div style="font-size:11px;color:var(--muted)">需涨</div><div style="font-size:16px;font-weight:bold;color:var(--accent-ink)">${reqGain.toFixed(1)}%</div></div>
+   <div style="flex:1;min-width:180px;font-size:13px;color:var(--accent-ink)">
+    ${totalPl<0?`当前浮亏 <b style="color:var(--ok)">¥${(-totalPl).toLocaleString()}</b>，市值 ¥${totalMv.toLocaleString()}，需整体上涨 <b>${reqGain.toFixed(1)}%</b> 才回本。`:`当前已盈利，回本目标已达成 ✅`}
+    <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">若再跌 <input id="recDrop" type="number" style="width:64px;padding:3px 6px;border:2px dashed var(--line);border-radius:8px;font-family:inherit;font-size:12px" placeholder="%"> % → <b id="recNew" style="color:var(--bad)"></b></div>
    </div>
   </div>
-  <div style="margin-top:8px;font-size:12px;color:#888">亏损 ↔ 回本所需涨幅对照：亏10%需涨11% · 20%→25% · 30%→43% · 40%→67% · 50%→100%（亏越深越难回）。</div>`;
+  <div style="margin-top:8px;font-size:12px;color:var(--muted)">亏损 ↔ 回本所需涨幅对照：亏10%需涨11% · 20%→25% · 30%→43% · 40%→67% · 50%→100%（亏越深越难回）。</div>`;
  main.appendChild(recCard);
  // 补仓后回本价计算器
  const totalShares=holdings.reduce((a,h)=>a+h.shares,0);
  const avgP=totalShares?totalCost/totalShares:0;
  const beCard=document.createElement("div");beCard.className="card";
  beCard.innerHTML=`<h3>➕ 补仓后回本价</h3>
-  <div style="font-size:12px;color:#888;margin-bottom:6px">当前均价 <b>¥${avgP.toFixed(3)}</b> · 总股数 <b>${totalShares.toLocaleString()}</b>（补仓可摊低/抬高回本价）</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:6px">当前均价 <b>¥${avgP.toFixed(3)}</b> · 总股数 <b>${totalShares.toLocaleString()}</b>（补仓可摊低/抬高回本价）</div>
   <div class="addrow">
    <input id="beShares" type="number" placeholder="补仓股数" value="${Math.round(totalShares*0.2)||1000}">
    <input id="bePrice" type="number" placeholder="补仓价" value="${avgP.toFixed(2)}">
    <button class="btn sm" id="beCalc">算一下</button>
   </div>
-  <div id="beOut" style="margin-top:8px;font-size:13px;color:#7a4a44"></div>`;
+  <div id="beOut" style="margin-top:8px;font-size:13px;color:var(--accent-ink)"></div>`;
  main.appendChild(beCard);
  const beSharesEl=document.getElementById("beShares"),bePriceEl=document.getElementById("bePrice"),beOut=document.getElementById("beOut");
  function calcBE(){const sh=parseFloat(beSharesEl.value)||0;const pr=parseFloat(bePriceEl.value)||0;if(sh<=0||pr<=0){beOut.textContent="请输入补仓股数与价格";return;}
   const nCost=totalCost+sh*pr,nSh=totalShares+sh,nBE=nCost/nSh;const curP=totalShares?totalMv/totalShares:0;const need=curP>0?((nBE-curP)/curP*100):0;
-  beOut.innerHTML=`补仓后：总成本 <b>¥${Math.round(nCost).toLocaleString()}</b> · 总股数 <b>${Math.round(nSh).toLocaleString()}</b><br>👉 <b style="color:#b03021">回本价 ¥${nBE.toFixed(2)}</b>（组合盈亏归零所需卖出价）<br>较当前均价 ¥${curP.toFixed(2)} 需涨 <b>${need>=0?'+':''}${need.toFixed(1)}%</b>`;}
+  beOut.innerHTML=`补仓后：总成本 <b>¥${Math.round(nCost).toLocaleString()}</b> · 总股数 <b>${Math.round(nSh).toLocaleString()}</b><br>👉 <b style="color:var(--bad)">回本价 ¥${nBE.toFixed(2)}</b>（组合盈亏归零所需卖出价）<br>较当前均价 ¥${curP.toFixed(2)} 需涨 <b>${need>=0?'+':''}${need.toFixed(1)}%</b>`;}
  const beBtn=document.getElementById("beCalc");if(beBtn)beBtn.onclick=calcBE;
  if(beSharesEl)beSharesEl.oninput=calcBE;if(bePriceEl)bePriceEl.oninput=calcBE;
  calcBE();
@@ -1280,11 +1499,11 @@ function renderStocks(main){
  const hcard=document.createElement("div");hcard.className="card";
  hcard.innerHTML=`<h3>📊 持仓明细</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:8px">`+
   holdings.map((h,i)=>`<div style="background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:10px">
-   <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:bold;color:#7a4a44">${esc(h.name||h.code)}</span><span style="font-size:11px;color:#888">${h.code}</span></div>
-   <div style="font-size:12px;color:#888;margin:4px 0">${h.shares} 股 · 成本 ¥${h.cost.toLocaleString()}</div>
-   <div style="font-size:12px;color:#888">现价 <b>¥${h.price.toLocaleString()}</b></div>
-   <div style="font-size:13px;margin-top:4px;color:${h.pl<0?'#3c6b4a':'#b03021'}">盈亏 ${h.pl>=0?'+':''}¥${h.pl.toLocaleString()}</div>
-   ${((stop)=>{if(!h.stop&&!h.target)return"";let s="";if(h.stop){const dd=(h.price-h.stop)/h.price*100,br=h.price<=h.stop;s+=`<div style="font-size:11px;margin-top:3px;color:${br?'#b03021':'#888'}">${br?'🚨 已破止损':'距止损 '+dd.toFixed(1)+'%'}（¥${h.stop}）</div>`;}if(h.target){const up=(h.target-h.price)/h.price*100,hit=h.price>=h.target;s+=`<div style="font-size:11px;color:${hit?'#3c6b4a':'#888'}">${hit?'✅ 已止盈':'距止盈 '+up.toFixed(1)+'%'}（¥${h.target}）</div>`;}return s;})()}
+   <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:bold;color:var(--accent-ink)">${esc(h.name||h.code)}</span><span style="font-size:11px;color:var(--muted)">${h.code}</span></div>
+   <div style="font-size:12px;color:var(--muted);margin:4px 0">${h.shares} 股 · 成本 ¥${h.cost.toLocaleString()}</div>
+   <div style="font-size:12px;color:var(--muted)">现价 <b>¥${h.price.toLocaleString()}</b></div>
+   <div style="font-size:13px;margin-top:4px;color:${h.pl<0?'var(--ok)':'var(--bad)'}">盈亏 ${h.pl>=0?'+':''}¥${h.pl.toLocaleString()}</div>
+   ${((stop)=>{if(!h.stop&&!h.target)return"";let s="";if(h.stop){const dd=(h.price-h.stop)/h.price*100,br=h.price<=h.stop;s+=`<div style="font-size:11px;margin-top:3px;color:${br?'var(--bad)':'var(--muted)'}">${br?'🚨 已破止损':'距止损 '+dd.toFixed(1)+'%'}（¥${h.stop}）</div>`;}if(h.target){const up=(h.target-h.price)/h.price*100,hit=h.price>=h.target;s+=`<div style="font-size:11px;color:${hit?'var(--ok)':'var(--muted)'}">${hit?'✅ 已止盈':'距止盈 '+up.toFixed(1)+'%'}（¥${h.target}）</div>`;}return s;})()}
   </div>`).join("")+`</div>
   ${holdings.length?'<h3 style="margin-top:12px">🏆 贡献排行</h3>'+(()=>{
    const sorted=[...holdings].sort((a,b)=>b.pl-a.pl);
@@ -1295,22 +1514,22 @@ function renderStocks(main){
  const sig=[];
  holdings.forEach(h=>{
    const q=STOCK_DATA.prices[h.code]; const pct=q?q.changePct:undefined;
-   if(h.stop&&h.price<=h.stop) sig.push({n:h.name||h.code,c:h.code,l:0,t:"🚨 已破止损（建议卖出）",col:"#b03021"});
-   else if(h.stop&&(h.price-h.stop)/h.price*100<=5) sig.push({n:h.name||h.code,c:h.code,l:1,t:"⚠ 接近止损（剩 "+((h.price-h.stop)/h.price*100).toFixed(1)+"%）",col:"#b5651d"});
-   if(h.target&&h.price>=h.target) sig.push({n:h.name||h.code,c:h.code,l:0,t:"✅ 已到止盈（考虑卖出）",col:"#3c6b4a"});
-   if(typeof pct==="number"&&pct<=-WATCH_DROP_PCT) sig.push({n:h.name||h.code,c:h.code,l:1,t:"📉 单日大跌 "+pct.toFixed(2)+"%，可考虑补仓",col:"#b5651d"});
-   if(typeof pct==="number"&&pct>=WATCH_RISE_PCT) sig.push({n:h.name||h.code,c:h.code,l:1,t:"📈 单日大涨 +"+pct.toFixed(2)+"%，可考虑减仓",col:"#3c6b4a"});
+   if(h.stop&&h.price<=h.stop) sig.push({n:h.name||h.code,c:h.code,l:0,t:"🚨 已破止损（建议卖出）",col:"var(--bad)"});
+   else if(h.stop&&(h.price-h.stop)/h.price*100<=5) sig.push({n:h.name||h.code,c:h.code,l:1,t:"⚠ 接近止损（剩 "+((h.price-h.stop)/h.price*100).toFixed(1)+"%）",col:"var(--warm)"});
+   if(h.target&&h.price>=h.target) sig.push({n:h.name||h.code,c:h.code,l:0,t:"✅ 已到止盈（考虑卖出）",col:"var(--ok)"});
+   if(typeof pct==="number"&&pct<=-WATCH_DROP_PCT) sig.push({n:h.name||h.code,c:h.code,l:1,t:"📉 单日大跌 "+pct.toFixed(2)+"%，可考虑补仓",col:"var(--warm)"});
+   if(typeof pct==="number"&&pct>=WATCH_RISE_PCT) sig.push({n:h.name||h.code,c:h.code,l:1,t:"📈 单日大涨 +"+pct.toFixed(2)+"%，可考虑减仓",col:"var(--ok)"});
  });
  (S.stocks.watchlist||[]).forEach(w=>{
    const pr=priceOf(w.code)||w.price||0; const q=STOCK_DATA.prices[w.code]; const pct=q?q.changePct:undefined;
-   if(w.buyBelow&&pr&&pr<=w.buyBelow) sig.push({n:w.name||w.code,c:w.code,l:0,t:"🟢 到达买点（≤¥"+w.buyBelow+"），可考虑建仓",col:"#3c6b4a"});
-   if(w.sellAbove&&pr&&pr>=w.sellAbove) sig.push({n:w.name||w.code,c:w.code,l:1,t:"🔴 超过卖点（≥¥"+w.sellAbove+"），注意风险",col:"#b03021"});
-   if(typeof pct==="number"&&pct<=-WATCH_DROP_PCT) sig.push({n:w.name||w.code,c:w.code,l:1,t:"🟢 自选大跌 "+pct.toFixed(2)+"%，关注买点",col:"#3c6b4a"});
-   if(typeof pct==="number"&&pct>=WATCH_RISE_PCT) sig.push({n:w.name||w.code,c:w.code,l:1,t:"🟡 自选大涨 +"+pct.toFixed(2)+"%，谨慎追高",col:"#b5651d"});
+   if(w.buyBelow&&pr&&pr<=w.buyBelow) sig.push({n:w.name||w.code,c:w.code,l:0,t:"🟢 到达买点（≤¥"+w.buyBelow+"），可考虑建仓",col:"var(--ok)"});
+   if(w.sellAbove&&pr&&pr>=w.sellAbove) sig.push({n:w.name||w.code,c:w.code,l:1,t:"🔴 超过卖点（≥¥"+w.sellAbove+"），注意风险",col:"var(--bad)"});
+   if(typeof pct==="number"&&pct<=-WATCH_DROP_PCT) sig.push({n:w.name||w.code,c:w.code,l:1,t:"🟢 自选大跌 "+pct.toFixed(2)+"%，关注买点",col:"var(--ok)"});
+   if(typeof pct==="number"&&pct>=WATCH_RISE_PCT) sig.push({n:w.name||w.code,c:w.code,l:1,t:"🟡 自选大涨 +"+pct.toFixed(2)+"%，谨慎追高",col:"var(--warm)"});
  });
  sig.sort((a,b)=>a.l-b.l);
  const alertCard=document.createElement("div");alertCard.className="card";
- alertCard.innerHTML=`<h3>🔔 盯盘预警</h3>`+(sig.length?`<div style="font-size:12px">`+sig.map(s=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px dotted #ece3d6"><span style="color:#7a4a44">${esc(s.n)} <span style="color:#aaa;font-size:11px">${esc(s.c)}</span></span><span style="color:${s.col};white-space:nowrap">${s.t}</span></div>`).join("")+`</div>`:`<div style="color:#3c6b4a;font-size:13px">✅ 监控中，暂无触发（持仓设了止损/止盈线、自选设了买点/卖点才提示）</div>`);
+ alertCard.innerHTML=`<h3>🔔 盯盘预警</h3>`+(sig.length?`<div style="font-size:12px">`+sig.map(s=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px dotted #ece3d6"><span style="color:var(--accent-ink)">${esc(s.n)} <span style="color:var(--muted);font-size:11px">${esc(s.c)}</span></span><span style="color:${s.col};white-space:nowrap">${s.t}</span></div>`).join("")+`</div>`:`<div style="color:var(--ok);font-size:13px">✅ 监控中，暂无触发（持仓设了止损/止盈线、自选设了买点/卖点才提示）</div>`);
  main.appendChild(alertCard);
  // 👀 自选买列表
  const watch=S.stocks.watchlist||[];
@@ -1321,12 +1540,12 @@ function renderStocks(main){
    const overSell=w.sellAbove&&pr&&pr>=w.sellAbove;
    const dist=w.buyBelow&&pr?((pr-w.buyBelow)/pr*100):null;
    let badge,col;
-   if(reachBuy){badge="🟢 到达买点";col="#3c6b4a";}
-   else if(overSell){badge="🔴 超卖点";col="#b03021";}
-   else if(dist!==null){badge="距买点 "+dist.toFixed(1)+"%";col="#b5651d";}
-   else{badge="—";col="#888";}
-   return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dotted #ece3d6"><span style="color:#7a4a44">${esc(w.name||w.code)} <span style="color:#aaa;font-size:11px">${esc(w.code)}</span>${w.note?` <span style="color:#aaa;font-size:11px">· ${esc(w.note)}</span>`:""}</span><span style="white-space:nowrap"><span style="color:${col}">¥${pr?pr.toFixed(3):"—"} · ${badge}</span> <span style="color:#c98b83;cursor:pointer" onclick="delWatch('${w.code}')">✕</span></span></div>`;
- }).join("")+`</div>`:`<div style="color:#aaa;font-size:13px">暂无自选。在 holdings.json 的 "watchlist" 加代码与买点/卖点，或用下方「添加自选」表单。</div>`);
+   if(reachBuy){badge="🟢 到达买点";col="var(--ok)";}
+   else if(overSell){badge="🔴 超卖点";col="var(--bad)";}
+   else if(dist!==null){badge="距买点 "+dist.toFixed(1)+"%";col="var(--warm)";}
+   else{badge="—";col="var(--muted)";}
+   return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dotted #ece3d6"><span style="color:var(--accent-ink)">${esc(w.name||w.code)} <span style="color:var(--muted);font-size:11px">${esc(w.code)}</span>${w.note?` <span style="color:var(--muted);font-size:11px">· ${esc(w.note)}</span>`:""}</span><span style="white-space:nowrap"><span style="color:${col}">¥${pr?pr.toFixed(3):"—"} · ${badge}</span> <span style="color:var(--red);cursor:pointer" onclick="delWatch('${w.code}')">✕</span></span></div>`;
+ }).join("")+`</div>`:`<div style="color:var(--muted);font-size:13px">暂无自选。在 holdings.json 的 "watchlist" 加代码与买点/卖点，或用下方「添加自选」表单。</div>`);
  main.appendChild(wcard);
  // 盈亏贡献条形图
  const maxAbs=Math.max(1,...holdings.map(h=>Math.abs(h.pl)));
@@ -1334,10 +1553,10 @@ function renderStocks(main){
  bar.innerHTML=`<h3>📊 盈亏贡献（谁在拖后腿）</h3>`+
   holdings.slice().sort((a,b)=>a.pl-b.pl).map(h=>{
    const w=Math.round(Math.abs(h.pl)/maxAbs*100);
-   const col=h.pl>=0?"#b03021":"#3c6b4a";
+   const col=h.pl>=0?"var(--bad)":"var(--ok)";
    const sign=h.pl>=0?"+":"";
    return `<div style="margin:7px 0">
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:#7a4a44"><span>${esc(h.name||h.code)}</span><span style="color:${col}">${sign}¥${h.pl.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--accent-ink)"><span>${esc(h.name||h.code)}</span><span style="color:${col}">${sign}¥${h.pl.toLocaleString()}</span></div>
     <div style="height:10px;background:#f0e9dd;border-radius:6px;overflow:hidden"><div style="height:100%;width:${w}%;background:${col}"></div></div>
    </div>`;
   }).join("");
@@ -1347,14 +1566,14 @@ function renderStocks(main){
  const kidx=((new Date().getDate()-1)%S.stocks.knowledgeCards.length);
  kcard.innerHTML=`<h3>💡 今日必备知识点</h3>
   <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:10px;font-size:13px;line-height:1.7">${esc(S.stocks.knowledgeCards[kidx])}</div>
-  <div style="margin-top:8px;font-size:12px;color:#888">共 ${S.stocks.knowledgeCards.length} 条，每日轮换</div>`;
+  <div style="margin-top:8px;font-size:12px;color:var(--muted)">共 ${S.stocks.knowledgeCards.length} 条，每日轮换</div>`;
  main.appendChild(kcard);
  // 资讯
  const ncard=document.createElement("div");ncard.className="card";
  const news=S.stocks.dailyNews.length?S.stocks.dailyNews:(STOCK_DATA.news||[]);
  ncard.innerHTML=`<h3>📰 持仓相关资讯</h3>`+
-  (news.length?news.map(n=>`<div style="border-bottom:1px dotted #ece3d6;padding:6px 0;font-size:13px"><a href="${esc(n.url||'#')}" target="_blank" style="color:#7a4a44;text-decoration:none">${esc(n.title)}</a><div style="font-size:11px;color:#aaa">${esc(n.source||"")} ${esc(n.time||"")}</div></div>`).join("")
-   :`<div style="color:#888;font-size:13px">暂无今日资讯。可运行 sync_stocks.py 同步最新新闻与行情。</div>`);
+  (news.length?news.map(n=>`<div style="border-bottom:1px dotted #ece3d6;padding:6px 0;font-size:13px"><a href="${esc(n.url||'#')}" target="_blank" style="color:var(--accent-ink);text-decoration:none">${esc(n.title)}</a><div style="font-size:11px;color:var(--muted)">${esc(n.source||"")} ${esc(n.time||"")}</div></div>`).join("")
+   :`<div style="color:var(--muted);font-size:13px">暂无今日资讯。可运行 sync_stocks.py 同步最新新闻与行情。</div>`);
  main.appendChild(ncard);
  // 交易复盘日志
  const tr=S.stocks.trades||[];
@@ -1373,7 +1592,7 @@ function renderStocks(main){
    <div class="stat"><b>¥${Math.round(maxDD).toLocaleString()}</b><span>最大回撤</span></div>
    <div class="stat"><b>${avgScore}</b><span>过程分均值</span></div>
   </div>
-  <div style="font-size:12px;color:#888;margin-top:6px">风控铁律：单笔亏损≤5% · 总仓位≤80%留现金 · 每周看盈亏统计。过程分(0-10)比盈亏更重要——一致性来自行为而非结果。</div>`;
+  <div style="font-size:12px;color:var(--muted);margin-top:6px">风控铁律：单笔亏损≤5% · 总仓位≤80%留现金 · 每周看盈亏统计。过程分(0-10)比盈亏更重要——一致性来自行为而非结果。</div>`;
  main.appendChild(statCard);
  const fcard=document.createElement("div");fcard.className="card";
  fcard.innerHTML=`<h3>➕ 记一笔交易</h3>
@@ -1389,7 +1608,7 @@ function renderStocks(main){
   <div class="addrow" style="margin-top:6px">
    <select id="trHabit"><option value="无">坏习惯：无</option><option>追高</option><option>扛单</option><option>重仓</option><option>临时改计划</option><option>频繁交易</option></select>
    <select id="trMood"><option>情绪：平静</option><option>兴奋</option><option>焦虑</option><option>犹豫</option><option>报复性</option></select>
-   <label style="font-size:12px;color:#7a4a44;display:flex;align-items:center;gap:4px"><input id="trDisc" type="checkbox"> 守纪律</label>
+   <label style="font-size:12px;color:var(--accent-ink);display:flex;align-items:center;gap:4px"><input id="trDisc" type="checkbox"> 守纪律</label>
    <input id="trScore" placeholder="过程分0-10" type="number" style="flex:0 0 110px">
   </div>
   <textarea id="trLesson" class="note" placeholder="一句话教训 / 复盘心得…" style="min-height:40px;margin-top:6px;width:100%"></textarea>
@@ -1397,10 +1616,10 @@ function renderStocks(main){
  main.appendChild(fcard);
  const lcard=document.createElement("div");lcard.className="card";
  lcard.innerHTML=`<h3>🗒 交易记录（${tn} 笔）</h3>`+(tn?tr.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(t=>`<div style="border-bottom:1px dotted #ece3d6;padding:8px 0">
-   <div style="display:flex;justify-content:space-between;align-items:center"><b style="color:#7a4a44;font-size:13px">${esc(t.ticker)}</b><span style="font-size:11px;color:#c98b83;cursor:pointer" onclick="delTrade(${t.id})">✕</span></div>
-   <div style="font-size:12px;color:#888;margin-top:2px">${esc(t.date)} · ${t.dir<0?'空':'多'} · 进场¥${t.entry}→出场¥${t.exit} · <b style="color:${t.pl>=0?'#b03021':'#3c6b4a'}">${t.pl>=0?'+':''}¥${Math.round(t.pl).toLocaleString()}</b> · 过程分${t.score}${t.disc?' · 守纪律':''}${t.habit&&t.habit!=='无'?' · '+esc(t.habit):''}</div>
-   ${t.lesson?`<div style="font-size:12px;color:#9c5b52;margin-top:3px">💡 ${esc(t.lesson)}</div>`:""}
-  </div>`).join(""):`<div style="color:#aaa;font-size:13px">还没有交易记录，收盘后记一笔吧。</div>`);
+   <div style="display:flex;justify-content:space-between;align-items:center"><b style="color:var(--accent-ink);font-size:13px">${esc(t.ticker)}</b><span style="font-size:11px;color:var(--red);cursor:pointer" onclick="delTrade(${t.id})">✕</span></div>
+   <div style="font-size:12px;color:var(--muted);margin-top:2px">${esc(t.date)} · ${t.dir<0?'空':'多'} · 进场¥${t.entry}→出场¥${t.exit} · <b style="color:${t.pl>=0?'var(--bad)':'var(--ok)'}">${t.pl>=0?'+':''}¥${Math.round(t.pl).toLocaleString()}</b> · 过程分${t.score}${t.disc?' · 守纪律':''}${t.habit&&t.habit!=='无'?' · '+esc(t.habit):''}</div>
+   ${t.lesson?`<div style="font-size:12px;color:var(--accent-ink);margin-top:3px">💡 ${esc(t.lesson)}</div>`:""}
+  </div>`).join(""):`<div style="color:var(--muted);font-size:13px">还没有交易记录，收盘后记一笔吧。</div>`);
  main.appendChild(lcard);
  // 操作
  const op=document.createElement("div");op.className="card";
@@ -1416,7 +1635,7 @@ function renderStocks(main){
    <input id="shTarget" placeholder="止盈价(选)" type="number">
    <button class="btn sm" onclick="addHolding()">添加</button>
   </div>
-  <div style="margin-top:8px;font-size:12px;color:#888">💡 自动同步：把同花顺导出文件放到 OneDrive，运行 sync_stocks.py 即可更新持仓与行情。</div>`;
+  <div style="margin-top:8px;font-size:12px;color:var(--muted)">💡 自动同步：把同花顺导出文件放到 OneDrive，运行 sync_stocks.py 即可更新持仓与行情。</div>`;
  main.appendChild(op);
  // 添加/修改自选
  const wop=document.createElement("div");wop.className="card";
@@ -1429,7 +1648,7 @@ function renderStocks(main){
    <input id="shwNote" placeholder="备注(选)">
    <button class="btn sm" onclick="addWatch()">添加</button>
   </div>
-  <div style="margin-top:8px;font-size:12px;color:#888">💡 买点价：现价≤此价提醒建仓；卖点价：现价≥此价提醒注意。也支持直接在 holdings.json 的 watchlist 填写。</div>`;
+  <div style="margin-top:8px;font-size:12px;color:var(--muted)">💡 买点价：现价≤此价提醒建仓；卖点价：现价≥此价提醒注意。也支持直接在 holdings.json 的 watchlist 填写。</div>`;
  main.appendChild(wop);
 }
 function addHolding(){const code=document.getElementById("shCode").value.trim();const name=document.getElementById("shName").value.trim();const shares=parseFloat(document.getElementById("shShares").value)||0;const cost=parseFloat(document.getElementById("shCost").value)||0;const price=parseFloat(document.getElementById("shPrice").value)||0;if(!code||!shares)return;const sector=document.getElementById("shSector").value.trim();const stop=parseFloat(document.getElementById("shStop").value)||null;const target=parseFloat(document.getElementById("shTarget").value)||null;const idx=S.stocks.holdings.findIndex(h=>h.code===code);if(idx>=0){const o=S.stocks.holdings[idx];S.stocks.holdings[idx]={code,name:name||o.name,shares,cost,price:price||cost,group:"A股",sector:sector||o.sector,stop:stop||null,target:target||null};}else{S.stocks.holdings.push({code,name:name||code,shares,cost,price:price||cost,group:"A股",sector,stop,target});}save();render();toast("持仓已更新");}
@@ -1449,26 +1668,26 @@ function renderFitness(main){
  // 1. 体态诊断
  const diag=document.createElement("div");diag.className="card";
  diag.innerHTML=`<h2>💪 体态诊断</h2>
-  <div style="font-size:13px;color:#7a4a44;line-height:1.7">你列出的问题：<b>肋骨外翻、驼背、脖子前倾、小腹突出</b>，共同根源多为久坐 + 呼吸浅 + 核心无力。策略：每天只练 1 个动作，靠坚持重建体态。</div>
+  <div style="font-size:13px;color:var(--accent-ink);line-height:1.7">你列出的问题：<b>肋骨外翻、驼背、脖子前倾、小腹突出</b>，共同根源多为久坐 + 呼吸浅 + 核心无力。策略：每天只练 1 个动作，靠坚持重建体态。</div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">${S.fitness.issues.map(x=>`<span style="background:#fcebc2;border-radius:10px;padding:3px 9px;font-size:12px;color:#9a5a1d">${esc(x)}</span>`).join("")}</div>`;
  main.appendChild(diag);
  // 2. 今日动作卡（分解+注意+视频）
  const c=document.createElement("div");c.className="card";
  const stepsHtml=(ex.steps||[]).map(s=>`<li>${esc(s)}</li>`).join("");
  const cautHtml=(ex.cautions||[]).map(s=>`<li>${esc(s)}</li>`).join("");
- const vidHtml=vidSrc?`<iframe class="vidframe" src="${esc(vidSrc)}" allow="autoplay;encrypted-media" allowfullscreen></iframe>`:`<div style="font-size:12px;color:#888;margin-top:6px">暂无嵌入视频。点上面按钮看真实教学，或在下方粘贴 B站/YouTube 链接嵌入。</div>`;
+ const vidHtml=vidSrc?`<iframe class="vidframe" src="${esc(vidSrc)}" allow="autoplay;encrypted-media" allowfullscreen></iframe>`:`<div style="font-size:12px;color:var(--muted);margin-top:6px">暂无嵌入视频。点上面按钮看真实教学，或在下方粘贴 B站/YouTube 链接嵌入。</div>`;
  c.innerHTML=`<h2>📍 今日动作 · 周${["日","一","二","三","四","五","六"][dayIdx]}</h2>
   <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:12px;margin:8px 0">
-   <div style="font-family:'Ma Shan Zheng',cursive;color:#b5651d;font-size:18px">${esc(ex.name)}</div>
-   <div style="font-size:13px;color:#7a4a44;margin:4px 0"><b>针对：</b>${esc(ex.focus||"")} · <b>计划：</b>${esc(ex.sets)}</div>
-   <div style="font-size:12px;color:#888">🎬 可叠加：${esc(ex.while||"")}</div>
+   <div style="font-family:'Ma Shan Zheng',cursive;color:var(--warm);font-size:18px">${esc(ex.name)}</div>
+   <div style="font-size:13px;color:var(--accent-ink);margin:4px 0"><b>针对：</b>${esc(ex.focus||"")} · <b>计划：</b>${esc(ex.sets)}</div>
+   <div style="font-size:12px;color:var(--muted)">🎬 可叠加：${esc(ex.while||"")}</div>
   </div>
   <div class="fit-block"><div class="fit-h">🧩 分解步骤</div><ol class="fit-steps">${stepsHtml}</ol></div>
-  <div class="fit-block"><div class="fit-h" style="color:#b03021">⚠ 注意事项（千万别错）</div><ul class="fit-caut">${cautHtml}</ul></div>
+  <div class="fit-block"><div class="fit-h" style="color:var(--bad)">⚠ 注意事项（千万别错）</div><ul class="fit-caut">${cautHtml}</ul></div>
   <div class="vid">
    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0">
     <button class="btn sm" onclick="openFitVideo(${dayIdx})">▶ 看教学视频</button>
-    <span style="font-size:11px;color:#aaa">（在 B站/YouTube 搜真实教学）</span>
+    <span style="font-size:11px;color:var(--muted)">（在 B站/YouTube 搜真实教学）</span>
    </div>
    ${vidHtml}
    <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
@@ -1500,8 +1719,8 @@ function renderFitness(main){
  cal.innerHTML=`<h3>📅 本周课表</h3>
   <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px">`+
    FITNESS_PLAN.map((x,i)=>`<div style="background:${i===dayIdx?'#fff7e8':'#fffdfa'};border:2px ${i===dayIdx?'solid #e0b96a':'dashed var(--line)'};border-radius:10px;padding:6px;font-size:11px;text-align:center">
-    <div style="color:#888">${["日","一","二","三","四","五","六"][i]}</div>
-    <div style="color:#7a4a44;margin-top:3px;font-weight:bold">${esc((x.name||"").split("+")[0])}</div>
+    <div style="color:var(--muted)">${["日","一","二","三","四","五","六"][i]}</div>
+    <div style="color:var(--accent-ink);margin-top:3px;font-weight:bold">${esc((x.name||"").split("+")[0])}</div>
    </div>`).join("")+`</div>`;
  main.appendChild(cal);
  // 5. 坚持热力图
@@ -1549,7 +1768,7 @@ function renderReading(main){
   <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:6px 0">
    <div class="ring" style="--p:${rp}">${rp}%</div>
    <div style="flex:1;min-width:180px">
-    <div class="xptxt" style="font-size:13px">年度目标 <b>${goal}</b> 本 · 已读 <b style="color:#3c6b4a">${read}</b> · 在读 <b>${reading}</b> · 待读 ${total-read-reading}</div>
+    <div class="xptxt" style="font-size:13px">年度目标 <b>${goal}</b> 本 · 已读 <b style="color:var(--ok)">${read}</b> · 在读 <b>${reading}</b> · 待读 ${total-read-reading}</div>
     <div class="goalbar"><i style="width:${Math.min(100,rp)}%"></i></div>
    </div>
   </div>
@@ -1561,13 +1780,13 @@ function renderReading(main){
    <div class="stat"><b>${readStreak()}</b><span>连续打卡</span></div>
   </div>
   <div class="tabs" style="margin-top:8px">${["全部","想读","在读","已读"].map(s=>`<span class="tab${READ_FILTER===s?' active':''}" onclick="setReadFilter('${s}')">${s}</span>`).join("")}</div>
-  <div class="chips" style="margin-top:6px">${Object.keys(tags).map(t=>`<span class="chip">${esc(t)} ${tags[t]}</span>`).join("")||'<span style="font-size:12px;color:#aaa">暂无标签</span>'}</div>`;
+  <div class="chips" style="margin-top:6px">${Object.keys(tags).map(t=>`<span class="chip">${esc(t)} ${tags[t]}</span>`).join("")||'<span style="font-size:12px;color:var(--muted)">暂无标签</span>'}</div>`;
  main.appendChild(c);
  // 今日读什么
  const cand=all.filter(b=>b.status!=="已读");
  if(cand.length){const pick=cand[Math.floor(Math.random()*cand.length)];
   const card=document.createElement("div");card.className="card";
-  card.innerHTML=`<div style="background:var(--blue);border-radius:12px;padding:12px"><b>📍 今日读什么</b><div style="margin-top:6px;font-size:14px;color:#7a4a44;font-weight:bold">${esc(pick.title)}</div><div style="font-size:12px;color:#888">${esc(pick.author||"")} · 当前：${pick.status}</div></div>`;
+  card.innerHTML=`<div style="background:var(--blue);border-radius:12px;padding:12px"><b>📍 今日读什么</b><div style="margin-top:6px;font-size:14px;color:var(--accent-ink);font-weight:bold">${esc(pick.title)}</div><div style="font-size:12px;color:var(--muted)">${esc(pick.author||"")} · 当前：${pick.status}</div></div>`;
   main.appendChild(card);}
  // 书架（可点击进详情）
  const filt=READ_FILTER==="全部"?all:all.filter(b=>b.status===READ_FILTER);
@@ -1575,14 +1794,14 @@ function renderReading(main){
  let h=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">`;
  filt.forEach((b,i)=>{const gi=all.indexOf(b);const bg=b.status==="已读"?"#cde8d2":(b.status==="在读"?"#cfe3f2":"#fcebc2");
   h+=`<div class="bk-card" onclick="openBookDetail(${gi})">
-   <div style="font-weight:bold;color:#7a4a44;font-size:14px;margin-bottom:4px">${esc(b.title)}</div>
-   <div style="font-size:12px;color:#888;margin-bottom:4px">${esc(b.author||"")}</div>
+   <div style="font-weight:bold;color:var(--accent-ink);font-size:14px;margin-bottom:4px">${esc(b.title)}</div>
+   <div style="font-size:12px;color:var(--muted);margin-bottom:4px">${esc(b.author||"")}</div>
    ${b.rating?`<div style="color:#e0a93b;font-size:13px;margin:2px 0">${"★".repeat(b.rating)}${"☆".repeat(5-b.rating)}</div>`:""}
-   ${b.progress?`<div class="goalbar" style="margin:4px 0"><i style="width:${b.progress}%"></i></div><div style="font-size:10px;color:#888">进度 ${b.progress}%</div>`:""}
+   ${b.progress?`<div class="goalbar" style="margin:4px 0"><i style="width:${b.progress}%"></i></div><div style="font-size:10px;color:var(--muted)">进度 ${b.progress}%</div>`:""}
    <span style="display:inline-block;font-size:11px;padding:1px 8px;border-radius:10px;background:${bg}">${b.status}</span>
   </div>`;});
  h+=`</div>`;
- if(!filt.length)h=`<div style="color:#aaa;font-size:13px;padding:8px">这个分类下还没有书。</div>`;
+ if(!filt.length)h=`<div style="color:var(--muted);font-size:13px;padding:8px">这个分类下还没有书。</div>`;
  grid.innerHTML=h;main.appendChild(grid);
  const add=document.createElement("div");add.className="card";
  add.innerHTML=`<h3>➕ 添加新书</h3><div class="addrow"><input id="nbTitle" placeholder="书名"><input id="nbAuthor" placeholder="作者"><input id="nbTags" placeholder="标签"><button class="btn sm" onclick="addBook()">添加</button></div>`;
@@ -1591,7 +1810,7 @@ function renderReading(main){
 function readStreak(){const set=new Set(S.readingLog||[]);if(!set.has(todayStr()))return 0;let n=0,d=new Date();while(set.has(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate())){n++;d.setDate(d.getDate()-1);}return n;}
 function setReadFilter(s){READ_FILTER=s;render();}
 function openBookDetail(i){const b=S.reading[i];if(!b)return;
- const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:8px"><b>${esc(b.title)}</b> · ${esc(b.author||"")}</div>
+ const html=`<div style="font-size:13px;color:var(--accent-ink);margin-bottom:8px"><b>${esc(b.title)}</b> · ${esc(b.author||"")}</div>
   <div style="margin:6px 0">状态：<span class="tab" onclick="cycleBookStatus(${i});openBookDetail(${i})">${b.status}（点击切换）</span></div>
   <div style="margin:8px 0">评分：${starsInput('rateBook',i,b.rating||0,'openBookDetail')}</div>
   <div style="margin:8px 0">阅读进度：<input id="bkProg" type="number" min="0" max="100" value="${b.progress||0}" style="width:70px;padding:3px 6px;border:2px dashed var(--line);border-radius:8px">% <button class="btn sm" onclick="setBookProgress(${i})">保存</button></div>
@@ -1618,7 +1837,7 @@ function renderFilm(main){
  const types=["全部",...new Set(S.film.map(f=>f.type).filter(Boolean))];
  const mk=S.months[S.currentMonth];const theme=(mk&&mk.filmTheme)||"人文历史纪录片";
  let h=`<h2>🎬 影视片单</h2>
-  <div style="font-size:13px;color:#6a5a55;margin:2px 0 6px">年度目标 <b>${goal}</b> 部 · 已看 <b style="color:#3c6b4a">${seen}</b> / 共 <b>${total}</b> 部（${fp}%）</div>
+  <div style="font-size:13px;color:var(--muted);margin:2px 0 6px">年度目标 <b>${goal}</b> 部 · 已看 <b style="color:var(--ok)">${seen}</b> / 共 <b>${total}</b> 部（${fp}%）</div>
   <div class="goalbar"><i style="width:${fp}%"></i></div>
   <div class="stat-strip" style="margin-top:12px">
    <div class="stat"><b>${total}</b><span>片库</span></div>
@@ -1636,9 +1855,9 @@ function renderFilm(main){
  const d=new Date();const isWed=d.getDay()===3;
  h+=`<div style="background:var(--lilac);border-radius:12px;padding:12px;margin:12px 0">
   <div style="font-family:'Ma Shan Zheng',cursive;color:#5a3a6a;font-size:16px;margin-bottom:6px">🎞 今日推荐 · 本月主题「${esc(theme)}」${isWed?"（周三·书店后适合看）":""}</div>
-  <div style="font-weight:bold;color:#7a4a44">${esc(pick.title)}</div>
-  <div style="font-size:12px;color:#888">${esc(pick.type||"")} ${pick.tags?"· "+esc(pick.tags):""}</div>
-  <div style="font-size:12px;color:#9c5b52;margin-top:6px">💡 观影时可同步：梳头100次 / 靠墙站5分钟</div>
+  <div style="font-weight:bold;color:var(--accent-ink)">${esc(pick.title)}</div>
+  <div style="font-size:12px;color:var(--muted)">${esc(pick.type||"")} ${pick.tags?"· "+esc(pick.tags):""}</div>
+  <div style="font-size:12px;color:var(--accent-ink);margin-top:6px">💡 观影时可同步：梳头100次 / 靠墙站5分钟</div>
  </div>`;
  const filt=FILM_FILTER==="全部"?S.film:S.film.filter(f=>f.type===FILM_FILTER);
  h+=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:6px">`;
@@ -1647,9 +1866,9 @@ function renderFilm(main){
   const bg=f.status==="已看"?"#cde8d2":"#fcebc2";
   const stars=f.rating>0?"★".repeat(f.rating):"";
   h+=`<div class="film-card" onclick="openFilmDetail(${i})">
-   <div style="font-weight:bold;color:#7a4a44;font-size:14px;margin-bottom:4px">${esc(f.title)}</div>
-   <div style="font-size:12px;color:#888;margin-bottom:6px">${esc(f.type||"")}</div>
-   <div style="font-size:11px;color:#9c5b52;margin-bottom:8px">${esc(f.tags||"")}</div>
+   <div style="font-weight:bold;color:var(--accent-ink);font-size:14px;margin-bottom:4px">${esc(f.title)}</div>
+   <div style="font-size:12px;color:var(--muted);margin-bottom:6px">${esc(f.type||"")}</div>
+   <div style="font-size:11px;color:var(--accent-ink);margin-bottom:8px">${esc(f.tags||"")}</div>
    <div style="display:flex;justify-content:space-between;align-items:center">
      <span style="display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:${bg}">${f.status}</span>
      <span style="font-size:13px;color:#e0a93b">${stars}</span>
@@ -1664,7 +1883,7 @@ function renderFilm(main){
 }
 function setFilmFilter(s){FILM_FILTER=s;render();}
 function openFilmDetail(i){const f=S.film[i];if(!f)return;
- const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:8px"><b>${esc(f.title)}</b> · ${esc(f.type||"")} · ${esc(f.tags||"")}</div>
+ const html=`<div style="font-size:13px;color:var(--accent-ink);margin-bottom:8px"><b>${esc(f.title)}</b> · ${esc(f.type||"")} · ${esc(f.tags||"")}</div>
   <div style="margin:6px 0">状态：<span class="tab" onclick="cycleFilmStatus(${i});openFilmDetail(${i})">${f.status}（点击切换）</span></div>
   <div style="margin:8px 0">评分：${starsInput('rateFilm',i,f.rating||0,'openFilmDetail')}</div>
   <div style="margin:8px 0">观影日期：<input id="fmDate" type="date" value="${esc(f.date||'')}" style="padding:3px 6px;border:2px dashed var(--line);border-radius:8px" onchange="setFilmDate(${i})"></div>
@@ -1689,7 +1908,7 @@ function renderSocial(main){
  const byPlat={};arr.forEach(x=>{const p=x.platform||"未分类";byPlat[p]=(byPlat[p]||0)+(parseInt(x.fans)||0);});
  const maxPlat=Math.max(1,...Object.values(byPlat));
  let h=`<h2>📱 自媒体矩阵</h2>
-  <div style="font-size:13px;color:#6a5a55;margin:2px 0 6px">粉丝总目标 <b>${goal.toLocaleString()}</b> · 当前 <b style="color:#3c6b4a">${totalFans.toLocaleString()}</b>（${fp}%）</div>
+  <div style="font-size:13px;color:var(--muted);margin:2px 0 6px">粉丝总目标 <b>${goal.toLocaleString()}</b> · 当前 <b style="color:var(--ok)">${totalFans.toLocaleString()}</b>（${fp}%）</div>
   <div class="goalbar"><i style="width:${fp}%"></i></div>
   <div class="stat-strip" style="margin-top:12px">
    <div class="stat"><b>${arr.length}</b><span>账号数</span></div>
@@ -1697,37 +1916,49 @@ function renderSocial(main){
    <div class="stat"><b>${daily}</b><span>日更</span></div>
    <div class="stat"><b>${Object.keys(byPlat).length}</b><span>平台</span></div>
   </div>
-  <div style="margin-top:12px;font-size:13px;color:#6a5a55;font-weight:bold">各平台粉丝分布</div>
-  <div style="margin-top:6px">${Object.entries(byPlat).sort((a,b)=>b[1]-a[1]).map(([p,v])=>`<div class="platbar"><span style="min-width:64px;color:#7a4a44">${esc(p)}</span><span class="track"><i style="width:${Math.round(v/maxPlat*100)}%"></i></span><span class="n">${v.toLocaleString()}</span></div>`).join("")}</div>`;
+  <div style="margin-top:12px;font-size:13px;color:var(--muted);font-weight:bold">各平台粉丝分布</div>
+  <div style="margin-top:6px">${Object.entries(byPlat).sort((a,b)=>b[1]-a[1]).map(([p,v])=>`<div class="platbar"><span style="min-width:64px;color:var(--accent-ink)">${esc(p)}</span><span class="track"><i style="width:${Math.round(v/maxPlat*100)}%"></i></span><span class="n">${v.toLocaleString()}</span></div>`).join("")}</div>`;
  c.innerHTML=h;main.appendChild(c);
  const list=document.createElement("div");list.className="card";
- let cards=arr.map((it,i)=>`<div class="social-card" onclick="openSocialEdit(${i})">
-   <div class="pf">${esc(it.platform||"")} <span style="font-size:12px;color:#888">· ${esc(it.name||"")}</span></div>
+ let cards=arr.map((it,i)=>{const link=it.link||"";
+  return `<div class="social-card">
+   <div class="pf">${esc(it.platform||"")} <span style="font-size:12px;color:var(--muted)">· ${esc(it.name||"")}</span></div>
    <div class="row"><span>频率</span><span>${esc(it.freq||"—")}</span></div>
    <div class="row"><span>粉丝</span><span>${esc(it.fans||"—")}</span></div>
-   ${it.note?`<div style="font-size:12px;color:#7a4a44;margin:4px 0">${esc(it.note)}</div>`:""}
-   <div style="font-size:11px;color:#aa9;margin-top:4px">点击编辑 ✎</div>
-  </div>`).join("");
- if(!cards)cards=`<div style="color:#aaa;font-size:13px;padding:8px">还没有账号，下面添加一个吧。</div>`;
+   ${it.xhsId?`<div class="row"><span>小红书号</span><span>${esc(it.xhsId)}</span></div>`:""}
+   ${it.note?`<div style="font-size:12px;color:var(--accent-ink);margin:4px 0">${esc(it.note)}</div>`:""}
+   <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+     ${link?`<a class="linkbtn" href="${esc(link)}" target="_blank" rel="noopener">🔗 前往主页</a>`:""}
+     <button class="btn sm ghost" onclick="openSocialEdit(${i})">✎ 编辑</button>
+   </div>
+  </div>`;}).join("");
+ if(!cards)cards=`<div style="color:var(--muted);font-size:13px;padding:8px">还没有账号，下面添加一个吧。</div>`;
  list.innerHTML=`<h3>账号清单</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">${cards}</div>`;
  main.appendChild(list);
  const add=document.createElement("div");add.className="card";
- add.innerHTML=`<h3>➕ 新增账号</h3><div class="addrow"><input id="saPlatform" placeholder="平台"><input id="saName" placeholder="账号"><input id="saFreq" placeholder="频率"><input id="saFans" placeholder="粉丝数"><input id="saNote" placeholder="备注"><button class="btn sm" onclick="addSocial()">添加</button></div>`;
+ add.innerHTML=`<h3>➕ 新增账号</h3><div class="addrow" style="grid-template-columns:1fr 1fr">
+   <input id="saPlatform" placeholder="平台(抖音/小红书)"><input id="saName" placeholder="账号名">
+   <input id="saFreq" placeholder="频率"><input id="saFans" placeholder="粉丝数">
+   <input id="saLink" placeholder="主页链接(可选)"><input id="saXhs" placeholder="小红书号(可选)"></div>
+   <div class="addrow"><input id="saNote" placeholder="备注"><button class="btn sm" onclick="addSocial()">添加</button></div>`;
  main.appendChild(add);
 }
 function openSocialEdit(i){const it=S.social[i];if(!it)return;
- const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:8px"><b>${esc(it.platform||"")}</b> · ${esc(it.name||"")}</div>
+ const html=`<div style="font-size:13px;color:var(--accent-ink);margin-bottom:8px"><b>${esc(it.platform||"")}</b> · ${esc(it.name||"")}</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
    <div>平台<input id="sePlatform" class="note-inline" value="${esc(it.platform||"")}"></div>
    <div>账号名<input id="seName" class="note-inline" value="${esc(it.name||"")}"></div>
    <div>频率<input id="seFreq" class="note-inline" value="${esc(it.freq||"")}"></div>
    <div>粉丝数<input id="seFans" class="note-inline" value="${esc(it.fans||"")}"></div>
+   <div style="grid-column:1/3">主页链接<input id="seLink" class="note-inline" value="${esc(it.link||"")}"></div>
+   <div style="grid-column:1/3">小红书号<input id="seXhs" class="note-inline" value="${esc(it.xhsId||"")}"></div>
   </div>
   <div style="margin-top:6px">备注<textarea id="seNote" class="note-inline">${esc(it.note||"")}</textarea></div>
   <div style="display:flex;gap:8px;margin-top:10px"><button class="btn green" onclick="saveSocial(${i})">💾 保存</button><button class="btn ghost" onclick="delSocial(${i})">🗑 删除</button></div>`;
  openDModal("📱 编辑账号",html);}
 function saveSocial(i){const it=S.social[i];if(!it)return;
- it.platform=val("sePlatform");it.name=val("seName");it.freq=val("seFreq");it.fans=val("seFans");it.note=val("seNote");save();render();closeDModal();toast("已保存");}
+ it.platform=val("sePlatform");it.name=val("seName");it.freq=val("seFreq");it.fans=val("seFans");
+ it.link=val("seLink");it.xhsId=val("seXhs");it.note=val("seNote");save();render();closeDModal();toast("已保存");}
 function delSocial(i){if(S.social[i]){S.social.splice(i,1);save();render();closeDModal();}}
 
 // 写作追踪（独立重做：字数目标 + 打卡热力图 + 灵感织机 + 看板）
@@ -1743,7 +1974,7 @@ function renderWriting(main){
  const heat=heatmapHtml(S.writingLog||[],12);
  const c=document.createElement("div");c.className="card";
  c.innerHTML=`<h2>✍️ 写作追踪</h2>
-  <div style="font-size:13px;color:#6a5a55;margin:2px 0 6px">年度字数目标 <b>${goal.toLocaleString()}</b> · 已写 <b style="color:#3c6b4a">${totalW.toLocaleString()}</b> 字（${fp}%）</div>
+  <div style="font-size:13px;color:var(--muted);margin:2px 0 6px">年度字数目标 <b>${goal.toLocaleString()}</b> · 已写 <b style="color:var(--ok)">${totalW.toLocaleString()}</b> 字（${fp}%）</div>
   <div class="goalbar"><i style="width:${fp}%"></i></div>
   <div class="stat-strip" style="margin-top:12px">
    <div class="stat"><b>${totalW.toLocaleString()}</b><span>总字数</span></div>
@@ -1751,9 +1982,15 @@ function renderWriting(main){
    <div class="stat"><b>${drafting}</b><span>写作中</span></div>
    <div class="stat"><b>${idea}</b><span>灵感</span></div>
   </div>
-  <div style="margin-top:12px;font-size:13px;color:#6a5a55;font-weight:bold">写作打卡热力图</div>
+  <div style="margin-top:12px;font-size:13px;color:var(--muted);font-weight:bold">写作打卡热力图</div>
   <div style="margin-top:6px">${heat}</div>`;
  main.appendChild(c);
+ // 番茄作家助手入口
+ const wlk=document.createElement("div");wlk.className="card";
+ wlk.innerHTML=`<h3>🍅 番茄作家助手</h3>
+  <div style="font-size:13px;color:var(--ink2);margin-bottom:8px">你的小说正在连载，点下方按钮直达写作后台（入口也可在「设置 → 写作助手入口」修改）。</div>
+  <a class="linkbtn" onclick="openWriter()" style="cursor:pointer;justify-content:center;width:100%">🚀 打开番茄作家助手</a>`;
+ main.appendChild(wlk);
  // 灵感织机
  CURRENT_WRITE_PROMPT=WRITING_PROMPTS[Math.floor(Math.random()*WRITING_PROMPTS.length)];
  const loom=document.createElement("div");loom.className="card";
@@ -1784,25 +2021,25 @@ function renderKnowledge(main){
    <div class="stat"><b>${mature}</b><span>已掌握</span></div>
   </div>`;
  if(due.length){
-  qh+=`<div style="margin-top:12px;font-size:13px;color:#6a5a55;font-weight:bold">🔔 今日复习队列（${due.length}）</div><div style="margin-top:6px">`+
+  qh+=`<div style="margin-top:12px;font-size:13px;color:var(--muted);font-weight:bold">🔔 今日复习队列（${due.length}）</div><div style="margin-top:6px">`+
    due.map(k=>{const i=arr.indexOf(k);const iv=Math.max(1,k.interval||0);
     return `<div class="kcard" onclick="openReview(${i})">
-     <div style="font-weight:bold;color:#7a4a44">${esc(k.topic||"")}</div>
-     <div style="font-size:11px;color:#888">${esc(k.cat||"")} · 间隔 ${iv} 天${k.due&&k.due<todayStr()?" · <span style='color:#c0392b'>逾期</span>":""}</div>
+     <div style="font-weight:bold;color:var(--accent-ink)">${esc(k.topic||"")}</div>
+     <div style="font-size:11px;color:var(--muted)">${esc(k.cat||"")} · 间隔 ${iv} 天${k.due&&k.due<todayStr()?" · <span style='color:var(--bad)'>逾期</span>":""}</div>
     </div>`;}).join("")+`</div>`;
  }else{
-  qh+=`<div style="margin-top:12px;color:#3c6b4a;font-size:13px">🎉 今天没有待复习的，去下方「新增知识」补充或复习已掌握项吧。</div>`;
+  qh+=`<div style="margin-top:12px;color:var(--ok);font-size:13px">🎉 今天没有待复习的，去下方「新增知识」补充或复习已掌握项吧。</div>`;
  }
  qc.innerHTML=qh;main.appendChild(qc);
  renderSimple(main);
 }
 function reviewDue(){const t=todayStr();return (S.knowledge||[]).filter(k=>!k.due||k.due<=t);}
 function openReview(i){const k=S.knowledge[i];if(!k)return;
- const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:6px"><b>${esc(k.topic||"")}</b> · ${esc(k.cat||"")}</div>
-  <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:10px;padding:10px;font-size:14px;color:#7a4a44;margin-bottom:10px">${esc(k.q||k.note||"（无问题，凭记忆回顾这条笔记）")}</div>
-  <div style="font-size:12px;color:#888;margin-bottom:6px">凭记忆回想后，选择掌握程度：</div>
+ const html=`<div style="font-size:13px;color:var(--accent-ink);margin-bottom:6px"><b>${esc(k.topic||"")}</b> · ${esc(k.cat||"")}</div>
+  <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:10px;padding:10px;font-size:14px;color:var(--accent-ink);margin-bottom:10px">${esc(k.q||k.note||"（无问题，凭记忆回顾这条笔记）")}</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:6px">凭记忆回想后，选择掌握程度：</div>
   <div style="display:flex;gap:6px;flex-wrap:wrap">
-   <button class="btn sm" style="background:#fde2e0;color:#c0392b" onclick="gradeKnowledge(${i},'again')">😵 忘了</button>
+   <button class="btn sm" style="background:#fde2e0;color:var(--bad)" onclick="gradeKnowledge(${i},'again')">😵 忘了</button>
    <button class="btn sm" style="background:#fcebc2" onclick="gradeKnowledge(${i},'hard')">😅 吃力</button>
    <button class="btn sm green" onclick="gradeKnowledge(${i},'good')">🙂 不错</button>
    <button class="btn sm" style="background:#cde8d2" onclick="gradeKnowledge(${i},'easy')">😎 轻松</button>
@@ -1818,7 +2055,7 @@ function gradeKnowledge(i,g){const k=S.knowledge[i];if(!k)return;
  save();closeDModal();render();toast("已记录 · 下次复习 "+k.due);}
 function addDaysStr(dateStr,n){const d=new Date(dateStr);d.setDate(d.getDate()+n);return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
 function openKnowledgeEdit(i){const k=S.knowledge[i];if(!k)return;
- const html=`<div style="font-size:13px;color:#7a4a44;margin-bottom:6px">编辑知识条目</div>
+ const html=`<div style="font-size:13px;color:var(--accent-ink);margin-bottom:6px">编辑知识条目</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
    <div>主题<input id="keTopic" class="note-inline" value="${esc(k.topic||"")}"></div>
    <div>分类<input id="keCat" class="note-inline" value="${esc(k.cat||"")}"></div>
@@ -1852,7 +2089,7 @@ function renderSimple(main){
  let html=`<input class="search" id="swSearch" placeholder="🔍 搜索${m.searchLabel}…" value="${esc(SW_FILTER[view]||"")}">`;
  if(m.tagKey){
   const tags=[...new Set(S[view].map(x=>x[m.tagKey]).filter(Boolean))];
-  html+=`<div class="chips" id="swTags">${tags.map(t=>`<span class="tagchip${SW_TAG[view]===t?' active':''}" data-t="${esc(t)}">${esc(t)}</span>`).join("")||'<span style="font-size:12px;color:#aaa">暂无标签可筛选</span>'}</div>`;
+  html+=`<div class="chips" id="swTags">${tags.map(t=>`<span class="tagchip${SW_TAG[view]===t?' active':''}" data-t="${esc(t)}">${esc(t)}</span>`).join("")||'<span style="font-size:12px;color:var(--muted)">暂无标签可筛选</span>'}</div>`;
  }
  f.innerHTML=html;main.appendChild(f);
  const list=document.createElement("div");list.id="swList";main.appendChild(list);
@@ -1868,31 +2105,31 @@ function renderSimpleList(view,m){
  const filtered=arr.filter(it=>{const hay=(m.searchKeys||[]).map(k=>it[k]||"").join(" ").toLowerCase();const okQ=!q||hay.includes(q);const okT=!tag||(it[m.tagKey]===tag);return okQ&&okT;});
  if(view==="writing"){
   const cols=["灵感","写作中","已发布"];const maxW=Math.max(1,...filtered.map(it=>+(it.words||0)));
-  if(!filtered.length){list.innerHTML=`<div style="color:#aaa;font-size:13px;padding:8px">暂无匹配作品，下面添加一条吧。</div>`;return;}
+  if(!filtered.length){list.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:8px">暂无匹配作品，下面添加一条吧。</div>`;return;}
   list.innerHTML=`<div class="kanban">`+cols.map(col=>{
    const cards=filtered.filter(it=>it.status===col);
    return `<div class="kanban-col"><h4>${col} · ${cards.length}</h4>`+cards.map(it=>{const gi=arr.indexOf(it);const w=Math.min(100,(+(it.words||0))/maxW*100);
     return `<div class="kanban-card" onclick="cycleWritingStatus(${gi})" title="点击切换状态">
-     <div style="font-weight:bold;color:#7a4a44">${esc(it.title||"无标题")}</div>
-     <div style="font-size:11px;color:#888;margin:3px 0">${esc(it.type||"")} · ${esc(it.words||0)} 字</div>
-     ${it.note?`<div style="font-size:11px;color:#aaa">${esc(it.note)}</div>`:""}
+     <div style="font-weight:bold;color:var(--accent-ink)">${esc(it.title||"无标题")}</div>
+     <div style="font-size:11px;color:var(--muted);margin:3px 0">${esc(it.type||"")} · ${esc(it.words||0)} 字</div>
+     ${it.note?`<div style="font-size:11px;color:var(--muted)">${esc(it.note)}</div>`:""}
      ${w>0?`<div class="w"><i style="width:${w}%"></i></div>`:""}
     </div>`;}).join("")+`</div>`;}).join("")+`</div>`;
   return;
  }
- if(!filtered.length){list.innerHTML=`<div style="color:#aaa;font-size:13px;padding:8px">没有匹配项，调整搜索或标签。</div>`;return;}
+ if(!filtered.length){list.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:8px">没有匹配项，调整搜索或标签。</div>`;return;}
  const cards=filtered.map(it=>{const gi=arr.indexOf(it);
   if(view==="social")return `<div class="social-card">
-    <div class="pf">${esc(it.platform||"")} <span style="font-size:12px;color:#888">· ${esc(it.name||"")}</span></div>
+    <div class="pf">${esc(it.platform||"")} <span style="font-size:12px;color:var(--muted)">· ${esc(it.name||"")}</span></div>
     <div class="row"><span>频率</span><span>${esc(it.freq||"—")}</span></div>
     <div class="row"><span>粉丝</span><span>${esc(it.fans||"—")}</span></div>
-    ${it.note?`<div style="font-size:12px;color:#7a4a44;margin:4px 0">${esc(it.note)}</div>`:""}
+    ${it.note?`<div style="font-size:12px;color:var(--accent-ink);margin:4px 0">${esc(it.note)}</div>`:""}
     <div class="row-actions"><button onclick="delSw(${gi})">✕ 删除</button></div>
    </div>`;
   return `<div class="social-card" onclick="openKnowledgeEdit(${gi})">
     <div class="pf">${esc(it.topic||"")}</div>
     ${(it.cat||it.src)?`<div class="row"><span>${esc(it.cat||"")}</span><span style="color:#5a3a6a">${esc(it.src||"")}</span></div>`:""}
-    ${it.note?`<div style="font-size:12px;color:#7a4a44;margin:4px 0;line-height:1.5">${esc(it.note)}</div>`:""}
+    ${it.note?`<div style="font-size:12px;color:var(--accent-ink);margin:4px 0;line-height:1.5">${esc(it.note)}</div>`:""}
     <div class="row-actions"><button onclick="event.stopPropagation();delSw(${gi})">✕ 删除</button></div>
     <div style="font-size:11px;color:#aa9;margin-top:2px">点击编辑 ✎</div>
    </div>`;
@@ -1906,7 +2143,7 @@ function swAddForm(view){
 }
 function delSw(gi){if(S[view]&&S[view][gi]){S[view].splice(gi,1);save();render();}}
 function cycleWritingStatus(gi){const s=["灵感","写作中","已发布"];const cur=S.writing[gi].status;S.writing[gi].status=s[(s.indexOf(cur)+1)%s.length];save();render();}
-function addSocial(){const o={platform:val("saPlatform"),name:val("saName"),freq:val("saFreq"),fans:val("saFans"),note:val("saNote")};if(!o.platform&&!o.name)return;S.social.push(o);save();render();toast("已添加账号");}
+function addSocial(){const o={platform:val("saPlatform"),name:val("saName"),freq:val("saFreq"),fans:val("saFans"),note:val("saNote"),link:val("saLink"),xhsId:val("saXhs")};if(!o.platform&&!o.name)return;S.social.push(o);save();render();toast("已添加账号");}
 function addWriting(){const w=parseInt(val("saWords"))||0;const o={title:val("saTitle"),type:val("saType"),status:(document.getElementById("saStatus")||{}).value||"灵感",words:w,note:val("saNote")};if(!o.title)return;S.writing.push(o);save();render();toast("已添加作品");}
 function addKnowledge(){const o={topic:val("saTopic"),cat:val("saCat"),src:val("saSrc"),note:val("saNote")};if(!o.topic)return;S.knowledge.push(o);save();render();toast("已添加知识");}
 function val(id){const e=document.getElementById(id);return e?e.value.trim():"";}
@@ -1914,6 +2151,14 @@ function val(id){const e=document.getElementById(id);return e?e.value.trim():"";
 S.social=S.social||[];S.writing=S.writing||[];S.reading=S.reading||[];S.film=S.film||[];S.knowledge=S.knowledge||[];
 if(!S.reading.length)S.reading=DEFAULT_BOOKS.slice();
 if(!S.film.length)S.film=DEFAULT_FILMS.slice();
+S.settings=S.settings||{};
+if(!S.settings.theme)S.settings.theme="light";
+if(!S.settings.bg)S.settings.bg="paper";
+if(!S.settings.avatar)S.settings.avatar="🗺";
+if(!S.settings.name)S.settings.name="我的闯关工作台";
+if(!S.settings.writerUrl)S.settings.writerUrl="https://writer.fanqie.com/";
+// 确保所有月份都有 tasks（renderStamps 会惰性创建月份，taskXp 依赖 .tasks）
+if(S.months){for(const k in S.months){if(!S.months[k])S.months[k]={stampUnlocked:false,main:"",reward:"",stampName:""};if(!Array.isArray(S.months[k].tasks))S.months[k].tasks=[];}}
 S.readingGoal=S.readingGoal||12;S.filmGoal=S.filmGoal||24;S.writingGoal=S.writingGoal||100000;S.writingLog=S.writingLog||[];S.socialGoal=S.socialGoal||50000;
 S.reading.forEach(b=>{if(b.rating===undefined)b.rating=0;if(b.progress===undefined)b.progress=0;});
 S.film.forEach(f=>{if(f.rating===undefined)f.rating=0;if(f.date===undefined)f.date="";if(f.review===undefined)f.review="";});
@@ -2009,21 +2254,33 @@ function focusToggle(){
   if(focusState.remaining<=0){
    clearInterval(focusState.iv);focusState.running=false;focusState.remaining=focusState.total;
    S.focus.push(todayStr());S.checkinXp+=5;save();
-   toast("🍅 专注完成 +5 XP");confetti();paintFocus();
+   toast("🍅 专注完成 +5 XP");confetti();if(navigator.vibrate)navigator.vibrate([40,30,40]);paintFocus();
    const cnt=document.getElementById("fCount");if(cnt)cnt.textContent=todayFocus();
   }else paintFocus();
  },1000);
 }
 function focusReset(){focusState.running=false;clearInterval(focusState.iv);focusState.remaining=focusState.total;paintFocus();}
 function paintFocus(){
- const total=focusState.total,rem=focusState.remaining,r=60,circ=2*Math.PI*r;
+ const total=focusState.total,rem=focusState.remaining;
+ // 卡片内环（r=60）
+ const r1=60,circ1=2*Math.PI*r1;
  const arc=document.getElementById("fArc");
- if(arc){arc.style.strokeDasharray=circ+" "+circ;arc.style.strokeDashoffset=circ*(1-Math.max(0,rem)/total);}
+ if(arc){arc.style.strokeDasharray=circ1+" "+circ1;arc.style.strokeDashoffset=circ1*(1-Math.max(0,rem)/total);}
  const t=document.getElementById("fTime");
  if(t){const m=Math.floor(rem/60),s=rem%60;t.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
  const btn=document.getElementById("fToggle");
  if(btn)btn.textContent=focusState.running?"⏸ 暂停":"▶ 开始";
+ // 沉浸大环（r=104）
+ const r2=104,circ2=2*Math.PI*r2;
+ const arc2=document.getElementById("fArc2");
+ if(arc2){arc2.style.strokeDasharray=circ2+" "+circ2;arc2.style.strokeDashoffset=circ2*(1-Math.max(0,rem)/total);}
+ const t2=document.getElementById("fTime2");
+ if(t2){const m=Math.floor(rem/60),s=rem%60;t2.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+ const btn2=document.getElementById("fToggle2");
+ if(btn2)btn2.textContent=focusState.running?"⏸ 暂停":"▶ 开始";
 }
+function openFocusOverlay(){const o=document.getElementById("focusOverlay");if(o)o.classList.add("show");paintFocus();if(navigator.vibrate)navigator.vibrate(30);}
+function closeFocusOverlay(){const o=document.getElementById("focusOverlay");if(o)o.classList.remove("show");}
 // ---------- 能量语 ----------
 const QUOTES=[
  "你不是在过日子，你是在一砖一瓦地建设自己。",
@@ -2069,14 +2326,15 @@ function renderFocusCard(main){
   <div class="focus">
    <div class="focus-circle">
     <svg width="140" height="140" viewBox="0 0 140 140">
-     <circle cx="70" cy="70" r="60" fill="none" stroke="#f0e9dd" stroke-width="10"/>
-     <circle id="fArc" cx="70" cy="70" r="60" fill="none" stroke="#8fd0a0" stroke-width="10" stroke-linecap="round" transform="rotate(-90 70 70)"/>
-     <text id="fTime" x="70" y="78" text-anchor="middle" font-size="26" fill="#7a4a44" font-weight="bold">25:00</text>
+     <circle cx="70" cy="70" r="60" fill="none" stroke="var(--track)" stroke-width="10"/>
+     <circle id="fArc" cx="70" cy="70" r="60" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+     <text id="fTime" x="70" y="78" text-anchor="middle" font-size="26" fill="var(--ink)" font-weight="bold">25:00</text>
     </svg>
    </div>
    <div class="focus-btns">
     <button class="btn" id="fToggle" onclick="focusToggle()">▶ 开始</button>
     <button class="btn ghost" onclick="focusReset()">↺ 重置</button>
+    <button class="btn ghost" onclick="openFocusOverlay()">⛶ 沉浸</button>
    </div>
   </div>
   <div class="xptxt" style="text-align:center">今日已完成 <b id="fCount">${todayFocus()}</b> 个专注番茄 · 累计 ${S.focus.length} 次（每完成 +5 XP）</div>`;
@@ -2126,6 +2384,8 @@ document.getElementById("ckPush").onclick=()=>{S.__updatedAt=Date.now();localSto
 document.getElementById("ckClear").onclick=()=>{localStorage.removeItem(CLOUD_KEY);localStorage.removeItem(CLOUD_BIN);setCloudStatus("云端未配置","off");document.getElementById("ckStatus").textContent="已断开（本机数据保留）";toast("已断开云同步");};
 
 document.getElementById("d").textContent="今天 "+todayStr();
+applyTheme();updateWbTitle();
+if(window.matchMedia){try{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if((S.settings&&S.settings.theme)==="auto")applyTheme();});}catch(e){}}
 render();
 initCloudSync();
 if('serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}

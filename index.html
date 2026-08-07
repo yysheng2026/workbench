@@ -381,6 +381,13 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .spine small{line-height:1.05;white-space:nowrap}
 [data-theme="dark"] .lib-hall{background:linear-gradient(160deg,#2e2a24,#322c22)}
 [data-theme="dark"] .shelf{background:linear-gradient(#5a4d3a,#4a3f2f)}
+/* ---- 整馆片库：CD碟片架（仿阅读展示架，书脊换成CD） ---- */
+.cd-shelf{align-items:flex-end}
+.cd-case{flex:0 0 auto;width:32px;border-radius:3px 3px 0 0;cursor:pointer;transition:transform .15s,filter .15s;position:relative;display:flex;flex-direction:column;align-items:center;padding-top:6px;overflow:hidden;box-shadow:1px 0 0 rgba(0,0,0,.08);background:var(--cat,#8a8a8a)}
+.cd-case::after{content:"";position:absolute;left:3px;right:3px;top:7px;bottom:0;border-left:1px solid rgba(255,255,255,.16);border-right:1px solid rgba(0,0,0,.1)}
+.cd-case:hover{transform:translateY(-7px);filter:brightness(1.08)}
+.cd-case .cd-disc{width:22px;height:22px;border-radius:50%;flex:0 0 auto;margin-bottom:6px;background:radial-gradient(circle at 50% 50%,var(--cat,#8a8a8a) 0 3px,transparent 3px),conic-gradient(from 20deg,#efeadf,#fff,#cdc7b8,#fff,#e6e0d2,#cdc7b8,#fff,#efeadf);border:1.5px solid rgba(255,255,255,.6);box-shadow:0 0 0 1px rgba(0,0,0,.1)}
+.cd-case small{writing-mode:vertical-rl;text-orientation:upright;font-size:10px;color:#fff;line-height:1.05;white-space:nowrap;overflow:hidden;letter-spacing:0;flex:1 1 auto}
 /* ---- 书房三状态书架 + 拖拽 ---- */
 .shelf-block{margin:12px 0}
 .shelf-label{display:flex;align-items:center;gap:6px;font-family:'Ma Shan Zheng',cursive;font-size:16px;color:var(--accent-ink);margin:6px 0 2px}
@@ -2453,6 +2460,14 @@ function renderFilm(main){
   });
   const roomCard=document.createElement("div");roomCard.className="card";roomCard.innerHTML=bh;main.appendChild(roomCard);
  } else {
+  // 整馆片库：仿阅读展示架，书脊换成 CD 碟片（置于放映厅上方）
+  let spines="";
+  S.film.forEach(f=>{const i=S.film.indexOf(f);const col=catColor(filmCat(f));const h=Math.max(86,34+f.title.length*9);
+   spines+=`<div class="cd-case" style="height:${h}px;--cat:${col}" title="${esc(f.title)} · ${esc(f.status)}" onclick="openFilmSummary(${i})"><span class="cd-disc"></span><small>${esc(f.title)}</small></div>`;});
+  const lib=document.createElement("div");lib.className="card lib-hall";
+  lib.innerHTML=`<h3>🎞 整馆片库</h3><div class="shelf cd-shelf">${spines}</div><div class="shelf-scroll-hint">← 左右滑动查看更多 · 点击碟片看影片 →</div>`;
+  main.appendChild(lib);
+  // 选择放映厅
   const roomMap={};S.film.forEach(f=>{const cat=filmCat(f);(roomMap[cat]=roomMap[cat]||[]).push(f);});
   let rh=`<div class="lib">`;
   Object.keys(roomMap).forEach(cat=>{const films=roomMap[cat];const lit=films.some(f=>f.status==="已看");
@@ -2462,9 +2477,7 @@ function renderFilm(main){
      <div class="room-meta">${films.length} 部${lit?' · 💡有已看':''}<br><span class="room-enter">进入 ›</span></div>
     </div>`;});
   rh+=`</div>`;
-  const lib=document.createElement("div");lib.className="card";lib.innerHTML=`<h3>🎬 选择放映厅</h3>${rh}`;main.appendChild(lib);
-  let wall=`<div class="film-win-grid">${S.film.map(f=>filmCaseHTML(f,S.film.indexOf(f))).join("")}</div>`;
-  const hall=document.createElement("div");hall.className="card";hall.innerHTML=`<h3>🎞 整馆片库</h3>${wall}`;main.appendChild(hall);
+  const hall=document.createElement("div");hall.className="card";hall.innerHTML=`<h3>🎬 选择放映厅</h3>${rh}`;main.appendChild(hall);
  }
  const add=document.createElement("div");add.className="card";
  add.innerHTML=`<h3>➕ 添加新片</h3><div class="addrow"><input id="nfTitle" placeholder="片名"><select id="nfCat" style="padding:6px;border:2px dashed var(--line);border-radius:8px"><option value="电影">电影</option><option value="纪录片">纪录片</option></select><input id="nfType" placeholder="类型/小类(用/分隔)" style="min-width:120px"><input id="nfTags" placeholder="标签"><button class="btn sm" onclick="addFilm()">添加</button></div><div style="font-size:11px;color:var(--muted);margin-top:4px">大类自动取「电影/纪录片」，类型里写小类，例如「剧情/文学改编」→ 归入「剧情」厅下的「文学改编」</div>`;

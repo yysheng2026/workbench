@@ -377,7 +377,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .shelf-scroll-hint{text-align:right;font-size:11px;color:var(--muted);margin-top:2px}
 .spine{flex:0 0 auto;width:20px;border-radius:3px 3px 0 0;cursor:pointer;transition:.15s;position:relative;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;font-size:10px;color:#fff;padding:3px 0;overflow:hidden;box-shadow:1px 0 0 rgba(0,0,0,.08)}
 .spine:hover{transform:translateY(-5px);filter:brightness(1.07)}
-.spine small{line-height:1.05;max-height:82%;overflow:hidden;white-space:nowrap}
+.spine small{line-height:1.05;white-space:nowrap}
 [data-theme="dark"] .lib-hall{background:linear-gradient(160deg,#2e2a24,#322c22)}
 [data-theme="dark"] .shelf{background:linear-gradient(#5a4d3a,#4a3f2f)}
 /* ---- 书房三状态书架 + 拖拽 ---- */
@@ -491,10 +491,17 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  </div>
  <div class="ck-hint">① 到 jsonbin.io 注册并复制 API Key；② 填 Key、Bin ID 留空会自动建一个；③ 两端（电脑/手机）填<b>同一组</b> Key+Bin 即共享数据。未联网时自动退回本机，不影响使用。</div>
 </div></div>
+<div class="modal" id="dmodal"><div class="box wide">
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">
+  <h3 id="dmTitle" style="margin:0;font-family:'Ma Shan Zheng',cursive"></h3>
+  <button class="btn ghost sm" onclick="closeDModal()">✕ 关闭</button>
+ </div>
+ <div id="dmBody"></div>
+</div></div>
 
 <script type="application/json" id="morningSeed">{"text": "一句话结论：今天最重要的事——催盛居发水电竣工图。图一到手即可预约正式水电验收（你定的“先出图再验收”闸门），是解锁验收的唯一钥匙。\n\n🔴 今日必办（P0）\n1. 催盛居发水电竣工图 —— 昨 19:04 确认“在画，弄好发您”；图到即约正式验收。对接：盛居/陶工\n2. 地插高度 1710/1690 拍板 —— 借出图/验收机会书面锁定。对接：盛居\n3. 窗户单扇“太憋气”定性 —— 明确保护态还是真卡死，防入住隐患。对接：汉森张生\n\n🟠 关键推进（P1）\n4. 找平地面养护 —— 今早+傍晚洒水（今明无师傅，你亲做）\n5. 效果图催终版 —— 壹玖“今天能改好”已 >22 天未兑现，继续催\n6. 瓷砖铺贴排期 —— 催盛居给具体日期\n7. 海棠角文字尺寸 —— 逼装修公司出文字版给加工厂\n8. 主卧窗胶补缝 + 全屋智能点位回执 —— 一并催办\n\n🟡 顺手跟（P2）\n9. 全屋定制签约回填（诗尼曼，待贴砖复尺）\n10. 派雅退门（房间门+卫生间门）\n11. 地面空鼓与师傅确认\n\n💰 预算：总超支 ¥25,828.46（+12.9%）（补记瓷砖尾款+运费后约 +14.5%）\n\n详细复盘见 装修进度日报_2026-08-06.md"}</script>
 
-<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 34.93, "name": "紫金矿业", "open": 34.09, "high": 35.34, "low": 34.06, "preClose": 34.5, "change": 0.43, "changePct": 1.25, "amplitude": 3.71, "volumeRatio": 1.18, "amount": 639282.0, "time": "20260807120532"}, "sh601717": {"price": 15.83, "name": "中创智领", "open": 16.02, "high": 16.09, "low": 15.8, "preClose": 16.05, "change": -0.22, "changePct": -1.37, "amplitude": 1.81, "volumeRatio": 0.75, "amount": 12185.0, "time": "20260807120553"}, "sh600879": {"price": 16.07, "name": "航天电子", "open": 16.12, "high": 16.22, "low": 15.72, "preClose": 16.05, "change": 0.02, "changePct": 0.12, "amplitude": 3.12, "volumeRatio": 1.12, "amount": 83295.0, "time": "20260807120539"}, "sh600501": {"price": 14.7, "name": "航天晨光", "open": 14.9, "high": 14.9, "low": 14.46, "preClose": 14.87, "change": -0.17, "changePct": -1.14, "amplitude": 2.96, "volumeRatio": 1.29, "amount": 6091.0, "time": "20260807120546"}, "sz002270": {"price": 20.06, "name": "华明装备", "open": 20.4, "high": 20.47, "low": 19.93, "preClose": 20.45, "change": -0.39, "changePct": -1.91, "amplitude": 2.64, "volumeRatio": 0.85, "amount": 22876.0, "time": "20260807120533"}, "sz000429": {"price": 14.48, "name": "粤高速Ａ", "open": 14.23, "high": 14.54, "low": 14.1, "preClose": 14.19, "change": 0.29, "changePct": 2.04, "amplitude": 3.1, "volumeRatio": 1.16, "amount": 8729.0, "time": "20260807120512"}, "sh605166": {"price": 8.63, "name": "聚合顺", "open": 8.69, "high": 8.75, "low": 8.56, "preClose": 8.69, "change": -0.06, "changePct": -0.69, "amplitude": 2.19, "volumeRatio": 0.93, "amount": 1802.0, "time": "20260807120551"}, "sh600343": {"price": 19.72, "name": "航天动力", "open": 19.6, "high": 19.87, "low": 19.26, "preClose": 19.56, "change": 0.16, "changePct": 0.82, "amplitude": 3.12, "volumeRatio": 1.34, "amount": 34812.0, "time": "20260807120536"}, "sz002997": {"price": 27.16, "name": "瑞鹄模具", "open": 27.06, "high": 27.24, "low": 26.72, "preClose": 27.03, "change": 0.13, "changePct": 0.48, "amplitude": 1.92, "volumeRatio": 1.1, "amount": 3485.0, "time": "20260807120551"}, "sz159928": {"price": 0.671, "name": "消费ETF汇添富", "open": 0.669, "high": 0.674, "low": 0.665, "preClose": 0.669, "change": 0.002, "changePct": 0.3, "amplitude": 1.35, "volumeRatio": 0.9, "amount": 22265.0, "time": "20260807120536"}, "sh513130": {"price": 0.602, "name": "恒生科技ETF华泰柏瑞", "open": 0.601, "high": 0.603, "low": 0.595, "preClose": 0.601, "change": 0.001, "changePct": 0.17, "amplitude": 1.33, "volumeRatio": 0.77, "amount": 123076.0, "time": "20260807120553"}, "sh562800": {"price": 0.984, "name": "稀有金属ETF嘉实", "open": 0.959, "high": 0.988, "low": 0.954, "preClose": 0.96, "change": 0.024, "changePct": 2.5, "amplitude": 3.54, "volumeRatio": 1.73, "amount": 26284.0, "time": "20260807120551"}, "sh601012": {"price": 13.03, "name": "隆基绿能", "open": 12.75, "high": 13.18, "low": 12.75, "preClose": 12.74, "change": 0.29, "changePct": 2.28, "amplitude": 3.38, "volumeRatio": 2.0, "amount": 149910.0, "time": "20260807120549"}}, "news": [], "updated": "2026-08-07 12:40", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
+<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 35.09, "name": "紫金矿业", "open": 34.09, "high": 35.34, "low": 34.06, "preClose": 34.5, "change": 0.59, "changePct": 1.71, "amplitude": 3.71, "volumeRatio": 0.93, "amount": 832297.0, "time": "20260807141959"}, "sh601717": {"price": 15.83, "name": "中创智领", "open": 16.02, "high": 16.09, "low": 15.78, "preClose": 16.05, "change": -0.22, "changePct": -1.37, "amplitude": 1.93, "volumeRatio": 0.7, "amount": 18704.0, "time": "20260807141959"}, "sh600879": {"price": 16.25, "name": "航天电子", "open": 16.12, "high": 16.27, "low": 15.72, "preClose": 16.05, "change": 0.2, "changePct": 1.25, "amplitude": 3.43, "volumeRatio": 0.99, "amount": 122710.0, "time": "20260807142000"}, "sh600501": {"price": 14.71, "name": "航天晨光", "open": 14.9, "high": 14.9, "low": 14.46, "preClose": 14.87, "change": -0.16, "changePct": -1.08, "amplitude": 2.96, "volumeRatio": 1.0, "amount": 7828.0, "time": "20260807142001"}, "sz002270": {"price": 20.07, "name": "华明装备", "open": 20.4, "high": 20.47, "low": 19.93, "preClose": 20.45, "change": -0.38, "changePct": -1.86, "amplitude": 2.64, "volumeRatio": 0.66, "amount": 29492.0, "time": "20260807142000"}, "sz000429": {"price": 14.81, "name": "粤高速Ａ", "open": 14.23, "high": 14.93, "low": 14.1, "preClose": 14.19, "change": 0.62, "changePct": 4.37, "amplitude": 5.85, "volumeRatio": 1.5, "amount": 18951.0, "time": "20260807142000"}, "sh605166": {"price": 8.62, "name": "聚合顺", "open": 8.69, "high": 8.75, "low": 8.56, "preClose": 8.69, "change": -0.07, "changePct": -0.81, "amplitude": 2.19, "volumeRatio": 0.76, "amount": 2440.0, "time": "20260807142000"}, "sh600343": {"price": 20.06, "name": "航天动力", "open": 19.6, "high": 20.1, "low": 19.26, "preClose": 19.56, "change": 0.5, "changePct": 2.56, "amplitude": 4.29, "volumeRatio": 1.13, "amount": 49108.0, "time": "20260807142000"}, "sz002997": {"price": 27.2, "name": "瑞鹄模具", "open": 27.06, "high": 27.28, "low": 26.72, "preClose": 27.03, "change": 0.17, "changePct": 0.63, "amplitude": 2.07, "volumeRatio": 0.92, "amount": 4859.0, "time": "20260807141957"}, "sz159928": {"price": 0.672, "name": "消费ETF汇添富", "open": 0.669, "high": 0.674, "low": 0.665, "preClose": 0.669, "change": 0.003, "changePct": 0.45, "amplitude": 1.35, "volumeRatio": 0.74, "amount": 30605.0, "time": "20260807142000"}, "sh513130": {"price": 0.603, "name": "恒生科技ETF华泰柏瑞", "open": 0.601, "high": 0.604, "low": 0.595, "preClose": 0.601, "change": 0.002, "changePct": 0.33, "amplitude": 1.5, "volumeRatio": 0.59, "amount": 156259.0, "time": "20260807141959"}, "sh562800": {"price": 0.99, "name": "稀有金属ETF嘉实", "open": 0.959, "high": 0.993, "low": 0.954, "preClose": 0.96, "change": 0.03, "changePct": 3.13, "amplitude": 4.06, "volumeRatio": 1.3, "amount": 32744.0, "time": "20260807142000"}, "sh601012": {"price": 12.93, "name": "隆基绿能", "open": 12.75, "high": 13.18, "low": 12.75, "preClose": 12.74, "change": 0.19, "changePct": 1.49, "amplitude": 3.38, "volumeRatio": 1.4, "amount": 174485.0, "time": "20260807142001"}}, "news": [], "updated": "2026-08-07 14:20", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
 
 <script>
 const MORNING_FALLBACK=`🔴 今天最重要：水电验收前再核一遍智能点位（风管机/米家开关均在待付清单）。
@@ -517,87 +524,87 @@ const WATCH_DROP_PCT=3, WATCH_RISE_PCT=3;
 function priceOf(code){const p=STOCK_DATA.prices[code];return (p&&typeof p==='object')?p.price:(p||null);}
 // ---------- 默认书单 / 片单 ----------
 const DEFAULT_BOOKS=[
-{title:"疑案里的中国史",author:"艾公子",status:"已读",tags:"历史/悬疑",note:"1-3册"},
-{title:"请至少爱一个像男人的男人",author:"张妙娴",status:"已读",tags:"情感/随笔",note:""},
-{title:"傲慢与偏见",author:"简·奥斯汀",status:"已读",tags:"经典/爱情",note:""},
-{title:"林徽因：人间四月天",author:"张俊",status:"已读",tags:"传记/民国",note:""},
-{title:"简爱",author:"夏洛蒂·勃朗特",status:"已读",tags:"经典/女性",note:""},
-{title:"呼啸山庄",author:"艾米莉·勃朗特",status:"已读",tags:"经典/哥特",note:""},
-{title:"安娜·卡列尼娜",author:"列夫·托尔斯泰",status:"已读",tags:"经典/俄国文学",note:"上下册"},
-{title:"中国历代政治得失",author:"钱穆",status:"已读",tags:"历史/政治",note:""},
-{title:"文物中的化学",author:"周嘉华",status:"已读",tags:"科普/历史",note:""},
-{title:"一分钟物理",author:"中科院物理所",status:"已读",tags:"科普/物理",note:""},
+{title:"疑案里的中国史",author:"艾公子",status:"已读",tags:"历史/悬疑",note:"1-3册",version:"2021·辽宁人民出版社",authorInfo:"艾公子，历史自媒体团队，专注以通俗笔法重述中国史。",intro:"从一桩桩疑案、悬案切入，借扑朔迷离的历史谜团串联起历朝历代的政治、人物与社会图景。"},
+{title:"请至少爱一个像男人的男人",author:"张小娴",status:"已读",tags:"情感/随笔",note:"",version:"2017·湖南文艺出版社",authorInfo:"张小娴，香港言情小说女作家，1967年生，擅写都市男女情事。",intro:"张小娴的情感随笔，写尽爱情的甜蜜与荒凉，关于值得被爱的人和那份笃定的温柔。"},
+{title:"傲慢与偏见",author:"简·奥斯汀",status:"已读",tags:"经典/爱情",note:"",version:"1813·英国（王科一/孙致礼等译本）",authorInfo:"简·奥斯汀（1775—1817），英国小说家，以细腻的社会观察与婚姻喜剧著称。",intro:"乡绅之女伊丽莎白与高傲的达西在偏见与傲慢中彼此试探，最终越过阶层与误解走向理解与爱。"},
+{title:"林徽因：人间四月天",author:"张俊",status:"已读",tags:"传记/民国",note:"",version:"2013/2016·石油工业出版社",authorInfo:"张俊，70后女作家，长于人物随笔，著有《林徽因：人间四月天》等。",intro:"以唯美文字梳理林徽因斑斓的一生——才女、建筑学者、诗人，在时代洪流与情感细处皆从容。"},
+{title:"简爱",author:"夏洛蒂·勃朗特",status:"已读",tags:"经典/女性",note:"",version:"1847·英国（宋兆霖/祝庆英等译本）",authorInfo:"夏洛蒂·勃朗特（1816—1855），英国作家，「勃朗特三姐妹」之长。",intro:"孤女简·爱在寄人篱下与寄宿学校中长大，以独立与尊严赢得爱情，喊出「我们的灵魂是平等的」。"},
+{title:"呼啸山庄",author:"艾米莉·勃朗特",status:"已读",tags:"经典/哥特",note:"",version:"1847·英国（杨苡等译本）",authorInfo:"艾米莉·勃朗特（1818—1848），英国作家、诗人，「勃朗特三姐妹」之一。",intro:"弃儿希斯克利夫与凯瑟琳刻骨而扭曲的爱，在荒原的风暴里化作跨越生死的复仇与执念。"},
+{title:"安娜·卡列尼娜",author:"列夫·托尔斯泰",status:"已读",tags:"经典/俄国文学",note:"上下册",version:"1877·俄国（草婴/高惠群等译本）",authorInfo:"列夫·托尔斯泰（1828—1910），俄国文学巨匠。",intro:"上流社会少妇安娜为爱情出走，却撞碎于社会成见与自我撕裂；两条线索交织出帝国黄昏下的欲望与信仰。"},
+{title:"中国历代政治得失",author:"钱穆",status:"已读",tags:"历史/政治",note:"",version:"三联书店（钱穆论著精编）",authorInfo:"钱穆（1895—1990），史学大家，毕生以「温情与敬意」治中国史。",intro:"以汉、唐、宋、明、清五代为例，提纲挈领地比较政府组织、选举、经济与兵役制度之得失。"},
+{title:"文物中的化学",author:"周嘉华",status:"已读",tags:"科普/历史",note:"",version:"2021·北京联合出版公司",authorInfo:"周嘉华，科学史学者，长期从事化学史与中国科技史研究。",intro:"从陶、瓷、青铜、纸、墨等日常文物出发，讲清古人如何凭借化学智慧制造与审美。"},
+{title:"一分钟物理",author:"中科院物理所",status:"已读",tags:"科普/物理",note:"",version:"2019·北京联合出版公司",authorInfo:"中国科学院物理研究所，国家级物理研究机构，科普风格活泼。",intro:"把生活中刁钻的物理问题浓缩成一分钟可读完的回答，硬核又接地气。"},
 {title:"小王子",author:"圣埃克苏佩里",status:"已读",tags:"童话/哲学",note:"李继宏译",version:"2015·果麦/天津人民出版社（李继宏译）",authorInfo:"法国作家、飞行员，1900—1944。代表作《小王子》被译作数百种语言。",intro:"一位坠落撒哈拉的飞行员遇见来自B612星球的小王子，借孩童之眼审视成人世界的荒谬与孤独，关于驯养、责任与爱的寓言。"},
-{title:"简·奥斯汀之幸福哲学",author:"伊丽莎白·坎特",status:"已读",tags:"文学评论",note:""},
-{title:"红书",author:"荣格",status:"已读",tags:"心理学/经典",note:""},
-{title:"你也走了很远的路吧",author:"卢思浩",status:"已读",tags:"散文/治愈",note:""},
+{title:"简·奥斯汀之幸福哲学",author:"伊丽莎白·坎特",status:"已读",tags:"文学评论",note:"",version:"2015·黑龙江教育出版社",authorInfo:"伊丽莎白·坎特（Elizabeth Kantor），美国作家，从经典文学中提炼生活智慧。",intro:"借简·奥斯汀笔下的婚恋与教养，谈论女性在现实与理想之间如何安放自己的幸福。"},
+{title:"红书",author:"荣格",status:"已读",tags:"心理学/经典",note:"",version:"2013/2016·中央编译出版社",authorInfo:"卡尔·古斯塔夫·荣格（1875—1961），瑞士心理学家，分析心理学创始人。",intro:"荣格中年危机时记录的梦境、幻象与灵魂对话，是通往其心理学体系的一扇私密之门。"},
+{title:"你也走了很远的路吧",author:"卢思浩",status:"已读",tags:"散文/治愈",note:"",version:"2017·湖南文艺出版社",authorInfo:"卢思浩，青年作家，文风温柔治愈。",intro:"写给独自前行的人——关于离别、成长与「走了很远的路」后依然愿意相信的自己。"},
 {title:"局外人",author:"加缪",status:"已读",tags:"哲学/存在主义",note:"",version:"2010·上海译文出版社（柳鸣九译）",authorInfo:"法国哲学家、作家，诺贝尔文学奖得主，1913—1960，「荒诞哲学」代表人物。",intro:"默尔索在母亲葬礼上未落泪，后来因偶然的枪击入狱，却被法庭以「在母亲葬礼上没哭」定罪。冷静到冷漠的叙述，叩问存在的无意义与社会的伪善。"},
-{title:"月亮与六便士",author:"毛姆",status:"已读",tags:"经典/艺术",note:""},
-{title:"素食者",author:"韩江",status:"已读",tags:"小说/韩国文学",note:""},
-{title:"蛤蟆先生去看心理医生",author:"罗伯特·戴博德",status:"已读",tags:"心理学/自愈",note:""},
-{title:"围棋入门一本就够",author:"吴秉铁",status:"已读",tags:"围棋/技艺",note:""},
-{title:"郭德纲讲三国",author:"郭德纲",status:"已读",tags:"历史/评书",note:""},
-{title:"人间食粮",author:"安德烈·纪德",status:"已读",tags:"散文/哲学",note:""},
-{title:"《星际迷航》里的物理学",author:"劳伦斯·M·克劳斯",status:"已读",tags:"科普/科幻",note:""},
-{title:"厨房里的人类学家",author:"庄祖宜",status:"已读",tags:"美食/人类学",note:""},
+{title:"月亮与六便士",author:"毛姆",status:"已读",tags:"经典/艺术",note:"",version:"1919·英国（傅惟慈等译本）",authorInfo:"威廉·萨默塞特·毛姆（1874—1965），英国小说家、剧作家。",intro:"中年证券经纪人突然抛家弃业去画画，追逐月亮而弃六便士于不顾，质问世俗成功与艺术信仰。"},
+{title:"素食者",author:"韩江",status:"已读",tags:"小说/韩国文学",note:"",version:"2024/2021·四川文艺出版社",authorInfo:"韩江（1970—），韩国作家，2024年诺贝尔文学奖得主。",intro:"一场梦后，普通主妇英惠决意成为植物——以拒绝进食的身体，对抗家庭、社会与暴力的规训。"},
+{title:"蛤蟆先生去看心理医生",author:"罗伯特·戴博德",status:"已读",tags:"心理学/自愈",note:"",version:"2020·天津人民出版社",authorInfo:"罗伯特·戴博德（Robert de Board），英国心理学家、咨询师。",intro:"借蛤蟆先生的十次心理咨询，用温暖寓言讲透抑郁、童年与「人生坐标」的心理学常识。"},
+{title:"围棋入门一本就够",author:"吴秉铁",status:"已读",tags:"围棋/技艺",note:"",version:"2015·化学工业出版社",authorInfo:"吴秉铁，围棋教练，长期从事围棋普及教学。",intro:"从规则、死活到定式与官子，一册覆盖零基础到能下完一盘棋所需的知识。"},
+{title:"郭德纲讲三国",author:"郭德纲",status:"已读",tags:"历史/评书",note:"",version:"2022·北京联合出版公司",authorInfo:"郭德纲，相声演员、德云社班主。",intro:"以评书口吻重说三国，嬉笑怒骂间把权谋、人情与江湖气抖落得妙趣横生。"},
+{title:"人间食粮",author:"安德烈·纪德",status:"已读",tags:"散文/哲学",note:"",version:"1897·法国（李玉民等译本）",authorInfo:"安德烈·纪德（1869—1951），法国作家，1947年诺贝尔文学奖得主。",intro:"纪德游历北非后的散文诗，热烈礼赞感官、自由与「此刻」，是「行动与欲望」的宣言。"},
+{title:"《星际迷航》里的物理学",author:"劳伦斯·M·克劳斯",status:"已读",tags:"科普/科幻",note:"",version:"中信出版集团/世纪文景",authorInfo:"劳伦斯·M·克劳斯（Lawrence M. Krauss），美国理论物理学家、科普作家。",intro:"借《星际迷航》的曲速、传送与虫洞，认真推演科幻设定背后的真实物理可能。"},
+{title:"厨房里的人类学家",author:"庄祖宜",status:"已读",tags:"美食/人类学",note:"",version:"2010·文化艺术出版社",authorInfo:"庄祖宜，人类学者、厨师，弃学从厨写美食。",intro:"一位人类学博士转行进厨房的记录，在切配与烟火里重新打量食物、家与生活的意义。"},
 {title:"活着",author:"余华",status:"已读",tags:"小说/中国当代",note:"",version:"2012·作家出版社",authorInfo:"中国当代作家，1960年生，代表作《活着》《许三观卖血记》。",intro:"福贵从阔少沦为一无所有的佃户，在历史洪流中接连失去所有至亲，仍牵着老牛平静地活着。一部关于苦难、韧性与「活着本身」的小说。"},
-{title:"我只要写作就是回家",author:"余华",status:"已读",tags:"写作/访谈",note:""},
-{title:"人口学",author:"莫吉",status:"已读",tags:"社科/人口",note:""},
-{title:"历史中的大与小",author:"马伯庸",status:"已读",tags:"历史/随笔",note:""},
-{title:"敦煌大历史",author:"胡同庆",status:"已读",tags:"历史/敦煌",note:""},
-{title:"本色敦煌",author:"胡同庆/王进/张锋",status:"已读",tags:"历史/艺术",note:"壁画背后的故事"}
+{title:"我只要写作就是回家",author:"余华",status:"已读",tags:"写作/访谈",note:"",version:"2022/2026·山东文艺出版社",authorInfo:"余华（1960—），中国当代作家。",intro:"余华谈写作、阅读与人生的一本随笔，透出「只要写作，便已回家」的笃定与自在。"},
+{title:"人呐",author:"莫言",status:"已读",tags:"小说/中国当代",note:"",version:"2026·北京日报出版社",authorInfo:"莫言（1955—），首位获诺贝尔文学奖的中国籍作家，山东高密人。代表作《红高粱家族》《丰乳肥臀》《檀香刑》《生死疲劳》《蛙》等。",intro:"莫言时隔六年推出的全新短篇小说集，收录81篇精悍之作。以半生阅世的通透与悲悯，将人间百态、人性幽微凝于数百字之间，写尽人心的复杂与纯粹、温热与寒凉、荒诞与坚韧。"},
+{title:"历史中的大与小",author:"马伯庸",status:"已读",tags:"历史/随笔",note:"",version:"2025·湖南文艺出版社",authorInfo:"马伯庸，本名马力，当代作家，擅以考据写历史悬疑与脑洞。",intro:"马伯庸的历史文化随笔，于宏大叙事之外打捞被忽略的小人物、小物件与小心思。"},
+{title:"敦煌大历史",author:"邢耀龙",status:"已读",tags:"历史/敦煌",note:"",version:"2022·北京联合出版公司",authorInfo:"邢耀龙，敦煌学青年学者、「守窟人」，曾在榆林窟守窟多年。",intro:"一部面向大众的敦煌史，也是半部中国史——从石窟出发，串起边地如何纳入帝国、文明如何交汇。"},
+{title:"本色敦煌",author:"胡同庆/王义芝/张锋",status:"已读",tags:"历史/艺术",note:"壁画背后的故事",version:"2024·五洲传播出版社",authorInfo:"胡同庆、王义芝（敦煌研究院研究员）与摄影编辑张锋。",intro:"从壁画中提取佛教艺术、民俗烟火与敦煌人的日常，并回望莫高窟近代被发现的沧桑。"}
 ];
 const DEFAULT_FILMS=[
-{title:"呼啸山庄",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"哥特/经典"},
-{title:"安娜·卡列尼娜",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"俄国文学/爱情"},
-{title:"简·爱",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"女性/经典"},
-{title:"傲慢与偏见",type:"剧情/爱情",cat:"电影",status:"已看",tags:"奥斯汀/英伦"},
-{title:"茶花女",type:"剧情/爱情",cat:"电影",status:"已看",tags:"文学改编/悲剧"},
-{title:"小妇人",type:"剧情/家庭",cat:"电影",status:"已看",tags:"女性成长/经典"},
-{title:"红与黑",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"法国文学/野心"},
-{title:"镖人",type:"动画/武侠",cat:"电影",status:"已看",tags:"国漫/武侠"},
-{title:"飞驰人生",type:"喜剧/赛车",cat:"电影",status:"已看",tags:"韩寒/热血"},
-{title:"基督山伯爵",type:"剧情/复仇",cat:"电影",status:"已看",tags:"文学改编/爽片"},
-{title:"成为简·奥斯汀",type:"剧情/传记",cat:"电影",status:"已看",tags:"作家/爱情"},
-{title:"肖申克的救赎",type:"剧情/励志",cat:"电影",status:"已看",tags:"自由/经典"},
-{title:"悲惨世界",type:"歌舞/文学改编",cat:"电影",status:"已看",tags:"雨果/革命"},
-{title:"苔丝",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"英国文学/命运"},
-{title:"千年之恋之源氏物语",type:"剧情/古典",cat:"电影",status:"已看",tags:"日本古典/物哀"},
-{title:"布达佩斯大饭店",type:"喜剧/剧情",cat:"电影",status:"已看",tags:"韦斯·安德森/美学"},
-{title:"理智与情感",type:"剧情/爱情",cat:"电影",status:"已看",tags:"奥斯汀/英伦"},
-{title:"面纱",type:"剧情/爱情",cat:"电影",status:"已看",tags:"毛姆/中国背景"},
-{title:"战争与和平",type:"剧情/历史",cat:"电影",status:"已看",tags:"俄国文学/史诗"},
-{title:"沙翁情史",type:"剧情/爱情",cat:"电影",status:"已看",tags:"莎士比亚/戏说"},
-{title:"劝导",type:"剧情/爱情",cat:"电影",status:"已看",tags:"奥斯汀/英伦"},
-{title:"诺桑觉寺",type:"剧情/爱情",cat:"电影",status:"已看",tags:"奥斯汀/哥特"},
-{title:"蒂凡尼的早餐",type:"剧情/爱情",cat:"电影",status:"已看",tags:"赫本/都市"},
-{title:"永不妥协",type:"剧情/传记",cat:"电影",status:"已看",tags:"女性/维权"},
-{title:"追风筝的人",type:"剧情/成长",cat:"电影",status:"已看",tags:"阿富汗/救赎"},
-{title:"托斯卡纳艳阳下",type:"剧情/治愈",cat:"电影",status:"已看",tags:"意大利/疗伤"},
-{title:"百万美元宝贝",type:"剧情/运动",cat:"电影",status:"已看",tags:"拳击/励志"},
-{title:"奇迹男孩",type:"剧情/成长",cat:"电影",status:"已看",tags:"家庭/温暖"},
-{title:"大鱼",type:"奇幻/剧情",cat:"电影",status:"已看",tags:"蒂姆·波顿/父子"},
-{title:"隐藏人物",type:"剧情/传记",cat:"电影",status:"已看",tags:"NASA/女性/黑人"},
-{title:"时时刻刻",type:"剧情/传记",cat:"电影",status:"已看",tags:"伍尔夫/女性"},
-{title:"弱点",type:"剧情/传记",cat:"电影",status:"已看",tags:"橄榄球/温情"},
-{title:"裁缝",type:"剧情/喜剧",cat:"电影",status:"已看",tags:"复仇/时尚"},
-{title:"谎言大师",type:"剧情/悬疑",cat:"电影",status:"已看",tags:"海伦·米伦/骗局"},
-{title:"爱在黎明破晓前",type:"剧情/爱情",cat:"电影",status:"已看",tags:"爱在三部曲/话痨"},
-{title:"爱在日落黄昏时",type:"剧情/爱情",cat:"电影",status:"已看",tags:"爱在三部曲/重逢"},
-{title:"爱在午夜降临时",type:"剧情/爱情",cat:"电影",status:"已看",tags:"爱在三部曲/婚姻"},
-{title:"海街日记",type:"剧情/家庭",cat:"电影",status:"已看",tags:"是枝裕和/治愈"},
-{title:"美国往事",type:"剧情/犯罪",cat:"电影",status:"已看",tags:"黑帮/史诗"},
-{title:"超脱",type:"剧情/文艺",cat:"电影",status:"已看",tags:"教育/孤独"},
-{title:"摩托日记",type:"剧情/传记",cat:"电影",status:"已看",tags:"切·格瓦拉/旅行"},
-{title:"七号房的礼物",type:"剧情/亲情",cat:"电影",status:"已看",tags:"韩国/催泪"},
-{title:"妙手情真",type:"剧情/传记",cat:"电影",status:"已看",tags:"医疗/人文关怀"},
-{title:"至暗时刻",type:"剧情/传记",cat:"电影",status:"已看",tags:"丘吉尔/二战"},
-{title:"河西走廊",type:"纪录片/历史",cat:"纪录片",status:"已看",tags:"人文/丝路",reviewBody:"十集串起从汉朝到今日的河西走廊，影像与叙事都极克制，看完对‘通道即文明’有了实感。",reviewDate:"2026-03-12"},
-{title:"我在故宫修文物",type:"纪录片/手艺",cat:"纪录片",status:"已看",tags:"人文/匠心",reviewBody:"钟表组那段最动人——择一事终一生。节奏慢，但治愈。",reviewDate:"2026-03-20"},
-{title:"敦煌",type:"纪录片/历史",cat:"纪录片",status:"待看",tags:"人文/艺术"},
-{title:"大国崛起",type:"纪录片/历史",cat:"纪录片",status:"待看",tags:"人文/经济"},
-{title:"地球脉动",type:"纪录片/自然",cat:"纪录片",status:"待看",tags:"自然/治愈"},
-{title:"人生一串",type:"纪录片/美食",cat:"纪录片",status:"待看",tags:"美食/烟火"}
+{title:"呼啸山庄",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"哥特/经典",releaseDate:"1939 / 美国",douban:8.1,cast:"威廉·惠勒（导演） / 劳伦斯·奥利弗 / 梅尔·奥勃朗",intro:"弃儿希斯克利夫被收养后，因阶级与误会失去所爱凯瑟琳，归来以复仇灼烧整座庄园。"},
+{title:"安娜·卡列尼娜",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"俄国文学/爱情",releaseDate:"2012 / 英国",douban:7.2,cast:"乔·赖特（导演） / 凯拉·奈特莉 / 裘德·洛",intro:"上流社会少妇安娜为爱情抛下一切，却在社会成见与自我撕裂中走向悲剧。"},
+{title:"简·爱",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"女性/经典",releaseDate:"2011 / 英国",douban:7.5,cast:"凯瑞·福永（导演） / 米娅·华希科沃斯卡 / 迈克尔·法斯宾德",intro:"孤女家庭教师简·爱以独立与尊严赢得庄园主罗切斯特的心，也守住了自己的底线。"},
+{title:"傲慢与偏见",type:"剧情/爱情",cat:"电影",status:"已看",tags:"奥斯汀/英伦",releaseDate:"2005 / 英国",douban:8.6,cast:"乔·赖特（导演） / 凯拉·奈特莉 / 马修·麦克费登",intro:"乡绅之女伊丽莎白与高傲的达西在偏见中彼此试探，最终越过误解走向爱。"},
+{title:"茶花女",type:"剧情/爱情",cat:"电影",status:"已看",tags:"文学改编/悲剧",releaseDate:"1936 / 美国",douban:8.0,cast:"乔治·库克（导演） / 葛丽泰·嘉宝 / 罗伯特·泰勒",intro:"风尘女子玛格丽特与青年阿尔芒相爱，却因身份与世俗被迫分离，以生命成全爱情。"},
+{title:"小妇人",type:"剧情/家庭",cat:"电影",status:"已看",tags:"女性成长/经典",releaseDate:"2019 / 美国",douban:8.1,cast:"格蕾塔·葛韦格（导演） / 西尔莎·罗南 / 艾玛·沃森 / 弗洛伦丝·皮尤",intro:"马奇家四姐妹在南北战争年代各自追寻爱情、事业与自我，温柔而坚韧。"},
+{title:"红与黑",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"法国文学/野心",releaseDate:"1997 / 法国",douban:7.8,cast:"让-丹尼尔·韦尔埃格（导演） / 吉姆·罗斯·斯图尔特",intro:"木匠之子于连凭才学与野心攀附上流，却在爱情与虚荣的夹缝中走向毁灭。"},
+{title:"镖人：风起大漠",type:"动作/武侠",cat:"电影",status:"已看",tags:"国漫改编/武侠",releaseDate:"2026 / 中国",douban:7.5,cast:"袁和平（导演） / 吴京（监制·主演） / 谢霆锋 / 李连杰 / 于适 / 陈丽君 等",intro:"改编自许先哲同名高分漫画的武侠大片，隋末镖客刀马护送神秘人物知世郎远赴长安，途中卷入多方势力纷争。袁和平执导，集结吴京、谢霆锋、李连杰等老中青四代动作演员，实景真打、零绿幕，被誉为中式武侠回归。"},
+{title:"飞驰人生",type:"喜剧/赛车",cat:"电影",status:"已看",tags:"韩寒/热血",releaseDate:"2019 / 中国",douban:6.8,cast:"韩寒（导演） / 沈腾 / 黄景瑜 / 尹正",intro:"过气赛车手为重回赛道倾尽所有，在笑与泪里找回对速度与尊严的执念。"},
+{title:"基督山伯爵",type:"剧情/复仇",cat:"电影",status:"已看",tags:"文学改编/爽片",releaseDate:"2024 / 法国",douban:6.8,cast:"亚历山大·德·拉·巴特里耶 / 马修·德拉波特（导演） / 皮埃尔·尼内",intro:"含冤入狱十四年的爱德蒙越狱寻得宝藏，化身基督山伯爵向仇人步步复仇。"},
+{title:"成为简·奥斯汀",type:"剧情/传记",cat:"电影",status:"已看",tags:"作家/爱情",releaseDate:"2007 / 英国",douban:7.7,cast:"朱里安·杰拉德（导演） / 安妮·海瑟薇 / 詹姆斯·麦卡沃伊",intro:"年轻才女简·奥斯汀在爱情与写作之间抉择，一段未竟恋情成就日后的笔底波澜。"},
+{title:"肖申克的救赎",type:"剧情/励志",cat:"电影",status:"已看",tags:"自由/经典",releaseDate:"1994 / 美国",douban:9.7,cast:"弗兰克·德拉邦特（导演） / 蒂姆·罗宾斯 / 摩根·弗里曼",intro:"银行家蒙冤入狱，用近二十年的隐忍与希望凿通自由的隧道。",quotes:"希望让人自由。\n要么忙着活，要么忙着死。"},
+{title:"悲惨世界",type:"歌舞/文学改编",cat:"电影",status:"已看",tags:"雨果/革命",releaseDate:"2012 / 英国",douban:8.6,cast:"汤姆·霍伯（导演） / 休·杰克曼 / 安妮·海瑟薇 / 罗素·克劳",intro:"冉·阿让偷一块面包换来一生追捕，在革命与救赎中追问法律、恩典与人性。"},
+{title:"苔丝",type:"剧情/文学改编",cat:"电影",status:"已看",tags:"英国文学/命运",releaseDate:"1979 / 英国",douban:8.2,cast:"罗曼·波兰斯基（导演） / 娜塔莎·金斯基",intro:"纯真农女苔丝被命运接连捉弄，在贞洁、贫困与爱情的夹击中走向无可挽回的悲剧。"},
+{title:"千年之恋之源氏物语",type:"剧情/古典",cat:"电影",status:"已看",tags:"日本古典/物哀",releaseDate:"2001 / 日本",douban:7.2,cast:"崛川顿幸（导演） / 天海祐希 / 常盘贵子 / 吉永小百合",intro:"以《源氏物语》作者紫式部的视角，交织出光源氏跌宕情史与平安贵族的物哀。"},
+{title:"布达佩斯大饭店",type:"喜剧/剧情",cat:"电影",status:"已看",tags:"韦斯·安德森/美学",releaseDate:"2014 / 美国",douban:8.9,cast:"韦斯·安德森（导演） / 拉尔夫·费因斯 / 托尼·雷沃罗利",intro:"一座欧洲名酒店与其礼宾员卷入名画与遗产风波，对称构图里写尽旧欧洲的优雅与荒诞。",quotes:"在荒谬的世界里，礼貌是最体面的反抗。"},
+{title:"理智与情感",type:"剧情/爱情",cat:"电影",status:"已看",tags:"奥斯汀/英伦",releaseDate:"1995 / 英国",douban:8.3,cast:"李安（导演） / 艾玛·汤普森 / 凯特·温丝莱特 / 休·格兰特",intro:"姐妹二人，一个理性克制、一个浪漫炽热，在婚姻与门第的现实里各自寻爱。"},
+{title:"面纱",type:"剧情/爱情",cat:"电影",status:"已看",tags:"毛姆/中国背景",releaseDate:"2006 / 美国",douban:8.0,cast:"约翰·卡兰（导演） / 爱德华·诺顿 / 娜奥米·沃茨",intro:"为赌气远嫁中国的妻子在瘟疫小镇重新认识丈夫与自己，于霍乱与沉默中重生。"},
+{title:"战争与和平",type:"剧情/历史",cat:"电影",status:"已看",tags:"俄国文学/史诗",releaseDate:"1968 / 苏联",douban:9.1,cast:"谢尔盖·邦达尔丘克（导演/主演） / 柳德米拉·萨维里耶娃",intro:"拿破仑战争洪流下，贵族青年安德烈与皮埃尔在血与火中追问生命、爱与民族的意义。"},
+{title:"沙翁情史",type:"剧情/爱情",cat:"电影",status:"已看",tags:"莎士比亚/戏说",releaseDate:"1998 / 英国",douban:7.4,cast:"约翰·麦登（导演） / 约瑟夫·费因斯 / 格温妮丝·帕特洛",intro:"虚构青年莎士比亚为写出《罗密欧与朱丽叶》陷入一场禁忌恋情，戏里戏外皆是爱。"},
+{title:"劝导",type:"剧情/爱情",cat:"电影",status:"已看",tags:"奥斯汀/英伦",releaseDate:"2007 / 英国",douban:8.2,cast:"亚德里安·谢尔高德（导演） / 莎莉·霍金斯 / 鲁伯特·彭利-琼斯",intro:"八年前被劝放弃的恋人重逢，年长成熟的安妮在沉默与克制里等一场迟来的告白。"},
+{title:"诺桑觉寺",type:"剧情/爱情",cat:"电影",status:"已看",tags:"奥斯汀/哥特",releaseDate:"2007 / 英国",douban:7.5,cast:"乔恩·琼斯（导演） / 菲丽希缇·琼斯",intro:"爱读哥特小说的少女凯瑟琳初入社交圈，在误会与想象里学会分辨幻想与真心。"},
+{title:"蒂凡尼的早餐",type:"剧情/爱情",cat:"电影",status:"已看",tags:"赫本/都市",releaseDate:"1961 / 美国",douban:8.2,cast:"布莱克·爱德华兹（导演） / 奥黛丽·赫本 / 乔治·佩帕德",intro:"纽约上层边缘的少女霍莉在物质与孤独间游走，最终学会为爱停留。",quotes:"我们俩很像，我和那只猫——都不属于任何地方。"},
+{title:"永不妥协",type:"剧情/传记",cat:"电影",status:"已看",tags:"女性/维权",releaseDate:"2000 / 美国",douban:8.2,cast:"史蒂文·索德伯格（导演） / 朱莉娅·罗伯茨",intro:"单亲妈妈凭一股韧劲追查化工污染案，替小镇居民赢得史上少见的天价赔偿。"},
+{title:"追风筝的人",type:"剧情/成长",cat:"电影",status:"已看",tags:"阿富汗/救赎",releaseDate:"2007 / 美国",douban:8.2,cast:"马克·福斯特（导演） / 赫立德·阿卜杜拉 / 阿托莎·利奥妮",intro:"阿富汗少年因懦弱背叛挚友，成年后重返故土，以救赎偿还童年的债。"},
+{title:"托斯卡纳艳阳下",type:"剧情/治愈",cat:"电影",status:"已看",tags:"意大利/疗伤",releaseDate:"2003 / 美国",douban:7.9,cast:"奥黛丽·威尔斯（导演） / 戴安·琳恩",intro:"失婚女作家在托斯卡纳买下一栋老宅，于阳光、葡萄园与陌生人里重启人生。"},
+{title:"百万美元宝贝",type:"剧情/运动",cat:"电影",status:"已看",tags:"拳击/励志",releaseDate:"2004 / 美国",douban:8.6,cast:"克林特·伊斯特伍德（导演/主演） / 希拉里·斯万克 / 摩根·弗里曼",intro:"年迈教练接下女拳手弟子，两人在汗水与信任中彼此成全，也迎来残酷的抉择。",quotes:"最要紧的，是为了一个没人看见的梦想，赌上一切的勇气。"},
+{title:"奇迹男孩",type:"剧情/成长",cat:"电影",status:"已看",tags:"家庭/温暖",releaseDate:"2017 / 美国",douban:8.6,cast:"斯蒂芬·卓博斯基（导演） / 雅各布·特伦布莱 / 朱莉娅·罗伯茨",intro:"面部畸形的男孩第一次走进校园，用善良与勇气让整个世界重新打量「普通」。"},
+{title:"大鱼",type:"奇幻/剧情",cat:"电影",status:"已看",tags:"蒂姆·波顿/父子",releaseDate:"2003 / 美国",douban:8.0,cast:"蒂姆·波顿（导演） / 伊万·麦克格雷格 / 阿尔伯特·芬尼",intro:"儿子在父亲弥留之际，终于读懂那些夸张冒险故事里藏着的爱与告别。",quotes:"最神奇的事，是找到那件最要紧的事。"},
+{title:"隐藏人物",type:"剧情/传记",cat:"电影",status:"已看",tags:"NASA/女性/黑人",releaseDate:"2016 / 美国",douban:8.8,cast:"西奥多·梅尔菲（导演） / 塔拉吉·P·汉森 / 奥克塔维亚·斯宾瑟",intro:"三位黑人女性数学家在种族与性别的高墙后，算出把美国人送上太空的数字。"},
+{title:"时时刻刻",type:"剧情/传记",cat:"电影",status:"已看",tags:"伍尔夫/女性",releaseDate:"2002 / 美国",douban:8.5,cast:"斯蒂芬·戴德利（导演） / 梅丽尔·斯特里普 / 妮可·基德曼 / 朱丽安·摩尔",intro:"以《达洛维夫人》为线，串起三个时代女性关于生存、创作与自我毁灭的一天。"},
+{title:"弱点",type:"剧情/传记",cat:"电影",status:"已看",tags:"橄榄球/温情",releaseDate:"2009 / 美国",douban:8.7,cast:"约翰·李·汉考克（导演） / 桑德拉·布洛克",intro:"富裕家庭收留无家可归的黑人少年，用爱把他从街头托举成橄榄球明星。"},
+{title:"裁缝",type:"剧情/喜剧",cat:"电影",status:"已看",tags:"复仇/时尚",releaseDate:"2015 / 澳大利亚",douban:7.9,cast:"乔瑟琳·穆尔豪斯（导演） / 凯特·温丝莱特 / 朱迪·戴维斯 / 利亚姆·海姆斯沃斯 / 雨果·维文",intro:"离乡多年的女裁缝以高定时装为武器，回到愚昧小镇清算童年被诬陷的过往。"},
+{title:"谎言大师",type:"剧情/悬疑",cat:"电影",status:"已看",tags:"海伦·米伦/骗局",releaseDate:"2019 / 美国",douban:6.7,cast:"比尔·康顿（导演） / 海伦·米伦 / 伊恩·麦克莱恩",intro:"职业骗徒钓上富有寡妇，本想骗财，却在靠近真相时发现一段出乎意料的往事。"},
+{title:"爱在黎明破晓前",type:"剧情/爱情",cat:"电影",status:"已看",tags:"爱在三部曲/话痨",releaseDate:"1995 / 美国",douban:8.8,cast:"理查德·林克莱特（导演） / 伊桑·霍克 / 朱莉·德尔佩",intro:"陌生男女在火车上偶遇，于维也纳的一夜长谈里坠入不设防的爱。",quotes:"如果这世上真有魔法，那一定藏在努力理解一个人的过程里。"},
+{title:"爱在日落黄昏时",type:"剧情/爱情",cat:"电影",status:"已看",tags:"爱在三部曲/重逢",releaseDate:"2004 / 美国",douban:8.8,cast:"理查德·林克莱特（导演） / 伊桑·霍克 / 朱莉·德尔佩",intro:"九年后巴黎重逢，已各有归属的两人用一场午后漫步，把未竟的话说完。",quotes:"我曾在一个清晨醒来，以为自己还能再见到你。"},
+{title:"爱在午夜降临时",type:"剧情/爱情",cat:"电影",status:"已看",tags:"爱在三部曲/婚姻",releaseDate:"2013 / 美国",douban:8.8,cast:"理查德·林克莱特（导演） / 伊桑·霍克 / 朱莉·德尔佩",intro:"相恋多年的两人在希腊度假，于争吵与调情之间重新确认「在一起」的重量。",quotes:"爱不是两个残缺的人拼成完整，而是两个完整的人选择同行。"},
+{title:"海街日记",type:"剧情/家庭",cat:"电影",status:"已看",tags:"是枝裕和/治愈",releaseDate:"2015 / 日本",douban:8.8,cast:"是枝裕和（导演） / 绫濑遥 / 长泽雅美 / 夏帆 / 广濑铃",intro:"三姐妹在父亲葬礼上接纳同父异母的小妹，于镰仓的老屋与四季里慢慢愈合。"},
+{title:"美国往事",type:"剧情/犯罪",cat:"电影",status:"已看",tags:"黑帮/史诗",releaseDate:"1984 / 意大利",douban:9.2,cast:"赛尔乔·莱昂内（导演） / 罗伯特·德尼罗 / 詹姆斯·伍兹",intro:"从街头少年到黑帮巨头，三十年友谊、背叛与黄金梦在纽约的烟火里灰飞烟灭。",quotes:"他们那时二十岁，后来三十岁，然后我的过去回来了。"},
+{title:"超脱",type:"剧情/文艺",cat:"电影",status:"已看",tags:"教育/孤独",releaseDate:"2011 / 美国",douban:8.9,cast:"托尼·凯耶（导演） / 阿德里安·布罗迪",intro:"代课教师以疏离保护自我，却在问题学生与破碎童年里，逼近无法超脱的孤独。"},
+{title:"摩托日记",type:"剧情/传记",cat:"电影",status:"已看",tags:"切·格瓦拉/旅行",releaseDate:"2004 / 美国",douban:8.5,cast:"沃尔特·塞勒斯（导演） / 盖尔·加西亚·贝纳尔",intro:"年轻的格瓦拉骑摩托穿越南美，在疮痍与贫穷里萌生改变世界的火种。"},
+{title:"七号房的礼物",type:"剧情/亲情",cat:"电影",status:"已看",tags:"韩国/催泪",releaseDate:"2013 / 韩国",douban:8.9,cast:"李焕庆（导演） / 柳承龙 / 葛素媛",intro:"智障父亲含冤入狱，却在牢房里被囚犯们帮忙，与女儿演绎最纯粹的父女情。"},
+{title:"妙手情真",type:"剧情/传记",cat:"电影",status:"已看",tags:"医疗/人文关怀",releaseDate:"1998 / 美国",douban:8.4,cast:"汤姆·沙迪亚克（导演） / 罗宾·威廉姆斯",intro:"医生以小丑式的热情打破医院的冷漠，用笑声与真诚重拾医病之间的温度。"},
+{title:"至暗时刻",type:"剧情/传记",cat:"电影",status:"已看",tags:"丘吉尔/二战",releaseDate:"2017 / 英国",douban:8.6,cast:"乔·赖特（导演） / 加里·奥德曼",intro:"二战初期，丘吉尔在妥协与抵抗之间拍板，以演讲把不列颠托入殊死一战。",quotes:"我们将在海滩上战斗……我们绝不投降。"},
+{title:"河西走廊",type:"纪录片/历史",cat:"纪录片",status:"已看",tags:"人文/丝路",releaseDate:"2015 / 中国",douban:9.7,cast:"CCTV纪录",intro:"十集纪录片，从西汉到今日串起河西走廊的文明、通道与民族交融史。",reviewBody:"十集串起从汉朝到今日的河西走廊，影像与叙事都极克制，看完对‘通道即文明’有了实感。",reviewDate:"2026-03-12"},
+{title:"我在故宫修文物",type:"纪录片/手艺",cat:"纪录片",status:"已看",tags:"人文/匠心",releaseDate:"2016 / 中国",douban:9.4,cast:"叶君 / 萧寒",intro:"聚焦故宫书画、陶瓷、钟表等文物的修复师，慢工出细活，择一事终一生。",reviewBody:"钟表组那段最动人——择一事终一生。节奏慢，但治愈。",reviewDate:"2026-03-20"},
+{title:"敦煌",type:"纪录片/历史",cat:"纪录片",status:"在看",tags:"人文/艺术",releaseDate:"2010 / 中国",douban:8.8,cast:"周兵",intro:"大型纪录片，全景呈现敦煌莫高窟的历史、艺术与藏经洞被发现的沧桑。"},
+{title:"大国崛起",type:"纪录片/历史",cat:"纪录片",status:"在看",tags:"人文/经济",releaseDate:"2006 / 中国",douban:8.3,cast:"CCTV",intro:"十二集纪录片，梳理近代九国崛起背后的海洋、工业与制度脉络。"},
+{title:"地球脉动",type:"纪录片/自然",cat:"纪录片",status:"在看",tags:"自然/治愈",releaseDate:"2006–2023 / 英国(BBC)",douban:9.7,cast:"大卫·爱登堡 解说",intro:"BBC自然纪录片巅峰，用超高清镜头记录地球两极到深海的生态与野生动物。"},
+{title:"人生一串",type:"纪录片/美食",cat:"纪录片",status:"在看",tags:"美食/烟火",releaseDate:"2018– / 中国(B站)",douban:9.0,cast:"陈英杰 等",intro:"聚焦各地街头烧烤的市井烟火，被誉为中国版深夜食堂。"}
 ];
 const FITNESS_PLAN=[
  {name:"全身放松",focus:"久坐全身紧张，先放松再练",sets:"泡沫轴滚背/腿 10 min",setsCount:1,work:600,rest:0,tip:"放松竖脊肌和髂胫束，不要滚腰椎。",while:"边追剧边滚",video:"",
@@ -2192,8 +2199,8 @@ function renderReading(main){
    const list=inRoom.filter(b=> st==="想读" ? (b.status==="待读"||b.status==="想读") : b.status===st);
    let spines="";
    if(!list.length){spines=`<div style="font-size:12px;color:var(--muted);padding:6px 2px">（空书架）</div>`;}
-   list.forEach(b=>{const gi=all.indexOf(b);const col=catColor(bookCat(b));const h=72+((b.title.length*7)%24);
-     spines+=`<div class="spine" style="height:${h}px;background:${col}" data-i="${gi}" title="${esc(b.title)}" onpointerdown="bookPD(event,${gi},false)"><span class="grab" onpointerdown="e.stopPropagation();bookPD(event,${gi},true)">⠿</span><small>${esc(b.title.slice(0,8))}</small></div>`;});
+   list.forEach(b=>{const gi=all.indexOf(b);const col=catColor(bookCat(b));const h=Math.max(60,18+b.title.length*11);
+     spines+=`<div class="spine" style="height:${h}px;background:${col}" data-i="${gi}" title="${esc(b.title)}" onpointerdown="bookPD(event,${gi},false)"><span class="grab" onpointerdown="e.stopPropagation();bookPD(event,${gi},true)">⠿</span><small>${esc(b.title)}</small></div>`;});
    sh+=`<div class="shelf-block"><div class="shelf-label">${ico} ${st} <span class="cnt">(${list.length})</span></div><div class="shelf" data-status="${st}">${spines}</div><div class="shelf-scroll-hint">← 左右滑动 · 拖动换架 →</div></div>`;
  });
  hall.innerHTML=`<h3>📚 ${esc(READ_ROOM)} · 书架</h3>${sh}<div style="font-size:11px;color:var(--muted);margin-top:4px">拖动书脊到别的书架可改状态 · 轻点 ⠿ 也能选状态 · 点书脊展开书本</div>`;
@@ -2202,8 +2209,8 @@ function renderReading(main){
   // 整馆书架（放在魔法图书馆下方、书房上方）
   const hall=document.createElement("div");hall.className="card lib-hall";
   let spines="";
-  all.forEach(b=>{const gi=all.indexOf(b);const col=catColor(bookCat(b));const h=72+((b.title.length*7)%24);
-   spines+=`<div class="spine" style="height:${h}px;background:${col}" title="${esc(b.title)}" onclick="openBook(${gi})"><small>${esc(b.title.slice(0,8))}</small></div>`;});
+  all.forEach(b=>{const gi=all.indexOf(b);const col=catColor(bookCat(b));const h=Math.max(60,18+b.title.length*11);
+   spines+=`<div class="spine" style="height:${h}px;background:${col}" title="${esc(b.title)}" onclick="openBook(${gi})"><small>${esc(b.title)}</small></div>`;});
   hall.innerHTML=`<h3>📚 整馆书架</h3><div class="shelf">${spines}</div><div class="shelf-scroll-hint">← 左右滑动查看更多 →</div><div style="font-size:11px;color:var(--muted);margin-top:2px">点击书脊查看详情 · 书脊颜色按分类区分</div>`;
   main.appendChild(hall);
   // 选择一间书房
@@ -2288,7 +2295,7 @@ let bkDrag=null;
 function bookPD(e,i,fromHandle){e.preventDefault();bkDrag={i:i,fromHandle:fromHandle,sx:e.clientX,sy:e.clientY,moved:false,ghost:null};
  window.addEventListener("pointermove",bookPM,{passive:false});window.addEventListener("pointerup",bookPU);window.addEventListener("pointercancel",bookPU);}
 function bookPM(e){if(!bkDrag)return;const dx=e.clientX-bkDrag.sx,dy=e.clientY-bkDrag.sy;
- if(!bkDrag.moved&&Math.hypot(dx,dy)>8){bkDrag.moved=true;const b=S.reading[bkDrag.i];const col=catColor(bookCat(b));const g=document.createElement("div");g.className="drag-ghost";g.style.background=col;g.textContent=b.title.slice(0,8);document.body.appendChild(g);bkDrag.ghost=g;}
+ if(!bkDrag.moved&&Math.hypot(dx,dy)>8){bkDrag.moved=true;const b=S.reading[bkDrag.i];const col=catColor(bookCat(b));const g=document.createElement("div");g.className="drag-ghost";g.style.background=col;g.textContent=b.title;document.body.appendChild(g);bkDrag.ghost=g;}
  if(bkDrag.moved&&bkDrag.ghost){bkDrag.ghost.style.left=e.clientX+"px";bkDrag.ghost.style.top=e.clientY+"px";
   document.querySelectorAll(".shelf.drag-over").forEach(function(s){s.classList.remove("drag-over");});
   const el=document.elementFromPoint(e.clientX,e.clientY);const sh=el&&el.closest?el.closest(".shelf"):null;if(sh)sh.classList.add("drag-over");}}
@@ -2386,7 +2393,7 @@ function filmCat(f){return (f.cat||(f.type||"").split("/")[0]||"").trim()||"其�
 function filmSub(f){return ((f.type||"").split("/")[1]||f.type||"").trim()||"其他";}
 function renderFilm(main){
  const c=document.createElement("div");c.className="card";
- const total=S.film.length,seen=S.film.filter(f=>f.status==="已看").length;
+ const total=S.film.length,seen=S.film.filter(f=>f.status==="已看").length,watching=S.film.filter(f=>f.status==="在看").length,todo=S.film.filter(f=>f.status==="待看").length;
  const goal=S.filmGoal||24;
  const fp=Math.min(100,Math.round(seen/goal*100));
  const rated=S.film.filter(f=>f.status==="已看"&&(f.rating>0));
@@ -2399,7 +2406,8 @@ function renderFilm(main){
   <div class="stat-strip" style="margin-top:12px">
    <div class="stat"><b>${total}</b><span>片库</span></div>
    <div class="stat"><b>${seen}</b><span>已看</span></div>
-   <div class="stat"><b>${total-seen}</b><span>待看</span></div>
+   <div class="stat"><b>${watching}</b><span>在看</span></div>
+   <div class="stat"><b>${todo}</b><span>待看</span></div>
    <div class="stat"><b>${avg?avg+"★":"—"}</b><span>均分</span></div>
   </div>
   <div class="tabs" style="margin-top:10px">${topCats.map(t=>`<span class="tab${(FILM_ROOM===null&&t==="全部")||FILM_ROOM===t?' active':''}" onclick="setFilmRoom('${esc(t)}')">${esc(t)}</span>`).join("")}</div>`;
@@ -2474,7 +2482,7 @@ function openFilmDetail(i){const f=S.film[i];if(!f)return;
   <div style="margin:6px 0"><b>👥 角色 / 主演</b><input id="fmCast" type="text" value="${esc(f.cast||'')}" placeholder="如 张译 / 殷桃" style="width:100%;padding:4px 6px;border:2px dashed var(--line);border-radius:8px" onchange="setFilmCast(${i})"></div>
   <div style="display:flex;gap:8px;margin-top:10px"><button class="btn ghost" onclick="delFilm(${i})">🗑 删除</button></div>`;
  openDModal("🎬 影片详情",html);}
-function rateFilm(i,r){S.film[i].rating=r;if(r>0&&S.film[i].status!=="已看")S.film[i].status="已看";save();render();}
+function rateFilm(i,r){S.film[i].rating=r;if(r>0&&S.film[i].status==="待看")S.film[i].status="已看";save();render();}
 function setFilmDate(i){S.film[i].date=document.getElementById("fmDate").value;save();toast("已记录观影日期");}
 function setFilmReview(i){S.film[i].review=document.getElementById("fmReview").value;save();toast("短评已保存");}
 function setFilmReviewBody(i){const e=document.getElementById("fmReviewBody");if(e)S.film[i].reviewBody=e.value;save();toast("观后感已保存");}
@@ -2486,7 +2494,7 @@ function setFilmQuotes(i){const e=document.getElementById("fmQuotes");if(e)S.fil
 function setFilmIntro(i){const e=document.getElementById("fmIntro");if(e)S.film[i].intro=e.value;save();toast("简介已保存");}
 function setFilmCast(i){const e=document.getElementById("fmCast");if(e)S.film[i].cast=e.value;save();toast("角色已保存");}
 function delFilm(i){S.film.splice(i,1);save();render();closeDModal();}
-function cycleFilmStatus(i){const s=["已看","待看"];const cur=S.film[i].status;S.film[i].status=s[(s.indexOf(cur)+1)%s.length];if(s[(s.indexOf(cur)+1)%s.length]==="已看"&&S.film[i].reviewDate==="")S.film[i].reviewDate=todayStr();save();render();}
+function cycleFilmStatus(i){const s=["待看","在看","已看"];const cur=S.film[i].status;S.film[i].status=s[(s.indexOf(cur)+1)%s.length];if(s[(s.indexOf(cur)+1)%s.length]==="已看"&&S.film[i].reviewDate==="")S.film[i].reviewDate=todayStr();save();render();}
 function addFilm(){const t=document.getElementById("nfTitle").value.trim();const cat=document.getElementById("nfCat").value;const y=document.getElementById("nfType").value.trim();const g=document.getElementById("nfTags").value.trim();if(!t)return;S.film.push({title:t,cat:cat,type:y,status:"待看",tags:g,rating:0,date:"",review:"",reviewBody:"",reviewDate:"",spoiler:false,quotes:"",intro:"",cast:"",releaseDate:"",douban:""});save();render();toast("已添加");}
 
 // 自媒体矩阵（独立重做：粉丝目标 + 平台分布条 + 可编辑账号）

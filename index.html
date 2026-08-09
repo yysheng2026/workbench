@@ -970,9 +970,11 @@ function migrate(s){
  if(!s.seededRentJuly){
   if(Array.isArray(s.ledger)) s.ledger=s.ledger.filter(r=>!(r.recurringId==="rec_rent_in"&&r.date==="2026-07-23"));
   s.ledger.push({id:"seed_rent_jul_inc",date:"2026-07-23",type:"in",cat:"租金",amount:3000,accountId:"acc_bank",method:"银行卡",merchant:"陈小姐的女儿/YY",note:"尚城首月租金",src:"手动",createdAt:Date.now()});
-  s.ledger.push({id:"seed_rent_jul_dep",date:"2026-07-23",type:"in",cat:"押金",amount:6000,accountId:"acc_deposit_sc",method:"银行卡",merchant:"陈小姐的女儿/YY",note:"尚城租房押金(2个月,可退)",src:"手动",createdAt:Date.now()});
+  s.ledger.push({id:"seed_rent_jul_dep",date:"2026-07-23",type:"in",cat:"租金",amount:6000,accountId:"acc_deposit_sc",method:"银行卡",merchant:"陈小姐的女儿/YY",note:"尚城租房押金(2个月,可退)",src:"手动",createdAt:Date.now()});
   s.seededRentJuly=true;
  }
+ // 押金首笔统一归入租金收入，不再作为资产展示
+ (s.ledger||[]).forEach(r=>{ if(r.id==="seed_rent_jul_dep"&&r.cat==="押金") r.cat="租金"; });
  if(s.account){
    const acByMethod={"微信":"acc_wechat","支付宝":"acc_alipay","银行卡":"acc_bank","现金":"acc_cash","公积金":"acc_provident"};
    (Array.isArray(s.account.records)?s.account.records:[]).forEach(r=>{
@@ -2645,11 +2647,12 @@ const ACCOUNT_TYPES=[
  {type:"stock",label:"股票",icon:"📈",linked:true,cls:"floating"},{type:"fund",label:"基金",icon:"📊",linked:true,cls:"floating"},
  {type:"estate",label:"房产",icon:"🏠",cls:"fixed"}
 ];
-// 账户总览分组：按资产性质（固定 / 浮动 / 现金 / 负债）归并
+// 账户总览分组：按资产性质（固定 / 浮动 / 现金 / 押金 / 负债）归并；押金为可退资金，不计入净资产
 const ACCT_GROUPS=[
  {key:"floating",label:"📈 浮动资产（每日更新）",types:["stock","fund","provident"]},
- {key:"fixed",label:"🏠 固定资产",types:["bank","deposit","estate"]},
+ {key:"fixed",label:"🏠 固定资产",types:["bank","estate"]},
  {key:"liquid",label:"💳 现金 / 钱包 / 活期",types:["cash","wechat","alipay"]},
+ {key:"deposit",label:"🔒 押金 / 保证金（不计入净资产）",types:["deposit"]},
  {key:"liability",label:"💸 负债 / 信用卡",types:["liability"]}
 ];
 function accountGroupKey(a){const g=ACCT_GROUPS.find(g=>g.types.includes(a.type));return g?g.key:a.type;}
@@ -2660,8 +2663,8 @@ function accountById(id){return (S.accounts||[]).find(a=>a.id===id);}
 function accountName(id){const a=accountById(id);return a?a.name:id||"";}
 function secMV(){let stock=0,fund=0;(S.stocks&&S.stocks.holdings||[]).forEach(h=>{const price=(typeof priceOf==="function")?(priceOf(h.code)||h.price||h.cost):(h.price||h.cost);const mv=(h.shares||0)*price;if((h.kind||"stock")==="fund")fund+=mv;else stock+=mv;});return {stock,fund};}
 function accountBalance(a){if(!a)return 0;if(a.type==="estate"){return +(a.marketValue!==undefined?a.marketValue:(a.opening||0));}if(a.linked){const mv=secMV();return a.type==="stock"?mv.stock:mv.fund;}let bal=+a.opening||0;const L=S.ledger||[];for(const r of L){if(r.type==="in"&&r.accountId===a.id)bal+=+r.amount||0;else if(r.type==="out"&&r.accountId===a.id)bal-=+r.amount||0;else if(r.type==="transfer"){if(r.accountId===a.id)bal-=+r.amount||0;if(r.toAccountId===a.id)bal+=+r.amount||0;}}return bal;}
-function totals(){let assets=0,liab=0;(S.accounts||[]).forEach(a=>{if(a.linked){const mv=secMV();assets+=(a.type==="stock"?mv.stock:mv.fund);return;}const bal=accountBalance(a);if(a.type==="liability")liab+=-bal;else assets+=bal;});return {assets,liab,net:assets-liab};}
-function netWorthAt(dateMax){let nw=0;(S.accounts||[]).forEach(a=>{if(a.linked)return;let bal=+a.opening||0;(S.ledger||[]).forEach(r=>{if((r.date||"")>dateMax)return;if(r.type==="in"&&r.accountId===a.id)bal+=+r.amount||0;else if(r.type==="out"&&r.accountId===a.id)bal-=+r.amount||0;else if(r.type==="transfer"){if(r.accountId===a.id)bal-=+r.amount||0;if(r.toAccountId===a.id)bal+=+r.amount||0;}});nw+=bal;});const mv=secMV();nw+=mv.stock+mv.fund;return nw;}
+function totals(){let assets=0,liab=0;(S.accounts||[]).forEach(a=>{if(a.type==="deposit")return;if(a.linked){const mv=secMV();assets+=(a.type==="stock"?mv.stock:mv.fund);return;}const bal=accountBalance(a);if(a.type==="liability")liab+=-bal;else assets+=bal;});return {assets,liab,net:assets-liab};}
+function netWorthAt(dateMax){let nw=0;(S.accounts||[]).forEach(a=>{if(a.linked||a.type==="deposit")return;let bal=a.type==="estate"?(a.marketValue!==undefined?+a.marketValue:+(a.opening||0)):(+a.opening||0);(S.ledger||[]).forEach(r=>{if((r.date||"")>dateMax)return;if(r.type==="in"&&r.accountId===a.id)bal+=+r.amount||0;else if(r.type==="out"&&r.accountId===a.id)bal-=+r.amount||0;else if(r.type==="transfer"){if(r.accountId===a.id)bal-=+r.amount||0;if(r.toAccountId===a.id)bal+=+r.amount||0;}});nw+=bal;});const mv=secMV();nw+=mv.stock+mv.fund;return nw;}
 function ledgerAdd(r){if(!S.ledger)S.ledger=[];S.ledger.push(r);save();render();}
 function ledgerRecs(){return (S.ledger||[]).slice();}
 function isNonIncome(r){return r.type==="in"&&NON_INCOME_CATS.indexOf(r.cat||"")>=0;}
@@ -3073,17 +3076,31 @@ function renderMoneyStats(main){
  // 支出分类
  const cats={};recs.filter(r=>r.type==="out").forEach(r=>{const c=r.cat||"其他";cats[c]=(cats[c]||0)+(+r.amount||0);});
  const totalOut=Object.values(cats).reduce((s,v)=>s+v,0)||1;
- // 资产账户占比
- const assetAcc=(S.accounts||[]).filter(a=>a.type!=="liability");
- const acCats={};const acDetails={};let acTotal=0;
- const estateGroup={name:"房产",sum:0,items:[]};
+ // 资产账户占比：按用户指定维度分组（房产/股票/定期存款/基金/黄金/公积金/现金活期）；押金不计入资产
+ const assetAcc=(S.accounts||[]).filter(a=>a.type!=="liability"&&a.type!=="deposit");
+ const acGroups={
+  "房产":{sum:0,items:[]},
+  "股票":{sum:0,items:[]},
+  "定期存款":{sum:0,items:[]},
+  "基金":{sum:0,items:[]},
+  "黄金":{sum:0,items:[]},
+  "公积金":{sum:0,items:[]},
+  "现金/活期":{sum:0,items:[]}
+ };
  assetAcc.forEach(a=>{
   const b=accountBalance(a);if(b<=0)return;
-  if(a.type==="estate"){estateGroup.sum+=b;estateGroup.items.push(`${a.name} ¥${fmtMoney(b)}`);}
-  else{acCats[a.name]=b;}
-  acTotal+=b;
+  const item=`${a.name} ¥${fmtMoney(b)}`;
+  if(a.type==="estate"){acGroups["房产"].sum+=b;acGroups["房产"].items.push(item);}
+  else if(a.type==="stock"){acGroups["股票"].sum+=b;acGroups["股票"].items.push(item);}
+  else if(a.type==="bank"){acGroups["定期存款"].sum+=b;acGroups["定期存款"].items.push(item);}
+  else if(a.type==="fund"&&(a.id==="acc_alipay_gold"||a.name.includes("黄金"))){acGroups["黄金"].sum+=b;acGroups["黄金"].items.push(item);}
+  else if(a.type==="fund"){acGroups["基金"].sum+=b;acGroups["基金"].items.push(item);}
+  else if(a.type==="provident"){acGroups["公积金"].sum+=b;acGroups["公积金"].items.push(item);}
+  else if(["cash","wechat","alipay"].includes(a.type)){acGroups["现金/活期"].sum+=b;acGroups["现金/活期"].items.push(item);}
+  else{acGroups["现金/活期"].sum+=b;acGroups["现金/活期"].items.push(item);}
  });
- if(estateGroup.sum>0){acCats[estateGroup.name]=estateGroup.sum;acDetails[estateGroup.name]=estateGroup.items.join("\n");}
+ const acCats={};const acDetails={};let acTotal=0;
+ Object.entries(acGroups).forEach(([name,g])=>{if(g.sum>0){acCats[name]=g.sum;acDetails[name]=g.items.join("\n");acTotal+=g.sum;}});
  // 图表容器
  const chartId="moneyStatsChart_"+Date.now()+"_"+Math.floor(Math.random()*1000000);
  let chartHTML=data.length>1?`<div id="${chartId}" style="width:100%;height:320px;margin:8px 0"></div>`:"";
@@ -3267,7 +3284,8 @@ function renderMoneyAccounts(main){
   if(!list.length)return;
   const sum=list.reduce((s,a)=>s+accountBalance(a),0);
   const isLiab=g.key==="liability";
-  h+=`<h4 style="margin:10px 0 2px;color:var(--accent-ink);display:flex;justify-content:space-between;align-items:baseline"><span>${g.label}</span><span style="font-size:12px;font-weight:600;color:${isLiab?'var(--bad)':'var(--ok)'}">¥${fmtMoney(isLiab?-sum:sum)}</span></h4>`+list.map(accCard).join("");
+  const isDeposit=g.key==="deposit";
+  h+=`<h4 style="margin:10px 0 2px;color:var(--accent-ink);display:flex;justify-content:space-between;align-items:baseline"><span>${g.label}</span><span style="font-size:12px;font-weight:600;color:${isLiab?'var(--bad)':(isDeposit?'var(--muted)':'var(--ok)')}">¥${fmtMoney(isLiab?-sum:sum)}</span></h4>`+list.map(accCard).join("");
  });
  h+=`<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn sm primary" onclick="addAccount()">＋ 新增账户</button><button class="btn sm" onclick="openImport()">📥 导入账单 JSON</button><button class="btn sm" onclick="updateFloatingAssets()">🔄 刷新浮动资产</button><button class="btn sm" onclick="syncProvidentFromLedger()">🏛 公积金按流水更新</button></div>`;
  card.innerHTML=h;main.appendChild(card);
@@ -4454,7 +4472,7 @@ document.getElementById("checkin").onclick=()=>{if(S.lastCheckin===todayStr())re
 document.getElementById("newmonth").onclick=()=>{const mm=prompt("新月份主线条（例：2026-09 金秋收官）","2026-09 新主线");if(!mm)return;const a=mm.split(/\s+/);const k=a[0];const t=a.slice(1).join(" ")||"新主线";
  if(!/^\d{4}-\d{2}$/.test(k)){toast("月份格式应为 2026-09");return;}if(S.months[k]){toast("该月份已存在");return;}
  S.months[k]={main:t,reward:"自定义犒劳",stampName:"✨ 新印记",tasks:[]};S.currentMonth=k;save();render();toast("已开启 "+k);};
-document.getElementById("export").onclick=()=>{const b=JSON.stringify(S);const u=URL.createObjectURL(new Blob([b],{type:"application/json"}));const a=document.createElement("a");a.href=u;a.download="闯关进度.json";a.click();toast("已导出");};
+document.getElementById("export").onclick=()=>{const b=JSON.stringify(S);const u=URL.createObjectURL(new Blob([b],{type:"application/json"}));const a=document.createElement("a");a.href=u;a.download="个人工作台备份.json";a.click();toast("已导出");};
 document.getElementById("import").onclick=()=>document.getElementById("file").click();
 document.getElementById("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{S=JSON.parse(r.result);save();render();toast("已导入");}catch(_){toast("格式错误");}};r.readAsText(f);};
 

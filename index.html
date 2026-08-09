@@ -507,6 +507,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .cat-tile-desc{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .cat-tile-count{position:absolute;top:8px;right:10px;font-size:10px;color:var(--muted);background:rgba(255,255,255,.6);padding:1px 6px;border-radius:8px}
 .cat-list-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border:1px solid var(--line);border-radius:12px;margin:8px 0}
+.cat-list-item>div:first-child{flex:1;min-width:0}
 .cat-list-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex:0 0 auto}
 .cat-list-info{flex:1;min-width:0}
 .cat-list-name{font-size:15px;font-weight:600;color:var(--ink)}
@@ -2812,22 +2813,39 @@ function renderMoneyHome(main){
  main.appendChild(a);
  const cats=getMoneyCats();
  const counts={};(S.ledger||[]).forEach(r=>{if(!r||r.type==="transfer")return;counts[r.cat||"其他"]=(counts[r.cat||"其他"]||0)+1;});
- const catCard=document.createElement("div");catCard.className="card";
- catCard.innerHTML=`<h3>🏷️ 分类管理 <button class="btn sm ghost" style="float:right;margin-top:-4px" onclick="openCategoryManager()">管理</button></h3>
-  <div class="cat-grid">${cats.map(c=>{
-   const n=counts[c.name]||0;
-   return `<div class="cat-tile" onclick="quickCat('${esc(c.name)}')" style="--cat-color:${c.color};--cat-bg:${c.color}14">
-    <div class="cat-tile-icon">${c.icon}</div>
-    <div class="cat-tile-name">${esc(c.name)}</div>
-    <div class="cat-tile-desc">${esc(c.desc||"")}</div>
-    <div class="cat-tile-count">${n} 笔</div>
-   </div>`;
-  }).join("")}</div>`;
- main.appendChild(catCard);
+const catCard=document.createElement("div");catCard.className="card";
+catCard.innerHTML=`<h3 style="display:flex;align-items:center;justify-content:space-between;margin:0 0 8px">🏷️ 分类管理 <button class="btn sm ghost" onclick="openCategoryManager()">管理</button></h3>
+ <div class="cat-grid">${cats.map(c=>{
+  const n=counts[c.name]||0;
+  return `<div class="cat-tile" onclick="viewCatRecords('${esc(c.name)}')" style="--cat-color:${c.color};--cat-bg:${c.color}14">
+   <div class="cat-tile-icon">${c.icon}</div>
+   <div class="cat-tile-name">${esc(c.name)}</div>
+   <div class="cat-tile-desc">${esc(c.desc||"")}</div>
+   <div class="cat-tile-count">${n} 笔</div>
+  </div>`;
+ }).join("")}</div>`;
+main.appendChild(catCard);
  const rc=document.createElement("div");rc.className="card";rc.innerHTML=moneyRecurringSummaryHTML();main.appendChild(rc);
  const gc=document.createElement("div");gc.className="card";gc.innerHTML=moneyGoalsSummaryHTML();main.appendChild(gc);
 }
 function quickCat(name){const el=document.getElementById("acCat");if(el)el.value=name;setMoneyType("out");const a=document.getElementById("acAmt");if(a){a.focus();toast("已选「"+name+"」，填金额后点记录");}}
+function viewCatRecords(catName){
+ const L=(S.ledger||[]).filter(r=>r.type!=="transfer"&&(r.cat||"其他")===catName).sort((a,b)=>(b.date||"").localeCompare(a.date)||(b.id-a.id));
+ const totalIn=L.filter(r=>r.type==="in").reduce((s,r)=>s+(+r.amount||0),0);
+ const totalOut=L.filter(r=>r.type==="out").reduce((s,r)=>s+(+r.amount||0),0);
+ const byMonth={};L.forEach(r=>{const m=(r.date||"").slice(0,7);(byMonth[m]=byMonth[m]||[]).push(r);});
+ const months=Object.keys(byMonth).sort().reverse();
+ let h=`<h3>${catIcon(catName)} ${esc(catName)} · ${L.length} 笔</h3>
+  <div style="display:flex;gap:12px;font-size:13px;margin:6px 0 10px;flex-wrap:wrap">
+   <span style="color:#67c23a">收入 ¥${fmtMoney(totalIn)}</span>
+   <span style="color:#f56c6c">支出 ¥${fmtMoney(totalOut)}</span>
+   <span style="flex:1"></span>
+   <button class="btn sm primary" onclick="quickCat('${esc(catName)}');closeSheet()">＋ 记一笔</button>
+  </div>`;
+ if(!L.length){h+=`<div style="color:var(--muted);font-size:13px;padding:10px">该分类下还没有记录。</div>`;}
+ else{h+=months.map(m=>`<div style="margin:8px 0"><div style="font-size:12px;color:var(--muted);padding:4px 0;border-bottom:1px dashed var(--line)">${m.replace("-","年")}月</div>`+byMonth[m].map(r=>rowHTML(r)).join("")+`</div>`).join("");}
+ showSheet(h);
+}
 function openCategoryManager(){showSheet(categoryManagerHTML());}
 function categoryManagerHTML(){
  const cats=getMoneyCats();
@@ -2836,16 +2854,18 @@ function categoryManagerHTML(){
   const n=counts[c.name]||0;
   const isDefault=DEFAULT_MONEY_CATS.some(d=>d.name===c.name);
   return `<div class="cat-list-item">
-   <div class="cat-list-icon" style="background:${c.color}">${c.icon}</div>
-   <div class="cat-list-info">
-    <div class="cat-list-name">${esc(c.name)}${isDefault?'<span style="font-size:10px;color:var(--muted);margin-left:6px">默认</span>':''}</div>
-    <div class="cat-list-meta">${esc(c.desc||"")} · 已记录 ${n} 笔</div>
+   <div style="display:flex;align-items:center;gap:10px;flex:1;cursor:pointer" onclick="viewCatRecords('${esc(c.name)}')">
+    <div class="cat-list-icon" style="background:${c.color}">${c.icon}</div>
+    <div class="cat-list-info">
+     <div class="cat-list-name">${esc(c.name)}${isDefault?'<span style="font-size:10px;color:var(--muted);margin-left:6px">默认</span>':''}</div>
+     <div class="cat-list-meta">${esc(c.desc||"")} · 已记录 ${n} 笔</div>
+    </div>
    </div>
    <div class="cat-list-actions">
-    <button class="btn sm ghost" onclick="editCategory(${idx})">编辑</button>
-    ${isDefault?'':'<button class="btn sm ghost" onclick="delCategory('+idx+')">删除</button>'}
-    <button class="btn sm ghost" ${idx===0?'disabled style="opacity:.4"':`onclick="moveCategory(${idx},-1)"`}>↑</button>
-    <button class="btn sm ghost" ${idx===cats.length-1?'disabled style="opacity:.4"':`onclick="moveCategory(${idx},1)"`}>↓</button>
+    <button class="btn sm ghost" onclick="event.stopPropagation();editCategory(${idx})">编辑</button>
+    ${isDefault?'':'<button class="btn sm ghost" onclick="event.stopPropagation();delCategory('+idx+')">删除</button>'}
+    <button class="btn sm ghost" ${idx===0?'disabled style="opacity:.4"':`onclick="event.stopPropagation();moveCategory(${idx},-1)"`}>↑</button>
+    <button class="btn sm ghost" ${idx===cats.length-1?'disabled style="opacity:.4"':`onclick="event.stopPropagation();moveCategory(${idx},1)"`}>↓</button>
    </div>
   </div>`;
  }).join("");
@@ -3014,15 +3034,18 @@ function catRingSVG(cats,total,centerTop,centerBottom){
  entries.forEach(([k,v],i)=>{const frac=v/total;const a2=ang+frac*Math.PI*2;const large=frac>0.5?1:0;const x1=C+R*Math.cos(ang),y1=C+R*Math.sin(ang),x2=C+R*Math.cos(a2),y2=C+R*Math.sin(a2);paths+=`<path d="M${C} ${C} L${x1.toFixed(1)} ${y1.toFixed(1)} A${R} ${R} 0 ${large} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z" fill="${RING_PALETTE[i%RING_PALETTE.length]}" opacity=".85"></path>`;ang=a2;});
  return `<svg viewBox="0 0 120 120" style="width:120px;height:120px">${paths}<circle cx="${C}" cy="${C}" r="${R-22}" fill="var(--card)"></circle><text x="${C}" y="${C-2}" font-size="13" fill="var(--accent-ink)" text-anchor="middle">${centerTop||"支出"}</text><text x="${C}" y="${C+14}" font-size="11" fill="var(--muted)" text-anchor="middle">${centerBottom||("¥"+fmtMoney(total))}</text></svg>`;
 }
-function catRingLegend(cats,total){
+function catRingLegend(cats,total,details){
  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,6);
  if(!entries.length)return `<div style="font-size:12px;color:var(--muted)">无数据</div>`;
- return entries.map(([k,v],i)=>`<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0">
+ return entries.map(([k,v],i)=>{
+  const tip=details&&details[k]?` title="${esc(details[k])}"`:"";
+  return `<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0"${tip}>
    <span style="width:11px;height:11px;border-radius:50%;background:${RING_PALETTE[i%RING_PALETTE.length]};flex:0 0 11px;display:inline-block"></span>
    <span style="flex:1;color:var(--accent-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(k)}</span>
    <span style="color:var(--muted);font-variant-numeric:tabular-nums">¥${fmtMoney(v)}</span>
    <span style="min-width:40px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums">${Math.round(v/total*100)}%</span>
-  </div>`).join("");
+  </div>`;
+ }).join("");
 }
 function renderMoneyStats(main){
  const L=ledgerRecs();
@@ -3052,7 +3075,15 @@ function renderMoneyStats(main){
  const totalOut=Object.values(cats).reduce((s,v)=>s+v,0)||1;
  // 资产账户占比
  const assetAcc=(S.accounts||[]).filter(a=>a.type!=="liability");
- const acCats={};let acTotal=0;assetAcc.forEach(a=>{const b=accountBalance(a);if(b>0){acCats[a.name]=b;acTotal+=b;}});
+ const acCats={};const acDetails={};let acTotal=0;
+ const estateGroup={name:"房产",sum:0,items:[]};
+ assetAcc.forEach(a=>{
+  const b=accountBalance(a);if(b<=0)return;
+  if(a.type==="estate"){estateGroup.sum+=b;estateGroup.items.push(`${a.name} ¥${fmtMoney(b)}`);}
+  else{acCats[a.name]=b;}
+  acTotal+=b;
+ });
+ if(estateGroup.sum>0){acCats[estateGroup.name]=estateGroup.sum;acDetails[estateGroup.name]=estateGroup.items.join("\n");}
  // 图表容器
  const chartId="moneyStatsChart_"+Date.now()+"_"+Math.floor(Math.random()*1000000);
  let chartHTML=data.length>1?`<div id="${chartId}" style="width:100%;height:320px;margin:8px 0"></div>`:"";
@@ -3081,7 +3112,7 @@ function renderMoneyStats(main){
   h+=`<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div style="flex:0 0 120px">${catRingSVG(cats,totalOut,"支出","¥"+fmtMoney(totalOut))}</div><div style="flex:1;min-width:180px">`+catRingLegend(cats,totalOut)+`</div></div>`;
  }else h+=`<div style="font-size:12px;color:var(--muted);padding:6px">这个时段还没有支出。</div>`;
  h+=`<h4 style="margin:12px 0 4px;color:var(--accent-ink)">资产账户占比</h4>`;
- if(acTotal>0){h+=`<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div style="flex:0 0 120px">${catRingSVG(acCats,acTotal,"资产","¥"+fmtMoney(acTotal))}</div><div style="flex:1;min-width:180px">`+catRingLegend(acCats,acTotal)+`</div></div>`;}
+ if(acTotal>0){h+=`<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div style="flex:0 0 120px">${catRingSVG(acCats,acTotal,"资产","¥"+fmtMoney(acTotal))}</div><div style="flex:1;min-width:180px">`+catRingLegend(acCats,acTotal,acDetails)+`</div></div>`;}
  else h+=`<div style="font-size:12px;color:var(--muted);padding:6px">还没有资产账户余额。</div>`;
  h+=`<h4 style="margin:12px 0 4px;color:var(--accent-ink)">关键指标 <span style="font-size:11px;color:var(--muted);font-weight:normal">（本时段）</span></h4>
   <div class="stat-strip">

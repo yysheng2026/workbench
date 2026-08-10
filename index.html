@@ -145,7 +145,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 /* overview stat strip */
 .stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin:8px 0}
 .stat{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:8px 6px;text-align:center}
-.stat b{display:block;font-size:18px;color:var(--accent-ink);font-weight:700}
+.stat b{display:block;font-size:18px;color:var(--accent-ink);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.25;min-height:23px}
 .stat span{font-size:11px;color:var(--muted)}
 /* quote / energy */
 .quote{background:linear-gradient(135deg,#fff7e8,#fdeef3);border:2px dashed #e0b96a;border-radius:12px;padding:12px;font-size:14px;color:var(--accent-ink);line-height:1.7}
@@ -223,6 +223,23 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .shot-list{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
 .shot-tag{font-size:11px;padding:3px 8px;border-radius:10px;background:#e3d4f0;color:#5a3a6a}
 @media(max-width:680px){.stamps{grid-template-columns:repeat(3,1fr)}.nav{width:118px}}
+/* 桌面宽屏布局（≥1024px）：横版多列。手机竖屏与 PWA 桌面图标打开时由 max-width:680px 控制，不受影响 */
+@media(min-width:1024px){
+ .wrap{max-width:1400px;padding:22px 28px 100px}
+ .nav{width:200px;position:sticky;top:86px;align-self:flex-start}
+ .nav button{font-size:15px;padding:13px 16px;min-height:50px}
+ .main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+ .card{padding:18px;margin-bottom:0}
+ .card.grid-wide{grid-column:1/-1}
+ .cat-grid{grid-template-columns:repeat(4,1fr)}
+ .stat-strip{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+ .pie-wrap{gap:22px}
+ .pie-wrap>div:first-child{flex:0 0 150px!important}
+ header h1{font-size:30px}
+ .rc-sheet{max-width:720px}
+ .box.wide{max-width:640px}
+ .hdr-top h1{font-size:22px}
+}
 /* fitness redesign */
 .fit-block{margin:8px 0;padding:8px 10px;background:#fffdfa;border:2px dashed var(--line);border-radius:10px}
 .fit-h{font-size:12px;font-weight:bold;color:var(--accent-ink);margin-bottom:4px}
@@ -604,7 +621,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 
 <script type="application/json" id="morningSeed">{"text": "一句话结论：周日无强制现场节点，原三大 P0（水电验收 / 地插拍板 / 窗户定性）已全部闭环；今日轻松日——若有师傅到场养护，顺带确认地面空鼓与主卧胶补缝。\n\n🔴 今日必办（P0）\n🔴 无新增紧急项。若周日恰有师傅到场（泥水 / 养护），顺带现场确认 ⑦ 地面空鼓 与 ⑬ 主卧胶补缝 是否已处理。\n\n🟠 关键推进（P1）\n🟠 ⑤ 瓷砖铺贴排期：微信催陶工给明确排期（贴砖是复尺 + 全屋定制签约前置，不能一直悬着）。\n🟠 ⑥ 海棠角文字尺寸：催装修公司出文字版尺寸（加工厂看不懂 CAD，卡点）。\n🟠 ⑦ 地面空鼓：与师傅确认是否需重做（备注自相矛盾）。\n🟠 ⑧ 壹玖效果图：暂停催促、待贴砖推进；标注仍未终版，不视为已确认。\n\n🟡 顺手跟（P2）\n🟡 ⑨ 全屋定制签约：待贴砖完成 + 诗尼曼 / 派雅复尺后启动（暂挂起不催）。\n🟡 ⑩ 派雅退门：退房间门 + 卫生间门。\n🟡 ⑪ 预算超支统筹：当前超支 ¥30,684.46（+15.34%），持续压缩软装 / 家具待付空间。\n\n💰 预算：总超支 ¥30,684.46（+15.34%）\n\n详细复盘见 装修进度日报_2026-08-08.md"}</script>
 
-<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 35.27, "name": "紫金矿业", "open": 35.18, "high": 35.6, "low": 34.71, "preClose": 35.15, "change": 0.12, "changePct": 0.34, "amplitude": 2.53, "volumeRatio": 0.99, "amount": 726990.0, "time": "20260810134243"}, "sh601717": {"price": 16.01, "name": "中创智领", "open": 15.88, "high": 16.04, "low": 15.73, "preClose": 15.82, "change": 0.19, "changePct": 1.2, "amplitude": 1.96, "volumeRatio": 1.23, "amount": 24336.0, "time": "20260810134244"}, "sh600879": {"price": 16.27, "name": "航天电子", "open": 16.55, "high": 16.6, "low": 15.98, "preClose": 16.4, "change": -0.13, "changePct": -0.79, "amplitude": 3.78, "volumeRatio": 1.0, "amount": 103987.0, "time": "20260810134243"}, "sh600501": {"price": 14.92, "name": "航天晨光", "open": 14.88, "high": 14.95, "low": 14.58, "preClose": 14.79, "change": 0.13, "changePct": 0.88, "amplitude": 2.5, "volumeRatio": 0.95, "amount": 6340.0, "time": "20260810134244"}, "sz002270": {"price": 20.21, "name": "华明装备", "open": 20.2, "high": 20.68, "low": 20.14, "preClose": 20.17, "change": 0.04, "changePct": 0.2, "amplitude": 2.68, "volumeRatio": 0.66, "amount": 21347.0, "time": "20260810134242"}, "sz000429": {"price": 13.31, "name": "粤高速Ａ", "open": 13.9, "high": 13.9, "low": 13.2, "preClose": 14.2, "change": -0.89, "changePct": -6.27, "amplitude": 4.93, "volumeRatio": 2.08, "amount": 20543.0, "time": "20260810134245"}, "sh605166": {"price": 8.86, "name": "聚合顺", "open": 8.69, "high": 8.89, "low": 8.63, "preClose": 8.67, "change": 0.19, "changePct": 2.19, "amplitude": 3.0, "volumeRatio": 1.31, "amount": 3375.0, "time": "20260810134243"}, "sh600343": {"price": 20.49, "name": "航天动力", "open": 20.38, "high": 20.64, "low": 19.72, "preClose": 20.28, "change": 0.21, "changePct": 1.04, "amplitude": 4.54, "volumeRatio": 1.34, "amount": 51004.0, "time": "20260810134243"}, "sz002997": {"price": 27.45, "name": "瑞鹄模具", "open": 27.25, "high": 27.55, "low": 27.1, "preClose": 27.23, "change": 0.22, "changePct": 0.81, "amplitude": 1.65, "volumeRatio": 0.88, "amount": 3622.0, "time": "20260810134242"}, "sz159928": {"price": 0.689, "name": "消费ETF汇添富", "open": 0.671, "high": 0.691, "low": 0.671, "preClose": 0.672, "change": 0.017, "changePct": 2.53, "amplitude": 2.98, "volumeRatio": 1.26, "amount": 39937.0, "time": "20260810134245"}, "sh513130": {"price": 0.607, "name": "恒生科技ETF华泰柏瑞", "open": 0.608, "high": 0.611, "low": 0.604, "preClose": 0.604, "change": 0.003, "changePct": 0.5, "amplitude": 1.16, "volumeRatio": 1.03, "amount": 196114.0, "time": "20260810134243"}, "sh562800": {"price": 0.998, "name": "稀有金属ETF嘉实", "open": 1.01, "high": 1.014, "low": 0.982, "preClose": 0.991, "change": 0.007, "changePct": 0.71, "amplitude": 3.23, "volumeRatio": 1.34, "amount": 31652.0, "time": "20260810134244"}, "sh601012": {"price": 12.9, "name": "隆基绿能", "open": 12.87, "high": 13.06, "low": 12.82, "preClose": 12.93, "change": -0.03, "changePct": -0.23, "amplitude": 1.86, "volumeRatio": 0.71, "amount": 77652.0, "time": "20260810134244"}}, "news": [], "updated": "2026-08-10 13:42", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
+<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 35.39, "name": "紫金矿业", "open": 35.18, "high": 35.6, "low": 34.71, "preClose": 35.15, "change": 0.24, "changePct": 0.68, "amplitude": 2.53, "volumeRatio": 0.9, "amount": 901723.0, "time": "20260810144243"}, "sh601717": {"price": 16.04, "name": "中创智领", "open": 15.88, "high": 16.1, "low": 15.73, "preClose": 15.82, "change": 0.22, "changePct": 1.39, "amplitude": 2.34, "volumeRatio": 1.09, "amount": 29411.0, "time": "20260810144244"}, "sh600879": {"price": 16.51, "name": "航天电子", "open": 16.55, "high": 16.6, "low": 15.98, "preClose": 16.4, "change": 0.11, "changePct": 0.67, "amplitude": 3.78, "volumeRatio": 0.95, "amount": 136699.0, "time": "20260810144243"}, "sh600501": {"price": 15.11, "name": "航天晨光", "open": 14.88, "high": 15.13, "low": 14.58, "preClose": 14.79, "change": 0.32, "changePct": 2.16, "amplitude": 3.72, "volumeRatio": 1.0, "amount": 9117.0, "time": "20260810144244"}, "sz002270": {"price": 20.32, "name": "华明装备", "open": 20.2, "high": 20.68, "low": 20.14, "preClose": 20.17, "change": 0.15, "changePct": 0.74, "amplitude": 2.68, "volumeRatio": 0.56, "amount": 24893.0, "time": "20260810144245"}, "sz000429": {"price": 13.23, "name": "粤高速Ａ", "open": 13.9, "high": 13.9, "low": 13.2, "preClose": 14.2, "change": -0.97, "changePct": -6.83, "amplitude": 4.93, "volumeRatio": 1.91, "amount": 25680.0, "time": "20260810144245"}, "sh605166": {"price": 8.84, "name": "聚合顺", "open": 8.69, "high": 8.89, "low": 8.63, "preClose": 8.67, "change": 0.17, "changePct": 1.96, "amplitude": 3.0, "volumeRatio": 1.08, "amount": 3819.0, "time": "20260810144244"}, "sh600343": {"price": 20.75, "name": "航天动力", "open": 20.38, "high": 20.8, "low": 19.72, "preClose": 20.28, "change": 0.47, "changePct": 2.32, "amplitude": 5.33, "volumeRatio": 1.18, "amount": 61293.0, "time": "20260810144243"}, "sz002997": {"price": 27.49, "name": "瑞鹄模具", "open": 27.25, "high": 27.55, "low": 27.1, "preClose": 27.23, "change": 0.26, "changePct": 0.95, "amplitude": 1.65, "volumeRatio": 0.76, "amount": 4246.0, "time": "20260810144242"}, "sz159928": {"price": 0.689, "name": "消费ETF汇添富", "open": 0.671, "high": 0.691, "low": 0.671, "preClose": 0.672, "change": 0.017, "changePct": 2.53, "amplitude": 2.98, "volumeRatio": 1.06, "amount": 45831.0, "time": "20260810144245"}, "sh513130": {"price": 0.607, "name": "恒生科技ETF华泰柏瑞", "open": 0.608, "high": 0.611, "low": 0.604, "preClose": 0.604, "change": 0.003, "changePct": 0.5, "amplitude": 1.16, "volumeRatio": 0.98, "amount": 257319.0, "time": "20260810144243"}, "sh562800": {"price": 1.009, "name": "稀有金属ETF嘉实", "open": 1.01, "high": 1.015, "low": 0.982, "preClose": 0.991, "change": 0.018, "changePct": 1.82, "amplitude": 3.33, "volumeRatio": 1.21, "amount": 39307.0, "time": "20260810144244"}, "sh601012": {"price": 12.94, "name": "隆基绿能", "open": 12.87, "high": 13.06, "low": 12.82, "preClose": 12.93, "change": 0.01, "changePct": 0.08, "amplitude": 1.86, "volumeRatio": 0.61, "amount": 92408.0, "time": "20260810144244"}}, "news": [], "updated": "2026-08-10 14:42", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
 
 <script>
 const MORNING_FALLBACK=`🔴 今天最重要：水电验收前再核一遍智能点位（风管机/米家开关均在待付清单）。
@@ -921,7 +938,8 @@ function catByName(name){return getMoneyCats().find(c=>c.name===name)||{name:nam
 function catIcon(name){return catByName(name).icon||"⋯";}
 function catColor(name){return catByName(name).color||"#9A9C98";}
 function catNames(){return getMoneyCats().map(c=>c.name);}
-const CAT_KEYWORDS={餐饮:["吃","饭","餐","咖啡","奶茶","外卖","食堂","早餐","午餐","晚餐","宵夜","餐厅","面包"],交通:["打车","滴滴","地铁","公交","加油","高铁","火车","机票","骑行","停车","过路","租车"],购物:["买","淘宝","京东","超市","购物","百货","服饰","数码","美妆"],居家:["水电","物业","房租","家居","日用","清洁","蔬菜","水果","杂货"],医疗:["药","医院","诊所","体检","牙","挂号"],学习:["书","课","培训","网课","考试","资料"],工资:["工资","薪水","发薪","薪资","个税","薪酬"],副业:["兼职","稿费","外快","佣金","打赏"],理财:["利息","理财","基金","分红","收益","股息"],娱乐:["电影","游戏","娱乐","演出","会员","门票"],其他:[]};
+const CAT_KEYWORDS={餐饮:["吃","饭","餐","咖啡","奶茶","外卖","食堂","早餐","午餐","晚餐","宵夜","餐厅","面包","宜家","小吃","火锅"],
+ 装修:["装修","风管机","海尔","格力","美的","老板","方太","小米之家","全屋定制","瓷砖","马桶","净水器","洗碗机","燃气灶","烟机","热水器","门锁","智能家居","盛居","壹玖","半包","硬装","电器"],交通:["打车","滴滴","地铁","公交","加油","高铁","火车","机票","骑行","停车","过路","租车"],购物:["买","淘宝","京东","超市","购物","百货","服饰","数码","美妆"],居家:["水电","物业","房租","家居","日用","清洁","蔬菜","水果","杂货"],医疗:["药","医院","诊所","体检","牙","挂号"],学习:["书","课","培训","网课","考试","资料"],工资:["工资","薪水","发薪","薪资","个税","薪酬"],副业:["兼职","稿费","外快","佣金","打赏"],理财:["利息","理财","基金","分红","收益","股息"],娱乐:["电影","游戏","娱乐","演出","会员","门票"],其他:[]};
 // 非收入转入：这些「进账」是借款归还/父母或家庭转账，并非赚到的收入，统计真实收入时应剔除
 const NON_INCOME_CATS=["借款归还","父母转账","家庭往来","押金"];
 // 默认账户（多账户资产统一管理）。股票/基金为 linked，余额实时联动股票模块持仓市值。
@@ -932,6 +950,11 @@ function defaultAccounts(){return [
  {id:"acc_bank",name:"银行卡",type:"bank",opening:0,note:""},
  {id:"acc_provident",name:"公积金",type:"provident",opening:0,note:""},
  {id:"acc_liability",name:"信用卡/负债",type:"liability",opening:0,note:""},
+ {id:"acc_huabei",name:"花呗",type:"liability",opening:0,note:""},
+ {id:"acc_baitiao",name:"京东白条",type:"liability",opening:0,note:""},
+ {id:"acc_meituan",name:"美团月付",type:"liability",opening:0,note:""},
+ {id:"acc_douyin",name:"抖音月付",type:"liability",opening:0,note:""},
+ {id:"acc_ccb_card",name:"建设银行信用卡",type:"liability",opening:0,note:"授信额度¥5000"},
  {id:"acc_stock",name:"股票账户",type:"stock",linked:true,note:""},
  {id:"acc_fund",name:"基金账户",type:"fund",linked:true,note:""},
  {id:"acc_alipay_gold",name:"支付宝黄金",type:"fund",opening:9160.68,note:"博时黄金ETF联接C"},
@@ -973,7 +996,37 @@ function migrate(s){
   s.ledger.push({id:"seed_rent_jul_dep",date:"2026-07-23",type:"in",cat:"租金",amount:6000,accountId:"acc_deposit_sc",method:"银行卡",merchant:"陈小姐的女儿/YY",note:"尚城租房押金(2个月,可退)",src:"手动",createdAt:Date.now()});
   s.seededRentJuly=true;
  }
- // 押金首笔统一归入租金收入，不再作为资产展示
+ // 分类整理迁移（幂等，仅首次执行）：按用户确认方案修正错位的分类
+ if(!s.migratedCatsV1){
+  (s.ledger||[]).forEach(r=>{
+   const addNote=t=>{ if(r.note && r.note.indexOf(t)<0) r.note=r.note+" · "+t; else if(!r.note) r.note=t; };
+   if(r.type==="in" && r.cat==="购房" && r.amount===1000 && r.date==="2026-07-17"){ r.cat="租金"; addNote("万科尚城B8-3701租房定金"); }
+   if(r.type==="out" && r.cat==="居家" && r.amount===5220 && r.date==="2026-05-31"){ r.cat="装修"; addNote("海尔风管机"); }
+   if(r.type==="out" && r.cat==="居家" && r.amount===97.94 && r.date==="2026-05-28"){ r.cat="餐饮"; addNote("宜家吃饭"); }
+   if(r.type==="out" && r.cat==="其他" && r.amount===1785.78 && r.date==="2026-06-17"){ r.cat="装修"; addNote("米家智能门锁 M40 Pro"); }
+   if(r.type==="out" && r.cat==="购物" && r.amount===99 && r.date==="2026-06-17"){ r.cat="装修"; addNote("小米智能门锁 M40 Pro 延保服务1年"); }
+   if(r.type==="out" && r.cat==="其他" && r.amount===2124.15 && r.date==="2026-06-17"){ r.cat="装修"; addNote("米家柔风版空调（已退）"); }
+   if(r.type==="out" && r.cat==="购物" && r.amount===1498.56 && r.date==="2026-06-17"){ r.cat="装修"; addNote("米家智能燃气热水器 2 16L"); }
+   if(r.type==="out" && r.cat==="购物" && r.amount===3498.6 && r.date==="2026-06-17"){ r.cat="装修"; addNote("米家智能嵌入式洗碗机 16套P2"); }
+   if(r.type==="out" && r.cat==="购物" && r.amount===1265.65 && r.date==="2026-06-17"){ r.cat="装修"; addNote("米家定时燃气灶 Pro 5200W"); }
+   if(r.type==="out" && r.cat==="购物" && r.amount===3060 && r.date==="2026-06-17"){ r.cat="装修"; addNote("米家智能净烟机 P2"); }
+   if(r.type==="out" && r.cat==="购物" && r.amount===3148.63 && r.date==="2026-06-17"){ r.cat="装修"; addNote("米家扫地机器人（已退）"); }
+   if(r.type==="in" && r.amount===2124.15 && r.date==="2026-07-02"){ addNote("米家柔风版空调退款"); }
+   if(r.type==="in" && (Math.abs(r.amount-689)<0.01||Math.abs(r.amount-2459.63)<0.01) && r.date==="2026-06-24"){ addNote("米家扫地机器人退款"); }
+  });
+  s.migratedCatsV1=true;
+}
+// 信用卡消费统一归入负债账户（避免误减微信/支付宝余额）；修正"信用卡还款"误记为支出
+if(!s.migratedCreditV1){
+ (s.ledger||[]).forEach(r=>{
+  const t=(r.method||"")+(r.merchant||"")+(r.note||"");
+  const isCredit=/信用卡|招行|招商银行|掌上生活/.test(t);
+  if(r.type==="out"&&isCredit&&["acc_wechat","acc_alipay","acc_bank","acc_cash"].includes(r.accountId)){ r.accountId="acc_liability"; }
+  if(r.type==="out"&&/信用卡还款|还款.*信用卡|招商银行信用卡.*扣款|掌上生活.*还款/.test(t)){ const from=["acc_bank","acc_wechat","acc_alipay","acc_cash"].includes(r.accountId)?r.accountId:"acc_bank"; r.type="transfer";r.toAccountId="acc_liability";r.accountId=from; }
+ });
+ s.migratedCreditV1=true;
+}
+// 押金首笔统一归入租金收入，不再作为资产展示
  (s.ledger||[]).forEach(r=>{ if(r.id==="seed_rent_jul_dep"&&r.cat==="押金") r.cat="租金"; });
  if(s.account){
    const acByMethod={"微信":"acc_wechat","支付宝":"acc_alipay","银行卡":"acc_bank","现金":"acc_cash","公积金":"acc_provident"};
@@ -2779,7 +2832,7 @@ function renderMoney(main){
    rateNote=`本月结余率 =（¥${fmtMoney(mReal)} − ¥${fmtMoney(mOut)}）/ ¥${fmtMoney(mReal)} = ${sr}%`;
   }
  }
- const c=document.createElement("div");c.className="card";
+ const c=document.createElement("div");c.className="card grid-wide";
  c.innerHTML=`<h2>💰 资产账本</h2>
   <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:2px 0 8px">
    <div class="ring" style="${ringStyle};width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto" title="${ringTitle}">${ringText}</div>
@@ -2790,11 +2843,12 @@ function renderMoney(main){
    </div>
   </div>
   <div style="font-size:11px;color:var(--muted);margin:-2px 0 6px">${rateNote}。真实收入不含押金、借款归还、父母转账等一次性/非收入资金。</div>
-  <div class="tabs">${[["home","首页"],["records","明细"],["accounts","账户"],["stats","统计"]].map(t=>`<span class="tab${moneyTab===t[0]?" active":""}" onclick="setMoneyTab('${t[0]}')">${t[1]}</span>`).join("")}</div>`;
+  <div class="tabs">${[["home","首页"],["records","明细"],["accounts","账户"],["stats","统计"],["health","健康"]].map(t=>`<span class="tab${moneyTab===t[0]?" active":""}" onclick="setMoneyTab('${t[0]}')">${t[1]}</span>`).join("")}</div>`;
  main.appendChild(c);
  if(moneyTab==="home")renderMoneyHome(main);
  else if(moneyTab==="accounts")renderMoneyAccounts(main);
  else if(moneyTab==="records")renderMoneyRecords(main);
+ else if(moneyTab==="health")renderMoneyHealth(main);
  else renderMoneyStats(main);
  renderMoneyAdd(main);
 }
@@ -2988,7 +3042,7 @@ function renderMoneyRecords(main){
  if(moneyF.type)f=f.filter(r=>r.type===moneyF.type);
  if(moneyF.cat)f=f.filter(r=>(r.cat||"其他")===moneyF.cat);
  if(moneyF.account)f=f.filter(r=>r.accountId===moneyF.account||r.toAccountId===moneyF.account);
- const card=document.createElement("div");card.className="card";
+ const card=document.createElement("div");card.className="card grid-wide";
  const acOpts=`<option value="">全账户</option>`+(S.accounts||[]).map(a=>`<option value="${a.id}"${moneyF.account===a.id?" selected":""}>${typeIcon(a.type)} ${esc(a.name)}</option>`).join("");
  const activeFilters=[];
  if(moneyF.type)activeFilters.push(moneyF.type==="in"?"只看收入":"只看支出");
@@ -3110,7 +3164,7 @@ function renderMoneyStats(main){
  if(statsMode==="day")pick=`<input type="date" value="${statsStart}" onchange="setStatsStart(this.value)">`;
  else if(statsMode==="month")pick=`<input type="month" value="${statsMonth}" onchange="setStatsMonth(this.value)">`;
  else pick=`<input type="date" value="${statsStart}" onchange="setStatsStart(this.value)"> <span style="color:var(--muted)">→</span> <input type="date" value="${statsEnd}" onchange="setStatsEnd(this.value)">`;
- const card=document.createElement("div");card.className="card";
+ const card=document.createElement("div");card.className="card grid-wide";
  let h=`<h3>📈 收支 & 净资产分析<span style="font-size:12px;color:var(--muted);font-weight:normal">（${start} ~ ${end}）</span></h3>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0">
    <div class="tabs" style="margin:0">${modeBtns}</div>
@@ -3161,14 +3215,14 @@ function renderMoneyStatsChart(chartId,data){
    let h=`<b>${p[0].axisValue}</b><br/>`;
    p.forEach(s=>{h+=`${s.marker} ${s.seriesName}: <b>¥${fmtMoney(s.value)}</b><br/>`;});return h;}},
   legend:{data:["真实收入","支出","净资产"],top:0,textStyle:{color:themeColors.text}},
-  grid:{left:"3%",right:"4%",bottom:"15%",top:"12%",containLabel:true},
+  grid:{left:"3%",right:"10%",bottom:"15%",top:"12%",containLabel:true},
   xAxis:{type:"category",data:labels,axisLine:{lineStyle:{color:themeColors.grid}},axisLabel:{color:themeColors.text,rotate:labels.length>12?45:0,formatter:function(v){if(/\d{4}-\d{2}/.test(v))return v.split("-")[1]+"月";return v.slice(5);}}},
   yAxis:[{type:"value",name:"收支",axisLine:{show:false},splitLine:{lineStyle:{color:themeColors.grid,type:"dashed"}},axisLabel:{color:themeColors.text,formatter:v=>"¥"+(v>=10000?(v/10000).toFixed(1)+"万":v)}},{type:"value",name:"净资产",axisLine:{show:false},splitLine:{show:false},axisLabel:{color:themeColors.text,formatter:v=>"¥"+(v>=10000?(v/10000).toFixed(1)+"万":v)}}],
   dataZoom:[{type:"inside",start:0,end:100},{type:"slider",start:0,end:100,bottom:0,height:20,handleSize:"80%",borderColor:themeColors.grid,fillerColor:isDark?"rgba(110,148,166,.25)":"rgba(110,148,166,.2)"}],
   series:[
    {name:"真实收入",type:"bar",data:inc,itemStyle:{color:themeColors.income,borderRadius:[3,3,0,0]},barMaxWidth:30},
    {name:"支出",type:"bar",data:out,itemStyle:{color:themeColors.expense,borderRadius:[3,3,0,0]},barMaxWidth:30},
-   {name:"净资产",type:"line",yAxisIndex:1,data:nw,smooth:true,symbol:"circle",symbolSize:6,lineStyle:{color:themeColors.net,width:3},itemStyle:{color:themeColors.net},endLabel:{show:true,formatter:"净资产¥"+fmtMoney(nw[nw.length-1]),color:themeColors.net}}
+   {name:"净资产",type:"line",yAxisIndex:1,data:nw,smooth:true,symbol:"circle",symbolSize:6,lineStyle:{color:themeColors.net,width:3},itemStyle:{color:themeColors.net},endLabel:{show:true,formatter:fmtMoney(nw[nw.length-1]),color:themeColors.net,padding:[0,0,0,6]}}
   ]
  };
  chart.setOption(option);
@@ -3198,6 +3252,62 @@ function moneyGoalsHTML(){
  return h;
 }
 function openGoalsSheet(){showSheet(moneyGoalsHTML());}
+function renderMoneyHealth(main){
+ const card=document.createElement("div");card.className="card grid-wide";
+ const L=ledgerRecs();
+ const creditRecs=L.filter(r=>{
+  const t=(r.method||"")+(r.merchant||"")+(r.note||"");
+  return /信用卡|招行|招商银行|掌上生活/.test(t);
+ });
+ const byMonth={};
+ const add=(m,key,amt)=>{if(!byMonth[m])byMonth[m]={out:0,in:0,repay:0};byMonth[m][key]+=amt;};
+ creditRecs.forEach(r=>{
+  const m=r.date.slice(0,7);
+  if(r.type==="out")add(m,"out",+r.amount||0);
+  if(r.type==="in")add(m,"in",+r.amount||0);
+  if(r.type==="transfer"&&r.toAccountId==="acc_liability")add(m,"repay",+r.amount||0);
+ });
+ // 兼容：迁移前被记为支出的还款（云闪付/银行卡扣款）
+ L.filter(r=>r.type==="out"&&/招商银行信用卡.*扣款|信用卡还款/.test((r.method||"")+(r.merchant||"")+(r.note||""))).forEach(r=>{
+  add(r.date.slice(0,7),"repay",+r.amount||0);
+ });
+ let acc=0;
+ const months=Object.keys(byMonth).sort();
+ const rows=months.map(m=>{
+  const b=byMonth[m];acc+=b.out-b.in-b.repay;
+  return `<tr style="border-bottom:1px dashed var(--line)"><td style="padding:6px 4px">${m}</td><td style="padding:6px 4px;color:#f56c6c;text-align:right">-${fmtMoney(b.out)}</td><td style="padding:6px 4px;color:#67c23a;text-align:right">+${fmtMoney(b.in)}</td><td style="padding:6px 4px;color:#409eff;text-align:right">-${fmtMoney(b.repay)}</td><td style="padding:6px 4px;font-weight:700;text-align:right">${fmtMoney(acc)}</td></tr>`;
+ }).join("");
+ const T=totals();
+ const liquid=(S.accounts||[]).filter(a=>["cash","wechat","alipay","bank"].includes(a.type)).reduce((s,a)=>s+accountBalance(a),0);
+ const debtRatio=T.assets?T.liab/T.assets*100:0;
+ const monthlyFixed=17700+3000+40000/6;
+ const tips=[];
+ if(T.liab>monthlyFixed*2) tips.push(`信用卡负债 <b style="color:#f56c6c">¥${fmtMoney(T.liab)}</b> 超过 2 个月固定收入，优先还清。`);
+ if(liquid<T.liab) tips.push(`流动资产 <b>¥${fmtMoney(liquid)}</b> 不足以覆盖负债，需加快还款或补充现金。`);
+ if(debtRatio>5) tips.push(`负债/资产 ${debtRatio.toFixed(1)}%（资产以房产为主），现金负债压力需关注。`);
+ if(!tips.length) tips.push("现金流整体可控，建议继续保持记账与对账。");
+ const html=`<h3>💳 信用卡对账 & 财务健康</h3>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">信用卡消费按「备注/商户含信用卡/招行/掌上生活」识别；还款含云闪付/银行卡扣款识别。</div>
+  <div style="overflow-x:auto">
+   <table style="width:100%;min-width:520px;font-size:13px;border-collapse:collapse">
+    <thead><tr style="border-bottom:2px solid var(--line);text-align:left"><th style="padding:6px 4px">月份</th><th style="padding:6px 4px;text-align:right">消费</th><th style="padding:6px 4px;text-align:right">退款/返现</th><th style="padding:6px 4px;text-align:right">还款</th><th style="padding:6px 4px;text-align:right">累计未还</th></tr></thead>
+    <tbody>${rows}</tbody>
+   </table>
+  </div>
+  <div style="margin:14px 0 6px;font-size:15px;color:var(--accent-ink);font-weight:700">关键指标</div>
+  <div class="stat-strip" style="margin-bottom:8px">
+   <div class="stat"><b>¥${fmtMoney(T.assets)}</b><span>总资产</span></div>
+   <div class="stat"><b>¥${fmtMoney(T.net)}</b><span>净资产</span></div>
+   <div class="stat"><b style="color:#f56c6c">¥${fmtMoney(T.liab)}</b><span>信用卡负债</span></div>
+   <div class="stat"><b>¥${fmtMoney(liquid)}</b><span>流动资产</span></div>
+   <div class="stat"><b>${debtRatio.toFixed(1)}%</b><span>负债/资产</span></div>
+  </div>
+  <div style="background:var(--accent-weak);border-radius:10px;padding:10px;font-size:13px;color:var(--accent-ink);line-height:1.6">
+   <b>建议：</b>${tips.join('；')}
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-top:8px">若「累计未还」与银行 App 不一致，请到「账户」页点击负债数字 → 使用「校正为银行当前应还额」按钮一键对齐。</div>`;
+ card.innerHTML=html;main.appendChild(card);
+}
 function renderMoneyAdd(main){
  const card=document.createElement("div");card.className="card";
  const acOpts=(S.accounts||[]).map(a=>`<option value="${a.id}">${typeIcon(a.type)} ${esc(a.name)}</option>`).join("");
@@ -3276,9 +3386,9 @@ function renderMoneyAccounts(main){
     ${a.linked?"":`<button class="btn sm ghost" onclick="delAccount('${a.id}')">删除</button>`}
    </div>
   </div>`;}
- const card=document.createElement("div");card.className="card";
+ const card=document.createElement("div");card.className="card grid-wide";
  let h=`<h3>🗂️ 账户总览</h3>
-  <div style="font-size:12px;color:var(--muted);margin-bottom:4px">总资产 <b>¥${fmtMoney(T.assets)}</b> · 负债 <b style="color:var(--bad)">¥${fmtMoney(T.liab)}</b> · 净资产 <b style="color:var(--ok)">¥${fmtMoney(T.net)}</b></div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:4px">总资产 <b>¥${fmtMoney(T.assets)}</b> · 负债 <b style="color:var(--bad);cursor:pointer" onclick="showLiabilityDetail()" title="点击查看负债明细">¥${fmtMoney(T.liab)}</b> · 净资产 <b style="color:var(--ok)">¥${fmtMoney(T.net)}</b></div>
   <div style="display:flex;gap:6px;margin:6px 0 4px;flex-wrap:wrap">
    <button class="btn sm primary" onclick="openImport()">📥 导入账单 JSON</button>
    <button class="btn sm" onclick="addAccount()">＋ 新增账户</button>
@@ -3298,6 +3408,41 @@ function renderMoneyAccounts(main){
  const tcard=document.createElement("div");tcard.className="card";
  tcard.innerHTML=`<h3>🔁 转账</h3><div style="font-size:12px;color:var(--muted)">在账户间转移资金，自动生成双向流水，余额实时更新。</div><button class="btn sm" onclick="openTransfer()" style="margin-top:8px">发起转账</button>`;
  main.appendChild(tcard);
+}
+function showLiabilityDetail(){
+ const liabs=(S.accounts||[]).filter(a=>a.type==="liability");
+ if(!liabs.length){showSheet("<h3>💳 负债明细</h3><div style='color:var(--muted);padding:10px'>还没有负债账户。</div>");return;}
+ const nowM=new Date();const mStart=iso(new Date(nowM.getFullYear(),nowM.getMonth(),1));const mEnd=monthEnd(nowM.getFullYear(),nowM.getMonth());
+ const rows=liabs.map(a=>{
+  const bal=accountBalance(a);
+  const ps=accountPeriodStats(a.id,mStart,mEnd);
+  const recs=(S.ledger||[]).filter(r=>(r.accountId===a.id||r.toAccountId===a.id)).sort((x,y)=>(y.date||"").localeCompare(x.date)).slice(0,5);
+  const recHTML=recs.length?recs.map(r=>{const sign=r.type==="in"?"+":(r.type==="transfer"?"⇄":"-");const col=r.type==="in"?"#67c23a":(r.type==="transfer"?"#409eff":"#f56c6c");return `<div style="font-size:12px;color:var(--muted);padding:2px 0;border-bottom:1px dotted #ece3d6"><span style="color:${col}">${sign}¥${fmtMoney(r.amount)}</span> · ${esc(r.date||"")} · ${esc(r.cat||"其他")}${r.note?` · ${esc(r.note)}`:""}</div>`;}).join(""):`<div style="font-size:12px;color:var(--muted);padding:4px 0">本月暂无流水（待你录入或导入）</div>`;
+  return `<div style="border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0">
+   <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="color:var(--accent-ink)">${esc(a.name)}</b><span style="font-size:16px;font-weight:700;color:var(--bad)">¥${fmtMoney(-bal)}</span></div>
+   ${a.id==="acc_liability"?`<button class="btn sm" style="margin-top:4px" onclick="correctCreditLiability()">校正为银行当前应还额</button>`:""}
+   ${a.note?`<div style="font-size:11px;color:var(--muted)">${esc(a.note)}</div>`:""}
+   <div style="font-size:11px;color:var(--muted);margin:4px 0">本月流入 +¥${fmtMoney(ps.inc+ps.tin)} / 流出 -¥${fmtMoney(ps.out+ps.tout)}</div>
+   <div style="font-size:12px;color:var(--accent-ink);margin-top:4px">最近流水：</div>${recHTML}
+  </div>`;
+ }).join("");
+ const totalLiab=liabs.reduce((s,a)=>s+accountBalance(a),0);
+ const h=`<h3>💳 负债明细</h3>
+  <div style="font-size:12px;color:var(--muted);margin:4px 0 8px">合计待还 <b style="color:var(--bad)">¥${fmtMoney(-totalLiab)}</b> · 招行信用卡为主要负债，其余账户历史流水尚未区分，余额显示 0</div>
+  ${rows}
+  <div style="font-size:11px;color:var(--muted);margin-top:8px">提示：花呗 / 白条 / 美团月付 / 抖音月付 / 建行信用卡的历史流水尚未拆分，可在「记一笔」选对应账户补录，或在「账户」页更新期初值。</div>`;
+ showSheet(h);
+}
+function correctCreditLiability(){
+ const a=accountById("acc_liability");if(!a){toast("未找到信用卡账户");return;}
+ const net=(S.ledger||[]).filter(r=>r.accountId==="acc_liability"||r.toAccountId==="acc_liability").reduce((s,r)=>{const am=+r.amount||0;if(r.type==="out"||(r.type==="transfer"&&r.accountId==="acc_liability"))s-=am;if(r.type==="in"||(r.type==="transfer"&&r.toAccountId==="acc_liability"))s+=am;return s;},0);
+ const curNet=Math.abs(net);
+ const input=prompt("请输入招行信用卡在 App 里显示的【当前总欠款】（已出未还 + 未出账单），单位元：","");
+ if(input===null)return;
+ const target=parseFloat(String(input).replace(/[^0-9.]/g,""));
+ if(!isFinite(target)){toast("输入无效");return;}
+ a.opening=+(target-curNet).toFixed(2);
+ save();render();toast("已校正：信用卡当前应还额 ¥"+fmtMoney(target));
 }
 function moneyRecurringHTML(){
  const rules=S.recurring||[];

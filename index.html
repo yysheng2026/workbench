@@ -823,6 +823,7 @@ function plantSVG(s){const g=`<line x1="14" y1="96" x2="92" y2="96" stroke="#c9b
  return `<svg class="plant" viewBox="0 0 108 110">${g}${soil}${b}</svg>`;}
 
 // ---------- 种子 ----------
+function defaultIncomePlan(){return{monthlyIncome:0,incomeAuto:false,savingsGoal:0,savingsNote:"",fixed:[{id:"fx_rent",name:"房租/房贷",amount:0,cat:"居住"},{id:"fx_net",name:"话费/网络",amount:0,cat:"通讯"},{id:"fx_prop",name:"物业费",amount:0,cat:"物业"},{id:"fx_util",name:"水电燃气费",amount:0,cat:"水电"},{id:"fx_ins",name:"保险",amount:0,cat:"保险"}]};}
 function seed(){const m="2026-08";return{version:1,currentMonth:m,checkinXp:0,lastCheckin:"",
  months:{[m]:{main:"盛夏三连击：装修定稿 · 论文投稿 · 故事连载",reward:"达标奖励：一顿大餐 / 一件心仪好物",stampUnlocked:true,stampName:"🌿 盛夏印记",filmTheme:"人文历史纪录片",
   tasks:[{id:1,text:"装修：定制柜内部尺寸图定稿 + 风管机安装排期锁定",xp:300,done:false},
@@ -998,6 +999,7 @@ function migrate(s){
  if(!Array.isArray(s.goals))s.goals=[];
  if(!Array.isArray(s.diary))s.diary=[];
  if(!Array.isArray(s.recurring))s.recurring=defaultRecurring();
+ if(!s.incomePlan)s.incomePlan=defaultIncomePlan();
  // 增量补齐真实资产账户（按 id 判存，不覆盖已有）
  (defaultAccounts()||[]).forEach(a=>{ if(a&&a.id&&!s.accounts.find(x=>x.id===a.id)) s.accounts.push(JSON.parse(JSON.stringify(a))); });
  // 兼容：万科尚城押金原归类 bank，统一为 deposit 分组
@@ -1109,10 +1111,25 @@ if(!s.migratedCCBCardV1){
   const have=new Set(s.moneyCats.map(x=>x&&x.name));
   DEFAULT_MONEY_CATS.forEach(o=>{ if(!have.has(o.name)) s.moneyCats.push({...o}); });
  }
+ if(!Array.isArray(s.film))s.film=[];   // seed 路径下 film 可能未初始化，先兜底
+ // 始终补回默认影片的海报/分类/类型（修复误导入导致 poster 丢失；云端老数据每次拉取也补）
+ // 并把旧分类「演说访谈」统一为「访谈演讲」，最终只保留 电影/纪录片/访谈演讲 三大放映厅
+ (DEFAULT_FILMS||[]).forEach(d=>{
+   const ex=s.film.find(f=>f.title===d.title);
+   const normCat=(c)=>{c=(c||"").trim();return c==="演说访谈"?"访谈演讲":c;};
+   if(ex){
+    if(!ex.poster && d.poster) ex.poster=d.poster;
+    if(!ex.cat && d.cat) ex.cat=normCat(d.cat);
+    if(ex.cat==="演说访谈") ex.cat="访谈演讲";
+    if(!ex.type && d.type) ex.type=d.type;
+   } else {
+    const clone=JSON.parse(JSON.stringify(d));
+    clone.cat=normCat(clone.cat);
+    s.film.push(clone);
+   }
+ });
+ s.film.forEach(f=>{ if(f.cat==="演说访谈") f.cat="访谈演讲"; });
  if(!s.ver || s.ver<DATA_VER){
-  if(!Array.isArray(s.film))s.film=[];   // seed 路径下 film 可能未初始化，先兜底
-  // 增量合并默认影片（按 title 去重，不覆盖用户已有条目）
-  (DEFAULT_FILMS||[]).forEach(d=>{ if(!s.film.some(f=>f.title===d.title)) s.film.push(JSON.parse(JSON.stringify(d))); });
   // 一次性纠正：用户列出的影片 → 已看
   const watched=["海蒂和爷爷","决胜时刻","开国将帅授衔1955","萨利机长","建党伟业","大空头","喜剧之王","给阿嫲的情书"];
   s.film.forEach(f=>{
@@ -2926,12 +2943,13 @@ function renderMoney(main){
    </div>
   </div>
   <div style="font-size:11px;color:var(--muted);margin:-2px 0 6px">${rateNote}。真实收入不含押金、借款归还、父母转账等一次性/非收入资金。</div>
-  <div class="tabs">${[["home","首页"],["records","明细"],["accounts","账户"],["stats","统计"],["health","健康"]].map(t=>`<span class="tab${moneyTab===t[0]?" active":""}" onclick="setMoneyTab('${t[0]}')">${t[1]}</span>`).join("")}</div>`;
+  <div class="tabs">${[["home","首页"],["records","明细"],["accounts","账户"],["stats","统计"],["health","健康"],["plan","收入分配"]].map(t=>`<span class="tab${moneyTab===t[0]?" active":""}" onclick="setMoneyTab('${t[0]}')">${t[1]}</span>`).join("")}</div>`;
  main.appendChild(c);
  if(moneyTab==="home")renderMoneyHome(main);
  else if(moneyTab==="accounts")renderMoneyAccounts(main);
  else if(moneyTab==="records")renderMoneyRecords(main);
  else if(moneyTab==="health")renderMoneyHealth(main);
+ else if(moneyTab==="plan")renderMoneyPlan(main);
  else renderMoneyStats(main);
  renderMoneyAdd(main);
 }
@@ -3397,6 +3415,89 @@ function renderMoneyHealth(main){
  card.innerHTML=html;main.appendChild(card);
  enableCollapse(card,"money_health",true);
 }
+// ===== 月收入分配计划 =====
+function avg3Income(){const L=ledgerRecs();const now=new Date(normDate(todayStr())+"T00:00:00");let sum=0,cnt=0;for(let i=0;i<3;i++){const d=new Date(now.getFullYear(),now.getMonth()-i,1);const ym=d.getFullYear()+"-"+pad2(d.getMonth()+1);const recs=L.filter(r=>(r.date||"").slice(0,7)===ym);const inc=realIncomeOf(recs);if(inc>0){sum+=inc;cnt++;}}return cnt?Math.round(sum/cnt*100)/100:0;}
+function planSet(field,val){const ip=S.incomePlan||(S.incomePlan=defaultIncomePlan());if(field==="monthlyIncome"||field==="savingsGoal")ip[field]=parseFloat(val)||0;else ip[field]=val;save();if(field==="monthlyIncome"||field==="savingsGoal")recalcPlan();}
+function planSetFixed(id,field,val){const ip=S.incomePlan||(S.incomePlan=defaultIncomePlan());const f=(ip.fixed||[]).find(x=>x.id===id);if(f){if(field==="amount")f.amount=parseFloat(val)||0;else f[field]=val;save();if(field==="amount")recalcPlan();}}
+function planAddFixed(){const ip=S.incomePlan||(S.incomePlan=defaultIncomePlan());ip.fixed=ip.fixed||[];ip.fixed.push({id:"fx_"+Date.now(),name:"新固定支出",amount:0,cat:"其他"});save();render();}
+function planDelFixed(id){const ip=S.incomePlan||(S.incomePlan=defaultIncomePlan());ip.fixed=(ip.fixed||[]).filter(x=>x.id!==id);save();render();}
+function planToggleAuto(on){const ip=S.incomePlan||(S.incomePlan=defaultIncomePlan());ip.incomeAuto=!!on;save();render();}
+function recalcPlan(){const el=document.getElementById("planResult");if(el)el.innerHTML=planResultHTML();}
+function planCompute(){
+ const ip=S.incomePlan||defaultIncomePlan();
+ const avg3=avg3Income();
+ const income=ip.incomeAuto?avg3:(+ip.monthlyIncome||0);
+ const fixed=ip.fixed||[];
+ const fixedTotal=fixed.reduce((s,f)=>s+(+f.amount||0),0);
+ const afterFixed=income-fixedTotal;
+ const goal=+ip.savingsGoal||0;
+ const savings=afterFixed>0?Math.min(goal,afterFixed):0;
+ const discretionary=afterFixed-savings;
+ return {ip,avg3,income,fixed,fixedTotal,afterFixed,goal,savings,discretionary,deficit:afterFixed<0,savingsMet:(afterFixed>=goal)&&goal>0};
+}
+function planResultHTML(){
+ const c=planCompute();
+ const inc=c.income;
+ if(inc<=0){return `<div style="font-size:13px;color:var(--muted);padding:10px;background:var(--accent-weak);border-radius:10px">请先在上方填写「预期月收入」（或开启「用近3个月平均自动」），系统会按 <b>固定支出 → 储蓄目标 → 可支配</b> 的顺序为你分配。</div>`;}
+ const pF=Math.max(0,Math.min(100,c.fixedTotal/inc*100));
+ const pS=Math.max(0,Math.min(100,c.savings/inc*100));
+ const pD=Math.max(0,Math.min(100,(c.discretionary>0?c.discretionary:0)/inc*100));
+ const segs=[];
+ if(pF>0)segs.push(`<i style="width:${pF}%;background:#E88A6A"></i>`);
+ if(pS>0)segs.push(`<i style="width:${pS}%;background:#7AA874"></i>`);
+ if(pD>0)segs.push(`<i style="width:${pD}%;background:#5B9BD5"></i>`);
+ let tip;
+ if(c.deficit)tip=`<span style="color:#B03021">⚠ 月收入不足以覆盖固定支出，缺口 <b>¥${fmtMoney(-c.afterFixed)}</b>。请下调固定支出或增加收入，否则会出现负债。</span>`;
+ else if(c.savingsMet)tip=`<span style="color:#5fae74">✅ 分配健康：固定支出已扣，储蓄目标 <b>¥${fmtMoney(c.goal)}</b> 已达成，剩余 <b>¥${fmtMoney(c.discretionary)}</b> 可用于弹性/意外支出。</span>`;
+ else if(c.goal>0)tip=`<span style="color:#E8B64C">⚠ 储蓄目标 <b>¥${fmtMoney(c.goal)}</b> 未全额达成：扣完固定支出后仅能攒 <b>¥${fmtMoney(c.savings)}</b>，可支配 <b>¥${fmtMoney(c.discretionary)}</b>。可下调目标或压缩固定支出。</span>`;
+ else tip=`<span style="color:var(--muted)">固定支出已扣，未设储蓄目标；可支配 <b>¥${fmtMoney(c.discretionary)}</b> 全部留给弹性/意外支出。</span>`;
+ return `<div class="stat-strip" style="margin:6px 0">
+   <div class="stat"><b style="color:#E88A6A">¥${fmtMoney(c.fixedTotal)}</b><span>①固定支出 · ${pF.toFixed(0)}%</span></div>
+   <div class="stat"><b style="color:#5fae74">¥${fmtMoney(c.savings)}</b><span>②储蓄 · ${pS.toFixed(0)}%</span></div>
+   <div class="stat"><b style="color:#5B9BD5">¥${fmtMoney(c.discretionary>0?c.discretionary:0)}</b><span>③可支配 · ${pD.toFixed(0)}%</span></div>
+  </div>
+  <div style="display:flex;height:22px;border-radius:11px;overflow:hidden;background:#eee;margin:4px 0 6px">${segs.join("")}</div>
+  <div style="font-size:11px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+   <span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#E88A6A"></i> 固定支出</span>
+   <span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#7AA874"></i> 储蓄</span>
+   <span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#5B9BD5"></i> 可支配</span>
+  </div>
+  <div style="font-size:13px;line-height:1.7;background:var(--accent-weak);border-radius:10px;padding:10px">${tip}</div>
+  <div style="font-size:11px;color:var(--muted);margin-top:6px">分配口诀：先扣<b>固定支出</b>（必须），再按目标<b>攒储蓄</b>，最后才是<b>弹性/意外</b>的可支配金额。</div>`;
+}
+function renderMoneyPlan(main){
+ const c=planCompute();
+ const ip=c.ip,avg3=c.avg3;
+ const catOpts=["居住","通讯","物业","水电","保险","其他"];
+ const fixedRows=(ip.fixed||[]).map(f=>`<tr style="border-bottom:1px dashed var(--line)">
+   <td style="padding:5px 4px"><input value="${esc(f.name)}" oninput="planSetFixed('${f.id}','name',this.value)" style="width:100%;min-width:90px"></td>
+   <td style="padding:5px 4px"><input type="number" min="0" step="0.01" value="${+f.amount||0}" oninput="planSetFixed('${f.id}','amount',this.value)" style="width:90px"></td>
+   <td style="padding:5px 4px"><select onchange="planSetFixed('${f.id}','cat',this.value)" style="font-size:12px">${catOpts.map(o=>`<option ${o===f.cat?"selected":""}>${o}</option>`).join("")}</select></td>
+   <td style="padding:5px 4px"><button class="btn sm ghost" onclick="planDelFixed('${f.id}')">✕</button></td>
+  </tr>`).join("");
+ const card=document.createElement("div");card.className="card grid-wide";
+ card.innerHTML=`<h3>📊 月收入分配计划</h3>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">按 <b>固定支出 → 储蓄目标 → 可支配</b> 的优先级，规划每个月收入怎么花。固定支出是必须先分配的（房租/房贷、话费网络、物业、水电燃气、保险）。</div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px">
+   <div><div style="font-size:12px;color:var(--muted)">预期月收入（元）</div><input id="planIncome" type="number" min="0" step="0.01" value="${+ip.monthlyIncome||0}" ${ip.incomeAuto?"disabled":""} oninput="planSet('monthlyIncome',this.value)" style="width:160px;font-size:18px;font-weight:700"></div>
+   <label style="font-size:12px;color:var(--accent-ink);display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" ${ip.incomeAuto?"checked":""} onchange="planToggleAuto(this.checked)"> 用近3个月平均自动（约 <b>¥${fmtMoney(avg3)}</b>）</label>
+  </div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px">
+   <div><div style="font-size:12px;color:var(--muted)">每月储蓄目标（元）</div><input type="number" min="0" step="0.01" value="${+ip.savingsGoal||0}" oninput="planSet('savingsGoal',this.value)" style="width:160px;font-weight:700"></div>
+   <div style="flex:1;min-width:180px"><div style="font-size:12px;color:var(--muted)">储蓄目标说明（可选）</div><input value="${esc(ip.savingsNote||"")}" oninput="planSet('savingsNote',this.value)" placeholder="如：应急金 / 购房首付 / 旅行基金" style="width:100%"></div>
+  </div>
+  <div style="font-size:14px;color:var(--accent-ink);font-weight:700;margin:6px 0 4px">① 固定支出（必须优先分配）</div>
+  <div style="overflow-x:auto">
+   <table style="width:100%;min-width:420px;font-size:13px;border-collapse:collapse">
+    <thead><tr style="border-bottom:2px solid var(--line);text-align:left"><th style="padding:5px 4px">名称</th><th style="padding:5px 4px">金额/月</th><th style="padding:5px 4px">类别</th><th></th></tr></thead>
+    <tbody>${fixedRows||`<tr><td colspan="4" style="padding:8px;color:var(--muted)">暂无，点下面添加</td></tr>`}</tbody>
+   </table>
+  </div>
+  <button class="btn sm" style="margin:8px 0 4px" onclick="planAddFixed()">＋ 添加固定支出</button>
+  <div style="font-size:14px;color:var(--accent-ink);font-weight:700;margin:10px 0 4px">② 分配方案</div>
+  <div id="planResult">${planResultHTML()}</div>`;
+ main.appendChild(card);
+}
 function renderMoneyAdd(main){
  const card=document.createElement("div");card.className="card";
  const acOpts=(S.accounts||[]).map(a=>`<option value="${a.id}">${typeIcon(a.type)} ${esc(a.name)}</option>`).join("");
@@ -3484,6 +3585,7 @@ function renderMoneyAccounts(main){
    <button class="btn sm" onclick="addAccount()">＋ 新增账户</button>
    <button class="btn sm" onclick="updateFloatingAssets()">🔄 刷新浮动资产</button>
    <button class="btn sm" onclick="syncProvidentFromLedger()">🏛 公积金按流水更新</button>
+   <button class="btn sm" style="border-color:#e6a23c;color:#e6a23c" onclick="dataSelfCheck()">🔍 数据自检</button>
   </div>`;
  ACCT_GROUPS.forEach(g=>{
   const list=(S.accounts||[]).filter(a=>g.types.includes(a.type));
@@ -3522,6 +3624,29 @@ function showLiabilityDetail(){
   <div style="font-size:12px;color:var(--muted);margin:4px 0 8px">合计待还 <b style="color:var(--bad)">¥${fmtMoney(-totalLiab)}</b> · 招行信用卡为主要负债；建行信用卡(7365)已按流水独立追踪，若与银行 App 不一致点负债数字 →「校正为银行当前应还额」对齐。</div>
   ${rows}
   <div style="font-size:11px;color:var(--muted);margin-top:8px">提示：花呗 / 白条 / 美团月付 / 抖音月付 / 建行信用卡的历史流水尚未拆分，可在「记一笔」选对应账户补录，或在「账户」页更新期初值。</div>`;
+ showSheet(h);
+}
+function dataSelfCheck(){
+ const liabs=(S.accounts||[]).filter(a=>a.type==="liability");
+ const c=cloudCfg();
+ const nowM=new Date();const mStart=iso(new Date(nowM.getFullYear(),nowM.getMonth(),1));const mEnd=monthEnd(nowM.getFullYear(),nowM.getMonth());
+ const totalLiab=liabs.reduce((s,a)=>s+accountBalance(a),0);
+ const rows=liabs.map(a=>{
+  const bal=accountBalance(a);const ps=accountPeriodStats(a.id,mStart,mEnd);
+  return `<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px dotted #ece3d6;padding:4px 0"><span style="color:var(--accent-ink)">${esc(a.name)}</span><span style="font-size:15px;font-weight:700;color:var(--bad)">待还 ¥${fmtMoney(-bal)}</span></div><div style="font-size:11px;color:var(--muted)">本月 流入 +¥${fmtMoney(ps.inc+ps.tin)} / 流出 -¥${fmtMoney(ps.out+ps.tout)} · 净 ${ps.net>=0?'+':'-'}¥${fmtMoney(Math.abs(ps.net))}</div>`;
+ }).join("");
+ const checks=[
+  {ok:c.on,label:"云端同步已配置",bad:"云端未配置 — 本机是数据孤岛，数字可能与手机/其他设备不一致；去 设置→云端同步 填 key+Bin 并「拉取云端」对齐"},
+  {ok:S.migratedCreditRepayV3,label:"招行还款补正(V3)已执行",bad:"⚠ 招行还款补正未执行 — 历史还款可能没计入「已还」，负债被高估；刷新页面让迁移跑完"},
+  {ok:S.migratedCCBCardV1,label:"建行信用卡(7365)已建模",bad:"⚠ 建行信用卡(7365)未建模 — 其流水未独立追踪，负债统计可能遗漏"}
+ ];
+ const checkHTML=checks.map(x=>`<div style="font-size:12px;padding:4px 0;color:${x.ok?'var(--ok)':'var(--bad)'}">${x.ok?'✅':'⚠️'} ${esc(x.ok?x.label:x.bad)}</div>`).join("");
+ const h=`<h3>🔍 数据自检 · 负债明细</h3>
+  <div style="font-size:12px;color:var(--muted);margin:4px 0 6px">本机当前合计待还 <b style="color:var(--bad)">¥${fmtMoney(-totalLiab)}</b>（这是本机 localStorage 数据，未配云端时可能与手机不同）</div>
+  ${liabs.length?rows:`<div style="color:var(--muted);padding:8px">还没有负债账户。</div>`}
+  <h4 style="margin:12px 0 2px;color:var(--accent-ink)">自检结论</h4>
+  ${checkHTML}
+  <div style="font-size:11px;color:var(--muted);margin-top:8px">每台设备打开本页点「数据自检」都能立刻看到自己的负债与同步状态；若与手机不一致，通常是云端未配置或迁移未跑，按上面红字处理即可。</div>`;
  showSheet(h);
 }
 function correctCreditLiability(){
@@ -3949,7 +4074,15 @@ function vcApply(){
 let FILM_ROOM=null;
 let CD_IDX=0;
 let CD_CAROUSEL_EL=null;
-function filmCat(f){return (f.cat||(f.type||"").split("/")[0]||"").trim()||"其他";}
+function filmCat(f){
+ const cat=(f.cat||"").trim();
+ if(cat==="电影"||cat==="纪录片"||cat==="访谈演讲")return cat;
+ if(cat==="演说访谈")return "访谈演讲";
+ const t=(f.type||"").toLowerCase();
+ if(/纪录|自然|历史|人文|美食|手艺|地理|丝路|艺术|商业/.test(t))return "纪录片";
+ if(/演说|访谈|演讲|人物|文化/.test(t))return "访谈演讲";
+ return "电影";
+}
 function filmSub(f){return ((f.type||"").split("/")[1]||f.type||"").trim()||"其他";}
 function renderFilm(main){
  const c=document.createElement("div");c.className="card";
@@ -4171,7 +4304,10 @@ function filmOcrFile(ev,i,p){const file=ev.target.files&&ev.target.files[0];if(!
 function expandFilmDetail(i){const f=S.film[i];if(!f)return;const box=document.querySelector("#dmodal .box");if(box)box.classList.add("expand");openFilmDetail(i);}
 function toggleRoomExpand(id){const g=document.getElementById(id);if(!g)return;const c=g.classList.toggle("collapsed");const b=document.getElementById("cdExpandBtn");const n=g.querySelectorAll(".cd-extra").length;if(b)b.textContent=c?("▾ 展开全部 ("+n+")"):"▴ 收起全部";}
 // 整馆片库：圆盘风琴旋转架
-function filmCoverCircle(f){return `<div class="cd-label">${filmGenCoverHTML(f,"disc")}</div>`;}
+function filmCoverCircle(f){
+ if(f.poster){ return `<div class="cd-label"><img class="film-cover-img" src="${esc(normalizePoster(f.poster))}" alt="${esc(f.title)}" data-title="${esc(f.title)}" data-cat="${esc(filmCat(f))}" data-sub="${esc(filmSub(f)||"")}" loading="lazy" decoding="async" onerror="filmCoverImgErr(this)"></div>`; }
+ return `<div class="cd-label">${filmGenCoverHTML(f,"disc")}</div>`;
+}
 function layoutCarousel(root){if(!root)return;const items=root.querySelectorAll(".cd-disc-item");const N=items.length;if(!N)return;
  items.forEach((el,idx)=>{let off=idx-CD_IDX;off=((off%N)+N)%N;if(off>N/2)off-=N;const a=Math.abs(off);
   const tx=off*96,ry=-off*26,tz=-a*90,sc=1-a*0.13;

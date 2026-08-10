@@ -143,10 +143,16 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .ck-btns .btn{flex:1 1 auto}
 .ck-hint{font-size:11px;color:#b09a8e;line-height:1.5;margin-top:6px}
 /* overview stat strip */
-.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin:8px 0}
-.stat{background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:8px 6px;text-align:center}
-.stat b{display:block;font-size:18px;color:var(--accent-ink);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.25;min-height:23px}
-.stat span{font-size:11px;color:var(--muted)}
+.stat-strip{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.stat{flex:1 1 120px;min-width:0;background:#fffdfa;border:2px dashed var(--line);border-radius:12px;padding:8px 6px;text-align:center;overflow:hidden}
+.stat b{display:block;font-size:18px;color:var(--accent-ink);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.25;min-height:23px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat span{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 卡片可折叠（电脑版长卡片） */
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;user-select:none}
+.card-head .chev{transition:transform .18s ease;font-size:13px;color:var(--muted);flex:0 0 auto}
+.card.collapsed>.card-head .chev{transform:rotate(-90deg)}
+.card.collapsed>.card-body{display:none}
+.card-head:hover{opacity:.82}
 /* quote / energy */
 .quote{background:linear-gradient(135deg,#fff7e8,#fdeef3);border:2px dashed #e0b96a;border-radius:12px;padding:12px;font-size:14px;color:var(--accent-ink);line-height:1.7}
 .quote .q{font-weight:600;color:var(--warm);font-size:16px;margin-bottom:4px;letter-spacing:-.2px}
@@ -232,7 +238,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  .card{padding:18px;margin-bottom:0}
  .card.grid-wide{grid-column:1/-1}
  .cat-grid{grid-template-columns:repeat(4,1fr)}
- .stat-strip{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+ .stat-strip{gap:10px}
  .pie-wrap{gap:22px}
  .pie-wrap>div:first-child{flex:0 0 150px!important}
  header h1{font-size:30px}
@@ -1016,15 +1022,54 @@ function migrate(s){
   });
   s.migratedCatsV1=true;
 }
-// 信用卡消费统一归入负债账户（避免误减微信/支付宝余额）；修正"信用卡还款"误记为支出
+// 信用卡消费统一归入负债账户（避免误减微信/支付宝余额）
 if(!s.migratedCreditV1){
  (s.ledger||[]).forEach(r=>{
   const t=(r.method||"")+(r.merchant||"")+(r.note||"");
   const isCredit=/信用卡|招行|招商银行|掌上生活/.test(t);
   if(r.type==="out"&&isCredit&&["acc_wechat","acc_alipay","acc_bank","acc_cash"].includes(r.accountId)){ r.accountId="acc_liability"; }
-  if(r.type==="out"&&/信用卡还款|还款.*信用卡|招商银行信用卡.*扣款|掌上生活.*还款/.test(t)){ const from=["acc_bank","acc_wechat","acc_alipay","acc_cash"].includes(r.accountId)?r.accountId:"acc_bank"; r.type="transfer";r.toAccountId="acc_liability";r.accountId=from; }
  });
  s.migratedCreditV1=true;
+}
+// 把云闪付/银行卡自动扣款还信用卡的支出，修正为"转账到信用卡"（冲抵负债）
+if(!s.migratedCreditRepayV2){
+ (s.ledger||[]).forEach(r=>{
+  const t=(r.method||"")+(r.merchant||"")+(r.note||"");
+  if(r.type==="out"&&/信用卡还款|还款.*信用卡|招商银行信用卡.*扣款|掌上生活.*还款/.test(t)){
+   const from=["acc_bank","acc_wechat","acc_alipay","acc_cash"].includes(r.accountId)?r.accountId:"acc_bank";
+   r.type="transfer";r.toAccountId="acc_liability";r.accountId=from;
+  }
+ });
+ s.migratedCreditRepayV2=true;
+}
+// 2026-08-10 补正：云闪付从中行(7712)还招商信用卡的 7 笔，被账单生成器错归为"其他/无卡支付"，
+// 因文本无"信用卡还款"等关键词，既未被账单生成器、也未被 V2 迁移识别为还款。按 id 精确转回
+// "转账→信用卡负债"冲抵。仅改类型/账户，金额不变（中行余额当初已正确扣减），故不会对中行余额二次扣减。
+if(!s.migratedCreditRepayV3){
+ const repayFixIds={"bk_bk180_813":1,"bk_bk162_795":1,"bk_bk129_762":1,"bk_bk111_744":1,"bk_bk100_733":1,"bk_bk65_698":1,"bk_bk27_660":1};
+  (s.ledger||[]).forEach(r=>{
+  if(repayFixIds[r.id] && r.type==="out" && r.accountId==="acc_bank"){
+   r.type="transfer"; r.toAccountId="acc_liability"; r.cat="还款"; r.merchant="信用卡还款";
+   r.note="云闪付·招商银行信用卡还款(手工修正归类)";
+  }
+ });
+ // 第 8 笔 ¥12,174 在已导入账单中完全缺失（云闪付从中行7712扣，但中行流水未包含该笔），补录为转账冲抵。
+ // 日期为暂估(2026-08-10，截图显示8月有还款)，如与实际不符可在 App 内修改该笔日期。
+ if(!s.ledger.find(x=>x.id==="bk_repay_cmb_12174")){
+  s.ledger.push({id:"bk_repay_cmb_12174",date:"2026-08-10",type:"transfer",cat:"还款",amount:12174,accountId:"acc_bank",toAccountId:"acc_liability",method:"银行卡",merchant:"信用卡还款",note:"云闪付·招商银行信用卡还款(补录·日期待核对)",src:"手动",createdAt:Date.now(),img:""});
+ }
+ s.migratedCreditRepayV3=true;
+}
+// 2026-08-10 建设银行信用卡(尾号7365)独立建模：账单生成器把建行信用卡的消费/还款都混在 acc_ccb（建行储蓄卡）下，
+// merchant 含卡号 4367455039387365。按 merchant 把这几笔改挂到专属负债账户 acc_ccb_card，使其真实欠款被追踪
+// （消费 out 增债、还款 in 减债），并从建行储蓄卡余额中剔除这笔本不属于储蓄卡的流水。
+if(!s.migratedCCBCardV1){
+ (s.ledger||[]).forEach(r=>{
+  if(r.accountId==="acc_ccb" && /4367455039387365/.test(r.merchant||"")){
+   r.accountId="acc_ccb_card";
+  }
+ });
+ s.migratedCCBCardV1=true;
 }
 // 押金首笔统一归入租金收入，不再作为资产展示
  (s.ledger||[]).forEach(r=>{ if(r.id==="seed_rent_jul_dep"&&r.cat==="押金") r.cat="租金"; });
@@ -2801,6 +2846,37 @@ function setMoneyFilter(k,v){moneyF[k]=(moneyF[k]===v?"":v);render();}
 function setMoneyType(t){moneyType=t;render();}
 function setMoneyMethod(m){moneyMethod=m;const box=document.getElementById("acMethods");if(box)box.querySelectorAll(".ac-method").forEach(x=>x.classList.toggle("active",x.dataset.m===m));}
 function quickIncome(cat){setMoneyType("in");const ci=document.getElementById("acCat");if(ci)ci.value=cat;const a=document.getElementById("acAmt");if(a)a.focus();toast("已选「"+cat+"」，填金额后点记录");}
+/* 卡片可折叠：把卡片首个 h3 作为可点击标题，其余内容装入 .card-body；桌面长卡片可默认折叠 */
+const _collapsedKeys=new Set();
+function isDesktop(){return (window.innerWidth||document.documentElement.clientWidth||0)>=1024;}
+function toggleCardCollapse(key,headEl){
+ const card=headEl.parentElement;
+ const willCollapsed=!card.classList.contains("collapsed");
+ card.classList.toggle("collapsed",willCollapsed);
+ if(willCollapsed)_collapsedKeys.add(key);else _collapsedKeys.delete(key);
+ if(!willCollapsed&&window.__moneyStatsChart){try{window.__moneyStatsChart.resize();}catch(e){}}
+}
+function enableCollapse(card,key,defaultDesktop,title){
+ if(!card)return;
+ let head=card.querySelector(":scope > h3");
+ if(head){
+  head.classList.add("card-head");
+  head.setAttribute("data-ck",key);
+  const chev=document.createElement("span");chev.className="chev";chev.textContent="▾";head.appendChild(chev);
+  head.addEventListener("click",function(){toggleCardCollapse(key,head);});
+ }else{
+  head=document.createElement("div");head.className="card-head";head.setAttribute("data-ck",key);
+  head.innerHTML=(title||"详情")+'<span class="chev">▾</span>';
+  card.insertBefore(head,card.firstChild);
+  head.addEventListener("click",function(){toggleCardCollapse(key,head);});
+ }
+ const body=document.createElement("div");body.className="card-body";
+ let n=head.nextSibling;
+ while(n){const nx=n.nextSibling;body.appendChild(n);n=nx;}
+ card.appendChild(body);
+ const collapsed=_collapsedKeys.has(key)||(defaultDesktop&&isDesktop());
+ card.classList.toggle("collapsed",collapsed);
+}
 function renderMoney(main){
  const T=totals();
  const L=ledgerRecs();
@@ -3083,6 +3159,7 @@ function renderMoneyRecords(main){
  else h+=days.map(d=>{const rs=byDay[d];const din=rs.filter(r=>r.type==="in").reduce((s,r)=>s+(+r.amount||0),0);const dout=rs.filter(r=>r.type==="out").reduce((s,r)=>s+(+r.amount||0),0);
   return `<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-bottom:1px dashed var(--line);padding-bottom:3px"><span>${esc(d)}</span><span>+${fmtMoney(din)} / -${fmtMoney(dout)}</span></div>`+rs.sort((a,b)=>(b.date||"").localeCompare(a.date)||b.id-a.id).map(r=>rowHTML(r)).join("")+`</div>`;}).join("");
  card.innerHTML=h;main.appendChild(card);
+ enableCollapse(card,"money_records",false,"📋 收支明细");
 }
 const RING_PALETTE=["#e6a23c","#67c23a","#409eff","#f56c6c","#9b59b6","#e8a0bf"];
 function catRingSVG(cats,total,centerTop,centerBottom){
@@ -3197,6 +3274,7 @@ function renderMoneyStats(main){
    <div class="stat"><b style="color:${nwChange>=0?'#67c23a':'#f56c6c'}">${nwChange>=0?'+':''}¥${fmtMoney(nwChange)}</b><span>净资产变动</span></div>
   </div>`;
  card.innerHTML=h;main.appendChild(card);
+ enableCollapse(card,"money_stats",false);
  if(data.length>1){setTimeout(()=>renderMoneyStatsChart(chartId,data),0);}
 }
 function renderMoneyStatsChart(chartId,data){
@@ -3255,21 +3333,19 @@ function openGoalsSheet(){showSheet(moneyGoalsHTML());}
 function renderMoneyHealth(main){
  const card=document.createElement("div");card.className="card grid-wide";
  const L=ledgerRecs();
- const creditRecs=L.filter(r=>{
-  const t=(r.method||"")+(r.merchant||"")+(r.note||"");
-  return /信用卡|招行|招商银行|掌上生活/.test(t);
- });
+ const creditRecs=L.filter(r=>r.accountId==="acc_liability"||r.toAccountId==="acc_liability");
+ const monthKey=d=>{const nd=normDate(d);if(nd&&nd.length===10)return nd.slice(0,7);const s=String(d||'');if(/^\d{8}$/.test(s))return s.slice(0,4)+'-'+s.slice(4,6);return (nd||s).slice(0,7);};
  const byMonth={};
  const add=(m,key,amt)=>{if(!byMonth[m])byMonth[m]={out:0,in:0,repay:0};byMonth[m][key]+=amt;};
  creditRecs.forEach(r=>{
-  const m=r.date.slice(0,7);
+  const m=monthKey(r.date);
   if(r.type==="out")add(m,"out",+r.amount||0);
   if(r.type==="in")add(m,"in",+r.amount||0);
   if(r.type==="transfer"&&r.toAccountId==="acc_liability")add(m,"repay",+r.amount||0);
  });
- // 兼容：迁移前被记为支出的还款（云闪付/银行卡扣款）
+ // 兼容：迁移前被记为支出的还款（云闪付/银行卡扣款），用 monthKey 兼容 YYYYMMDD
  L.filter(r=>r.type==="out"&&/招商银行信用卡.*扣款|信用卡还款/.test((r.method||"")+(r.merchant||"")+(r.note||""))).forEach(r=>{
-  add(r.date.slice(0,7),"repay",+r.amount||0);
+  add(monthKey(r.date),"repay",+r.amount||0);
  });
  let acc=0;
  const months=Object.keys(byMonth).sort();
@@ -3280,6 +3356,9 @@ function renderMoneyHealth(main){
  const T=totals();
  const liquid=(S.accounts||[]).filter(a=>["cash","wechat","alipay","bank"].includes(a.type)).reduce((s,a)=>s+accountBalance(a),0);
  const debtRatio=T.assets?T.liab/T.assets*100:0;
+ const ccOut=creditRecs.filter(r=>r.type==="out").reduce((s,r)=>s+(+r.amount||0),0);
+ const ccIn=creditRecs.filter(r=>r.type==="in").reduce((s,r)=>s+(+r.amount||0),0);
+ const ccRepay=creditRecs.filter(r=>r.type==="transfer"&&r.toAccountId==="acc_liability").reduce((s,r)=>s+(+r.amount||0),0);
  const monthlyFixed=17700+3000+40000/6;
  const tips=[];
  if(T.liab>monthlyFixed*2) tips.push(`信用卡负债 <b style="color:#f56c6c">¥${fmtMoney(T.liab)}</b> 超过 2 个月固定收入，优先还清。`);
@@ -3302,11 +3381,14 @@ function renderMoneyHealth(main){
    <div class="stat"><b>¥${fmtMoney(liquid)}</b><span>流动资产</span></div>
    <div class="stat"><b>${debtRatio.toFixed(1)}%</b><span>负债/资产</span></div>
   </div>
+  <div style="font-size:12px;color:var(--accent-ink);margin:10px 0 2px;line-height:1.7;border-top:1px dashed var(--line);padding-top:8px">💡 <b>信用卡对账公式</b>：净消费 <b>¥${fmtMoney(ccOut-ccIn)}</b>（消费−退款） − 已还 <b style="color:#409eff">¥${fmtMoney(ccRepay)}</b> ＝ 当前负债 <b style="color:#f56c6c">¥${fmtMoney((ccOut-ccIn)-ccRepay)}</b></div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:6px">说明：上面「还款」按月汇总自导入账单；若某月显示 0，仅表示该月还款记录未出现在导入的对账单中（银行在云闪付/他行卡还的款未进导入数据源），并不影响已在公式中扣除的实际还款。若与银行 App 仍不一致，到「账户」页点负债数字 →「校正为银行当前应还额」对齐。</div>
   <div style="background:var(--accent-weak);border-radius:10px;padding:10px;font-size:13px;color:var(--accent-ink);line-height:1.6">
    <b>建议：</b>${tips.join('；')}
   </div>
   <div style="font-size:11px;color:var(--muted);margin-top:8px">若「累计未还」与银行 App 不一致，请到「账户」页点击负债数字 → 使用「校正为银行当前应还额」按钮一键对齐。</div>`;
  card.innerHTML=html;main.appendChild(card);
+ enableCollapse(card,"money_health",true);
 }
 function renderMoneyAdd(main){
  const card=document.createElement("div");card.className="card";
@@ -3405,6 +3487,7 @@ function renderMoneyAccounts(main){
  });
  h+=`<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn sm primary" onclick="addAccount()">＋ 新增账户</button><button class="btn sm" onclick="updateFloatingAssets()">🔄 刷新浮动资产</button><button class="btn sm" onclick="syncProvidentFromLedger()">🏛 公积金按流水更新</button></div>`;
  card.innerHTML=h;main.appendChild(card);
+ enableCollapse(card,"money_accounts",false);
  const tcard=document.createElement("div");tcard.className="card";
  tcard.innerHTML=`<h3>🔁 转账</h3><div style="font-size:12px;color:var(--muted)">在账户间转移资金，自动生成双向流水，余额实时更新。</div><button class="btn sm" onclick="openTransfer()" style="margin-top:8px">发起转账</button>`;
  main.appendChild(tcard);
@@ -3428,7 +3511,7 @@ function showLiabilityDetail(){
  }).join("");
  const totalLiab=liabs.reduce((s,a)=>s+accountBalance(a),0);
  const h=`<h3>💳 负债明细</h3>
-  <div style="font-size:12px;color:var(--muted);margin:4px 0 8px">合计待还 <b style="color:var(--bad)">¥${fmtMoney(-totalLiab)}</b> · 招行信用卡为主要负债，其余账户历史流水尚未区分，余额显示 0</div>
+  <div style="font-size:12px;color:var(--muted);margin:4px 0 8px">合计待还 <b style="color:var(--bad)">¥${fmtMoney(-totalLiab)}</b> · 招行信用卡为主要负债；建行信用卡(7365)已按流水独立追踪，若与银行 App 不一致点负债数字 →「校正为银行当前应还额」对齐。</div>
   ${rows}
   <div style="font-size:11px;color:var(--muted);margin-top:8px">提示：花呗 / 白条 / 美团月付 / 抖音月付 / 建行信用卡的历史流水尚未拆分，可在「记一笔」选对应账户补录，或在「账户」页更新期初值。</div>`;
  showSheet(h);

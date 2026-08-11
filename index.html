@@ -1409,7 +1409,8 @@ const ICONS={
  stamps:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M8 13l-2 8 6-3 6 3-2-8"/></svg>',
  money:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="12" cy="13.2" r="2.2"/></svg>',
  diary:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M15 4v4h4"/><path d="M8 12l3 3 5-5"/></svg>',
- settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1l2-1.5-2-3.5-2.4 1a7 7 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.5 2 1.5a7 7 0 000 2l-2 1.5 2 3.5 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.5-2-1.5a7 7 0 00.1-1z"/></svg>'
+ settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1l2-1.5-2-3.5-2.4 1a7 7 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.5 2 1.5a7 7 0 000 2l-2 1.5 2 3.5 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.5-2-1.5a7 7 0 00.1-1z"/></svg>',
+ butler:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4"/><circle cx="12" cy="3" r="1.4"/><circle cx="9" cy="14" r="1.3"/><circle cx="15" cy="14" r="1.3"/><path d="M9 18h6"/></svg>'
 };
 const NAV_ICON_MENU='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
 const NAV_ICON_COLLAPSE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
@@ -1419,9 +1420,11 @@ const NAV=[
  {v:"home",t:"状态/主线",i:"home"},{v:"myhome",t:"我家",i:"reno"},{v:"stocks",t:"股市",i:"stocks"},{v:"fitness",t:"体态",i:"fitness"},
  {v:"money",t:"记账",i:"money"},
  {v:"reading",t:"阅读",i:"reading"},{v:"film",t:"影视",i:"film"},{v:"social",t:"自媒体",i:"social"}, {v:"writing",t:"写作",i:"writing"},
- {v:"knowledge",t:"知识库",i:"knowledge"},{v:"stamps",t:"成就墙",i:"stamps"},{v:"settings",t:"设置",i:"settings"}];
+ {v:"knowledge",t:"知识库",i:"knowledge"},{v:"stamps",t:"成就墙",i:"stamps"},{v:"butler",t:"管家",i:"butler"},{v:"settings",t:"设置",i:"settings"}];
 function renderNav(){const n=document.getElementById("nav");n.innerHTML="";
- const order=(S.settings&&S.settings.navOrder&&S.settings.navOrder.length)?S.settings.navOrder:NAV.map(x=>x.v);
+ let order=(S.settings&&S.settings.navOrder&&S.settings.navOrder.length)?S.settings.navOrder.slice():NAV.map(x=>x.v);
+ NAV.forEach(it=>{if(order.indexOf(it.v)<0)order.push(it.v);});
+ const _si=order.indexOf("settings");if(_si>=0&&_si!==order.length-1){order.splice(_si,1);order.push("settings");}
  const collapsed=!!(S.settings&&S.settings.navCollapsed);
  n.classList.toggle("collapsed",collapsed);
  const app=document.querySelector(".app");if(app)app.classList.toggle("nav-collapsed",collapsed);
@@ -1452,6 +1455,7 @@ function render(){
  else if(view==="social")renderSocial(main);
  else if(view==="writing")renderWriting(main);
  else if(view==="knowledge")renderKnowledge(main);
+ else if(view==="butler")renderButler(main);
  else if(view==="settings")renderSettings(main);
  else if(view==="myhome")renderMyHome(main);
  else renderSimple(main);
@@ -1591,9 +1595,9 @@ function renderSettings(main){
  // 写作助手入口
  const wCard=document.createElement("div");wCard.className="card";
  wCard.innerHTML=`<h2>🍅 写作助手入口</h2>
-  <div class="set-row"><div class="k">作家助手</div><input id="writerUrlIn" value="${esc(st.writerUrl||"https://writer.fanqie.com/")}" style="flex:1;padding:8px 10px;border:2px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;background:var(--card);color:var(--ink)"></div>
+  <div class="set-row"><div class="k">作家助手</div><input id="writerUrlIn" value="${esc(st.writerUrl||"https://fanqienovel.com/")}" style="flex:1;padding:8px 10px;border:2px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;background:var(--card);color:var(--ink)"></div>
   <button class="btn" style="width:100%" onclick="saveWriterUrl()">💾 保存</button>
-  <a class="linkbtn" href="${esc(normalizeUrl(st.writerUrl)||'https://writer.fanqie.com/')}" target="_blank" rel="noopener" style="width:100%;margin-top:10px;justify-content:center">🚀 打开番茄作家助手</a>`;
+  <button class="linkbtn" onclick="openWriter()" style="width:100%;margin-top:10px;justify-content:center">🚀 打开番茄作家助手</button>`;
  main.appendChild(wCard);
 
  // 周末充电
@@ -1622,8 +1626,7 @@ function saveAppearance(){if(!S.settings)S.settings={};
  save();applyTheme();applyBg();updateWbTitle();render();toast("外观已保存");}
 function saveAiCfg(){const cfg={key:(document.getElementById("aiKey").value||"").trim(),base:(document.getElementById("aiBase").value||"").trim(),model:(document.getElementById("aiModel").value||"").trim()};
  localStorage.setItem("wb_ai_cfg",JSON.stringify(cfg));toast("AI 配置已存本机");}
-function saveWriterUrl(){if(!S.settings)S.settings={};S.settings.writerUrl=normalizeUrl(document.getElementById("writerUrlIn").value)||"https://writer.fanqie.com/";save();render();toast("作家助手链接已保存");}
-function openWriter(){if(!S.settings)S.settings={};const u=(document.getElementById("writerUrlIn")?document.getElementById("writerUrlIn").value.trim():"")||S.settings.writerUrl||"https://writer.fanqie.com/";S.settings.writerUrl=u;save();window.open(u,"_blank");}
+function saveWriterUrl(){if(!S.settings)S.settings={};S.settings.writerUrl=normalizeUrl(document.getElementById("writerUrlIn").value)||"https://fanqienovel.com/";save();render();toast("作家助手链接已保存");}
 function moveNav(idx,dir){if(!S.settings)S.settings={};let o=(S.settings.navOrder&&S.settings.navOrder.length)?S.settings.navOrder.slice():NAV.map(x=>x.v);
  const j=idx+dir;if(j<0||j>=o.length)return;const t=o[idx];o[idx]=o[j];o[j]=t;S.settings.navOrder=o;save();render();}
 
@@ -2428,7 +2431,9 @@ function delTrade(id){S.stocks.trades=S.stocks.trades.filter(t=>t.id!==id);save(
 function stockPhase(){const d=new Date();const t=d.getHours()*60+d.getMinutes();if(t<9*60)return 'pre';if(t>=9*60+30&&t<15*60)return 'mid';return 'post';}
 function newsAnalysis(t){t=t||'';let mood='中性',advice='观望，结合自身仓位';if(/利好|增长|回购|分红|签约|中标|获批|超预期|上调/.test(t)){mood='偏多';advice='关注持有 / 分批加仓';}else if(/减持|风险|亏损|下滑|处罚|诉讼|下调|暴雷|退市|利空/.test(t)){mood='偏空';advice='注意规避 / 减仓';}else if(/业绩|公告|发布|募资/.test(t)){mood='中性';advice='看具体内容再定';}return {mood,advice};}
 function emSecid(code){code=(code||'').trim();if(code.indexOf('.')>0)return code;let mkt='1';if(/^(0|3|2|9)/.test(code))mkt='0';return mkt+'.'+code.replace(/^(sh|sz|bj)/i,'');}
-async function stockLiveSync(){const codes=[...new Set((S.stocks.holdings||[]).map(h=>h.code).concat((S.stocks.watchlist||[]).map(w=>w.code)))];if(!codes.length){toast('暂无持仓/自选');return;}toast('正在同步行情…');let ok=0;for(const c of codes){const secid=emSecid(c);const u='https://push2.eastmoney.com/api/qt/stock/get?secid='+encodeURIComponent(secid)+'&fields=f43,f57,f58,f170&invt=2&fltt=2';try{const r=await fetch(u,{mode:'cors'});if(!r.ok)continue;const j=await r.json();const d=j&&j.data;if(!d)continue;const price=+d.f43;const pct=+d.f170;if(price>0){STOCK_DATA.prices[c]={price:price,changePct:pct};ok++;}}catch(e){}}STOCK_DATA.updated='实时 '+new Date().toLocaleTimeString();save();render();toast('已同步 '+ok+' 只行情'+(ok<codes.length?'（其余用本地数据）':''));}
+function jsonp(url,timeout){timeout=timeout||8000;return new Promise(function(resolve,reject){const cb='wbjp_'+Date.now()+'_'+Math.floor(Math.random()*10000);const sc=document.createElement('script');const t=setTimeout(function(){cleanup();reject(new Error('timeout'));},timeout);function cleanup(){clearTimeout(t);if(sc.parentNode)sc.parentNode.removeChild(sc);try{delete window[cb];}catch(e){window[cb]=undefined;}}window[cb]=function(data){cleanup();resolve(data);};sc.onerror=function(){cleanup();reject(new Error('load error'));};const sep=url.indexOf('?')>=0?'&':'?';sc.src=url+sep+'cb='+cb;document.head.appendChild(sc);});}
+async function stockNewsSync(){const codes=[...new Set((S.stocks.holdings||[]).map(h=>h.name||h.code).concat((S.stocks.watchlist||[]).map(w=>w.name||w.code)))];if(!codes.length)return 0;let added=0;for(const kw of codes.slice(0,5)){const param=JSON.stringify({uid:"",keyword:kw,type:["cmsArticleWebOld"],client:"web",clientType:"web",clientVersion:"curr",param:{cmsArticleWebOld:{searchScope:"default",sort:"default",pageIndex:1,pageSize:5,preTag:"",postTag:""}}});const u='https://search-api-web.eastmoney.com/search/jsonp?param='+encodeURIComponent(param);try{const j=await jsonp(u,6000);const arr=j&&j.result&&j.result.datas||[];arr.forEach(function(n){if(!n||!n.title)return;const item={title:String(n.title),url:n.url||'',source:n.source||'东方财富',time:n.publishTime||'',phase:stockPhase()};if(!S.stocks.dailyNews.some(x=>x.title===item.title)){S.stocks.dailyNews.push(item);added++;}});}catch(e){}}S.stocks.dailyNews=(S.stocks.dailyNews||[]).sort((a,b)=>String(b.time||'').localeCompare(a.time||'')).slice(0,30);return added;}
+async function stockLiveSync(){const codes=[...new Set((S.stocks.holdings||[]).map(h=>h.code).concat((S.stocks.watchlist||[]).map(w=>w.code)))];if(!codes.length){toast('暂无持仓/自选');return;}toast('正在同步行情…');let ok=0;for(const c of codes){const secid=emSecid(c);const u='https://push2.eastmoney.com/api/qt/stock/get?secid='+encodeURIComponent(secid)+'&fields=f43,f57,f58,f170';try{const j=await jsonp(u,6000);const d=j&&j.data;if(!d)continue;const price=+d.f43;const pct=+d.f170;if(price>0){STOCK_DATA.prices[c]={price:price,changePct:pct};ok++;}}catch(e){}}let newsOk=0;try{newsOk=await stockNewsSync();}catch(e){}STOCK_DATA.updated='实时 '+new Date().toLocaleTimeString();save();render();toast('已同步 '+ok+'/'+codes.length+' 只行情'+(newsOk?' · 新增 '+newsOk+' 条快讯':'')+(ok<codes.length?' · 失败的请检查代码或网络':''));}
 function calcBuyback(){const sh=parseFloat(document.getElementById('bcShares').value)||0;const cost=parseFloat(document.getElementById('bcCost').value)||0;const a=parseFloat(document.getElementById('bcAddSh').value)||0;const p=parseFloat(document.getElementById('bcAddPr').value)||0;const out=document.getElementById('bcOut');if(sh<=0||cost<=0||a<=0||p<=0){out.textContent='请填完四项';return;}const nBE=(sh*cost+a*p)/(sh+a);const diff=nBE-cost;out.innerHTML='补仓后回本价（平均成本）<b style="color:var(--bad)">¥'+nBE.toFixed(2)+'</b> <span style="color:'+(diff<=0?'var(--ok)':'var(--bad)')+'">('+(diff>=0?'+':'')+diff.toFixed(2)+' vs 现成本)</span>';}
 // 体态（原健身）
 // 体态（原健身模块）——每天 15 分钟，一个一个解决体态问题
@@ -2558,7 +2563,7 @@ function paintPos(){const ph=document.getElementById("posPhase"),big=document.ge
 function posGoto(i){if(i<0||i>=POSTURE_ISSUES.length)return;POS_VIEW=i;if((S.fitness.postureDone||[]).includes(POSTURE_ISSUES[i].id))toast("该问题已攻克 ✅ 复习中");render();}
 function posMarkDone(){const f=S.fitness;const done=f.postureDone||[];const idx=POSTURE_ISSUES.findIndex(x=>!done.includes(x.id));if(idx<0){toast("已全部攻克，进入复习循环");return;}if(!done.includes(POSTURE_ISSUES[idx].id))done.push(POSTURE_ISSUES[idx].id);f.postureDone=done;POS_VIEW=-1;save();confetti();toast("🎉 已攻克「"+POSTURE_ISSUES[idx].id+"」！进入下一个");render();}
 function fmtSec(s){const m=Math.floor((s||0)/60),ss=(s||0)%60;return m?`${m}分${ss?ss+"秒":""}`:`${ss}秒`;}
-function toEmbed(u){u=(u||"").trim();let m;if(m=u.match(/[?&]v=([\w-]+)/))return "https://www.youtube.com/embed/"+m[1];if(m=u.match(/youtu\.be\/([\w-]+)/))return "https://www.youtube.com/embed/"+m[1];if(m=u.match(/bilibili\.com\/video\/(BV[\w]+)/))return "https://player.bilibili.com/player.html?bvid="+m[1]+"&page=1&high_quality=1&danmaku=0";if(m=u.match(/bvid=([\w]+)/))return "https://player.bilibili.com/player.html?bvid="+m[1]+"&page=1&high_quality=1&danmaku=0";return u;}
+function toEmbed(u){u=(u||"").trim();let m;if(m=u.match(/[?&]v=([\w-]+)/))return "https://www.youtube.com/embed/"+m[1];if(m=u.match(/youtu\.be\/([\w-]+)/))return "https://www.youtube.com/embed/"+m[1];if(m=u.match(/bilibili\.com\/video\/(BV[\w]+)/))return "https://player.bilibili.com/player.html?bvid="+m[1]+"&page=1&high_quality=1&danmaku=0";if(m=u.match(/bvid=(BV[\w]+)/i))return "https://player.bilibili.com/player.html?bvid="+m[1]+"&page=1&high_quality=1&danmaku=0";if(/^BV[\w]+$/.test(u))return "https://player.bilibili.com/player.html?bvid="+u+"&page=1&high_quality=1&danmaku=0";return u;}
 function openPostureVideo(i){const it=POSTURE_ISSUES[i]||{};const ov=(S.fitness.videoOverride)||{};const vidRaw=ov[i]||it.video||"";const vidSrc=vidRaw?toEmbed(vidRaw):"";const q=encodeURIComponent((it.id||"体态")+" 正确做法 教学");
  const html=`<div style="font-size:13px;color:var(--muted);margin-bottom:8px">${esc(it.id||"")} · ${esc(it.focus||"")}</div>
   ${vidSrc?`<iframe class="vidframe" src="${esc(vidSrc)}" allow="autoplay;encrypted-media;fullscreen" allowfullscreen style="border-style:solid"></iframe>`
@@ -4623,14 +4628,63 @@ function openWriter(){
  const isMobile=/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent)||(window.matchMedia&&window.matchMedia("(pointer:coarse)").matches);
  if(isMobile){
   const scheme=(S.settings&&S.settings.writerScheme)||"fanqienovel://";
-  const tStart=Date.now();
-  try{location.href=scheme;}catch(e){}
-  setTimeout(function(){if(Date.now()-tStart<2200){try{window.open(web,"_blank");}catch(e){}}},1400);
   toast("正在唤起番茄作家助手 APP…");
+  // 用 a.click() 唤起 scheme，比 location.href 更可靠
+  const a=document.createElement("a");a.href=scheme;a.style.display="none";document.body.appendChild(a);
+  try{a.click();}catch(e){location.href=scheme;}
+  document.body.removeChild(a);
+  // 若未安装 APP，延迟回退到网页
+  setTimeout(function(){window.location.href=web;},1600);
  }else{
   try{window.open(web,"_blank");}catch(e){location.href=web;}
  }
 }
+
+// ===== 管家 AI 助手 =====
+let butlerChat=[],butlerBusy=false,butlerPendingImg=null,butlerListening=false,butlerRecog=null;
+const BUTLER_SYS=`你是一个名为"管家"的个人助理，运行在用户的"个人工作台"网页应用里。用户会用中文与你对话（可能打字、语音或发图片），让你帮他在各个板块记录或更新内容。
+
+当你判断用户的意图对应下面某一种"可记录操作"时，你必须在自然回复（中文、简洁友好）之后，单独追加一个 \`\`\`json 代码块，块内为要执行的指令（不要在外面再写 JSON）。如果用户只是闲聊、提问或不需要记录，就正常回答，不要输出 JSON 代码块。
+
+可用指令与字段（payload 字段均可选，除非标注必填）：
+1) add_book：记录一本书。payload：{ "title":必填书名, "author":作者, "tags":标签, "status":"待读"|"在读"|"已读" }
+2) add_film：记录一部影视。payload：{ "title":必填片名, "cat":"电影"|"剧集"|"纪录片"|"动画", "type":"待看"|"在看"|"已看", "tags":标签 }
+3) add_ledger：记一笔账。payload：{ "type":"in"|"out"|"transfer"必填, "amount":必填数字, "cat":分类(如 餐饮/交通/购物/工资/租金), "account":"银行卡"|"微信"|"支付宝"|"现金"|"公积金"|"医保"|"押金"|"信用卡", "merchant":对方或商户, "date":"YYYY-MM-DD"(不填今天), "note":备注, "toAccount":转账目标账户 }
+4) add_task：加一个任务。payload：{ "text":必填任务内容, "xp":数字(默认80) }
+5) add_knowledge：记一条知识。payload：{ "topic":必填主题, "cat":分类, "content":内容 }
+6) set_book_status：更新阅读状态。payload：{ "title":必填书名, "status":"待读"|"在读"|"已读" }
+
+图片处理：如果用户发来图片（如账单、书影、电影票），请从中提取可用于上述指令的信息并照常输出 JSON；无法判断时先向用户确认。
+
+示例——用户："帮我记一笔，今天微信花了38块在麦当劳吃午饭"
+你回复：
+好的，已记下今天在麦当劳的午餐开支。
+\`\`\`json
+{ "action":"add_ledger", "payload":{ "type":"out", "amount":38, "cat":"餐饮", "account":"微信", "merchant":"麦当劳", "note":"午饭" } }
+\`\`\``;
+
+function ensureButlerStyle(){if(document.getElementById("butlerStyle"))return;const s=document.createElement("style");s.id="butlerStyle";s.textContent=".butler-msgs{max-height:56vh;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:6px 2px;margin-bottom:10px}.bm{display:flex}.bm.user{justify-content:flex-end}.bm.ai,.bm.sys{justify-content:flex-start}.bm-bubble{max-width:80%;padding:10px 12px;border-radius:14px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word}.bm.user .bm-bubble{background:#6c5ce7;color:#fff;border-bottom-right-radius:4px}.bm.ai .bm-bubble{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}.bm.sys .bm-bubble{background:transparent;color:var(--muted);font-size:12px;border:1px dashed var(--line)}.bm-act{margin-top:6px;font-size:12px;color:#2a9d6b;background:rgba(42,157,107,.12);padding:4px 8px;border-radius:8px;display:inline-block}.butler-thumb{max-width:120px;max-height:120px;border-radius:8px;margin-top:6px;display:block}.butler-input{display:flex;gap:8px;align-items:center}.butler-text{flex:1;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font-family:inherit;font-size:14px;outline:none}.butler-ic{width:40px;height:40px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}.butler-ic.listening{background:#ff5a5f;color:#fff;border-color:#ff5a5f;animation:pulseButler 1s infinite}@keyframes pulseButler{0%{box-shadow:0 0 0 0 rgba(255,90,95,.55)}70%{box-shadow:0 0 0 10px rgba(255,90,95,0)}100%{box-shadow:0 0 0 0 rgba(255,90,95,0)}}";document.head.appendChild(s);}
+
+function butlerLoad(){try{const s=localStorage.getItem("wb_butler_chat");if(s){const a=JSON.parse(s);if(Array.isArray(a))butlerChat=a;}}catch(e){}if(!butlerChat.length)butlerChat=[{role:"system",text:"我是你的管家 AI。可以打字、语音或发图片，让我帮你记录书籍、影视、账单、任务和知识～（首次使用请到「设置 → AI 大模型配置」填写密钥）"}];}
+function butlerSave(){try{localStorage.setItem("wb_butler_chat",JSON.stringify(butlerChat.filter(function(m){return !m._typing;}).slice(-50)));}catch(e){}}
+
+function renderButler(main){ensureButlerStyle();if(!butlerChat.length)butlerLoad();const ai=JSON.parse(localStorage.getItem("wb_ai_cfg")||"{}");const hasKey=!!(ai.key&&ai.base&&ai.model);main.innerHTML='<div class="card grid-wide"><h2>🤖 管家 · AI 助手</h2><div style="font-size:13px;color:var(--muted);margin-bottom:10px">用语音、打字或发图片和我对话，让我帮你记录书籍、影视、账单、任务、知识。'+(hasKey?'':'<b style="color:#e0533d"> 尚未配置 AI：请到「设置 → AI 大模型配置」填写 API Key / Base URL / 模型名。</b>')+'</div><div id="butlerMsgs" class="butler-msgs"></div><div class="butler-input"><button id="butlerVoice" class="butler-ic" title="语音输入" onclick="butlerVoice()">🎤</button><button class="butler-ic" title="发图片" onclick="document.getElementById(\'butlerFile\').click()">🖼️</button><input id="butlerFile" type="file" accept="image/*" style="display:none" onchange="butlerPickImg(event)"><input id="butlerInput" class="butler-text" placeholder="说点什么，或让我帮你记录…" onkeydown="if(event.key===\'Enter\')butlerSend()"><button class="btn sm" onclick="butlerSend()">发送</button></div><div id="butlerHint" style="font-size:11px;color:var(--muted);margin-top:6px"></div></div>';butlerRenderMsgs();}
+
+function butlerRenderMsgs(){const box=document.getElementById("butlerMsgs");if(!box)return;box.innerHTML=butlerChat.map(function(m){if(m.role==="user"){const img=m.img?'<img src="'+m.img+'" class="butler-thumb">':"";return '<div class="bm user"><div class="bm-bubble">'+esc(m.text||"")+img+'</div></div>';}if(m.role==="system"){return '<div class="bm sys"><div class="bm-bubble">'+esc(m.text||"")+'</div></div>';}const act=m.action?'<div class="bm-act">'+esc(m.action)+'</div>':"";return '<div class="bm ai"><div class="bm-bubble">'+esc(m.text||"")+act+'</div></div>';}).join("");box.scrollTop=box.scrollHeight;}
+
+function butlerSend(){if(butlerBusy)return;const inp=document.getElementById("butlerInput");if(!inp)return;const text=inp.value.trim();if(!text&&!butlerPendingImg)return;butlerChat.push({role:"user",text:text||"(图片)",img:butlerPendingImg||""});butlerPendingImg=null;inp.value="";butlerRenderMsgs();butlerAsk();}
+
+function butlerPickImg(e){const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(){butlerPendingImg=r.result;const h=document.getElementById("butlerHint");if(h)h.textContent="已选图片，可补充说明后发送（如“这是一张电影票，帮我记录”）";};r.readAsDataURL(f);}
+
+function butlerVoice(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast("当前浏览器不支持语音输入（建议用 Chrome / Edge 桌面端）");return;}if(butlerListening){try{butlerRecog&&butlerRecog.stop();}catch(e){}return;}const rec=new SR();rec.lang="zh-CN";rec.interimResults=false;rec.maxAlternatives=1;butlerRecog=rec;butlerListening=true;const btn=document.getElementById("butlerVoice");rec.onstart=function(){if(btn)btn.classList.add("listening");const h=document.getElementById("butlerHint");if(h)h.textContent="🎤 正在聆听…（再次点麦克风结束）";};rec.onresult=function(e){const t=e.results[0][0].transcript;const inp=document.getElementById("butlerInput");if(inp)inp.value=t;};rec.onend=function(){butlerListening=false;if(btn)btn.classList.remove("listening");const h=document.getElementById("butlerHint");if(h)h.textContent="";const inp=document.getElementById("butlerInput");if(inp&&inp.value.trim())butlerSend();};rec.onerror=function(e){butlerListening=false;if(btn)btn.classList.remove("listening");const h=document.getElementById("butlerHint");if(h)h.textContent="语音识别："+(e.error||"失败");};try{rec.start();}catch(e){butlerListening=false;}}
+
+function butlerBuildMsgs(){const out=[{role:"system",content:BUTLER_SYS}];butlerChat.forEach(function(m){if(m._typing||m.role==="system")return;if(m.role==="user"){const parts=[];if(m.img)parts.push({type:"image_url",image_url:{url:m.img}});const txt=(m.text&&m.text!=="(图片)")?m.text:"（请看这张图片）";parts.push({type:"text",text:txt});out.push({role:"user",content:parts});}else{out.push({role:"assistant",content:m.text||""});}});return out;}
+
+function butlerParseCmd(content){const re=/```(?:json)?\s*([\s\S]*?)```/i;const m=content.match(re);let text=content.replace(re,"").trim();let cmd=null;if(m){try{cmd=JSON.parse(m[1].trim());}catch(e){cmd=null;}}if(!text&&cmd)text="好的，我帮你记下了。";if(!text)text=content.trim();return {text:text,cmd:cmd};}
+
+function butlerExecCmd(cmd){const a=cmd&&cmd.action;const p=cmd.payload||{};const ACC_ALIAS={银行卡:"acc_bank",微信:"acc_wechat",支付宝:"acc_alipay",现金:"acc_cash",公积金:"acc_provident",医保:"acc_medical",押金:"acc_deposit_sc",负债:"acc_liability",信用卡:"acc_liability"};try{if(a==="add_book"){const title=(p.title||"").trim();if(!title)return "⚠️ 缺少书名";S.reading.push({title:title,author:(p.author||"").trim(),status:p.status||"待读",tags:(p.tags||"").trim(),excerpts:[],notes:[],rating:0,progress:0,intro:"",version:"",authorInfo:""});save();render();return "📚 已添加书籍：《"+title+"》";}if(a==="add_film"){const title=(p.title||"").trim();if(!title)return "⚠️ 缺少片名";const st=p.type==="在看"?"在看":(p.type==="已看"?"已看":"待看");S.film.push({title:title,cat:p.cat||"电影",type:st,status:st,tags:(p.tags||"").trim(),rating:0,date:"",review:"",reviewBody:"",reviewDate:"",spoiler:false,quotes:"",intro:"",cast:"",releaseDate:"",douban:"",poster:""});save();render();return "🎬 已添加影片：《"+title+"》";}if(a==="add_ledger"){const type=p.type;const amount=+p.amount;if(!type||!(amount>0))return "⚠️ 账单需要 type(in/out/transfer) 与 amount";if(!S.ledger)S.ledger=[];let accId=p.account||(type==="in"?"acc_bank":"acc_wechat");if(ACC_ALIAS[accId])accId=ACC_ALIAS[accId];const rec={id:"butler_"+Date.now(),date:normDate(p.date||todayStr()),type:type==="transfer"?"transfer":(type==="in"?"in":"out"),cat:((p.cat||(type==="in"?"收入":"支出"))+"").trim()||"其他",amount:amount,accountId:accId,method:"管家",merchant:(p.merchant||"").trim(),note:(p.note||"").trim(),src:"管家",createdAt:Date.now(),img:""};if(type==="transfer")rec.toAccountId=ACC_ALIAS[p.toAccount]||p.toAccount||"acc_liability";S.ledger.push(rec);save();render();return "💰 已记一笔："+(type==="in"?"收入":type==="transfer"?"转账":"支出")+" ¥"+amount+(p.merchant?"（"+p.merchant+"）":"");}if(a==="add_task"){const text=(p.text||"").trim();if(!text)return "⚠️ 缺少任务内容";if(!S.months)S.months={};if(!S.months[S.currentMonth])S.months[S.currentMonth]={tasks:[]};if(!S.months[S.currentMonth].tasks)S.months[S.currentMonth].tasks=[];const mk=S.months[S.currentMonth];const id=Math.max(0,...mk.tasks.map(function(t){return t.id;}))+1;mk.tasks.push({id:id,text:text,xp:(+p.xp||80),done:false});save();render();return "📌 已添加任务："+text;}if(a==="add_knowledge"){const topic=(p.topic||"").trim();if(!topic)return "⚠️ 缺少主题";if(!S.knowledge)S.knowledge=[];S.knowledge.push({topic:topic,cat:(p.cat||"").trim(),src:"管家",note:(p.content||"").trim()});save();render();return "🧠 已添加知识："+topic;}if(a==="set_book_status"){const title=(p.title||"").trim();if(!title)return "⚠️ 缺少书名";const b=S.reading.find(function(x){return x.title===title;});if(!b)return "⚠️ 没找到《"+title+"》";b.status=p.status||"在读";save();render();return "📚 《"+title+"》状态改为："+b.status;}return "⚠️ 未识别的操作："+(a||"");}catch(e){return "⚠️ 执行出错："+e.message;}}
+
+async function butlerAsk(){const ai=JSON.parse(localStorage.getItem("wb_ai_cfg")||"{}");if(!(ai.key&&ai.base&&ai.model)){butlerChat.push({role:"assistant",text:"我还没有 AI 配置。请到「设置 → AI 大模型配置」填写 API Key、Base URL 和模型名，保存后我就能上岗啦。"});butlerSave();butlerRenderMsgs();return;}butlerBusy=true;butlerChat.push({role:"assistant",text:"…",_typing:true});butlerRenderMsgs();const h=document.getElementById("butlerHint");if(h)h.textContent="管家思考中…";try{const msgs=butlerBuildMsgs();const base=ai.base.replace(/\/+$/,"");const url=base+"/chat/completions";const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+ai.key},body:JSON.stringify({model:ai.model,messages:msgs,temperature:0.4})});if(!res.ok){const t=await res.text().catch(function(){return "";});throw new Error("HTTP "+res.status+" "+t.slice(0,200));}const data=await res.json();let content="";if(data&&data.choices&&data.choices[0]&&data.choices[0].message)content=data.choices[0].message.content||"";else if(data&&data.choices&&data.choices[0]&&data.choices[0].text)content=data.choices[0].text;else throw new Error("返回格式异常");butlerChat=butlerChat.filter(function(m){return !m._typing;});const parsed=butlerParseCmd(content);let actionLabel="";if(parsed.cmd)actionLabel=butlerExecCmd(parsed.cmd);butlerChat.push({role:"assistant",text:parsed.text,action:actionLabel});butlerSave();butlerRenderMsgs();}catch(err){butlerChat=butlerChat.filter(function(m){return !m._typing;});butlerChat.push({role:"assistant",text:"抱歉，调用 AI 出错了："+err.message+"。请检查「设置」里的 AI 配置（Key / Base / 模型）以及网络（部分接口需要可访问的 Base URL，或配置 CORS 代理）。"});butlerSave();butlerRenderMsgs();}finally{butlerBusy=false;const hh=document.getElementById("butlerHint");if(hh)hh.textContent="";}}
 
 // 知识库（独立重做：SM-2 间隔复习队列 + 可编辑条目）
 const AI_CURRICULUM=[
@@ -4804,7 +4858,7 @@ if(!S.settings.theme)S.settings.theme="light";
 if(!S.settings.bg)S.settings.bg="paper";
 if(!S.settings.avatar)S.settings.avatar=DEFAULT_AV;
 if(!S.settings.name)S.settings.name=DEFAULT_NAME;
-if(!S.settings.writerUrl)S.settings.writerUrl="https://writer.fanqie.com/";
+if(!S.settings.writerUrl)S.settings.writerUrl="https://fanqienovel.com/";
 if(S.settings.bgImage===undefined)S.settings.bgImage="";
 if(S.settings.bgBlur===undefined)S.settings.bgBlur=0;
 if(S.settings.bgOpacity===undefined)S.settings.bgOpacity=1;

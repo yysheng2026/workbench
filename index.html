@@ -432,9 +432,6 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 [data-theme="dark"] .room.lit .room-win{background:radial-gradient(circle at 50% 40%,#ffe9a8 0 30%,#e0a93b 31% 100%)}
 /* ---- 首页仪表盘 ---- */
 .home-hero{background:linear-gradient(160deg,var(--card),var(--card2));border:2px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
-.greeting-card{background:linear-gradient(135deg,var(--accent-weak),color-mix(in srgb,var(--accent-weak) 40%,var(--card2)));border:2px solid var(--accent);border-radius:var(--radius);padding:16px 14px;box-shadow:var(--shadow);text-align:center}
-.greeting-text{font-size:var(--fs-xl);font-weight:700;color:var(--accent-ink);letter-spacing:-.3px;line-height:1.3}
-.greeting-sub{font-size:13px;color:var(--muted);margin-top:6px}
 .home-statusbar{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:8px}
 .home-datecard{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .hdc-avatar{width:48px;height:48px;border-radius:50%;background:var(--accent-weak);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-size:24px;flex:0 0 auto}
@@ -1329,7 +1326,7 @@ function applyBg(){const body=document.body;if(!body)return;
   layer.style.filter='blur('+blur+'px)';
   layer.style.opacity=opacity;
  }}
-function updateWbTitle(){const el=document.getElementById("wbTitle");if(el){const st=S.settings||{};el.innerHTML=esc(st.avatar||"🗺")+" "+esc(st.name||"我的闯关工作台");}}
+function updateWbTitle(){const el=document.getElementById("wbTitle");if(el){el.textContent=greetingText();}}
 function handleBgUpload(file){
  if(!file)return;
  if(file.size>5*1024*1024){toast("图片太大，请选 5MB 以下");return;}
@@ -1651,6 +1648,7 @@ const RENO_SUB=[{k:"today",t:"📌 今日待确认"},{k:"stages",t:"🪜 阶段�
  {k:"appliances",t:"🔌 家电家具"},{k:"pitfalls",t:"🕳 踩坑避坑"},{k:"social",t:"📸 自媒体日更"},{k:"softdecor",t:"🛋 软装搭配"},{k:"smart",t:"📡 全屋智能(米家)"},{k:"log",t:"📅 施工日志"}];
 function renderReno(main){
  const card=document.createElement("div");card.className="card";
+ card.innerHTML=`<h2 style="margin-bottom:10px">🏗 装修闯关</h2>`;
  const subbar=document.createElement("div");subbar.className="sub";
  RENO_SUB.forEach(s=>{const b=document.createElement("button");b.textContent=s.t;b.className=(sub===s.k?"active":"");
   b.onclick=()=>{sub=s.k;render();};subbar.appendChild(b);});
@@ -2160,7 +2158,7 @@ function renderHome(main){
    <div class="home-hero-left">
     <div class="home-datecard">
      <div class="hdc-avatar">${esc(S.settings.avatar||"🗺")}</div>
-     <div class="hdc-main"><div class="hdc-name">${esc(S.settings.name||"我的闯关工作台")}</div><div class="hdc-date">${ds.y}.${ds.m}.${ds.d} · 周${ds.wd}</div></div>
+     <div class="hdc-main"><div class="hdc-name">首页</div><div class="hdc-date">${ds.y}.${ds.m}.${ds.d} · 周${ds.wd}</div></div>
      <div class="hdc-lv">Lv.${li.l}</div>
     </div>
     <div class="home-statgrid">
@@ -2178,10 +2176,6 @@ function renderHome(main){
    </div>
   </div>`;
  main.appendChild(hero);
- // 时间问候语
- const greet=document.createElement("div");greet.className="card greeting-card grid-wide";
- greet.innerHTML=`<div class="greeting-text">${esc(greetingText())}</div><div class="greeting-sub">${esc(homeDateStr().m+"/"+homeDateStr().d+" · 周"+homeDateStr().wd)} · 今天想做点什么？</div>`;
- main.insertBefore(greet,hero);
  // 今日能量语
  const qEl=document.createElement("div");qEl.className="card";
  qEl.innerHTML=`<div class="quote"><div class="q">🌟 今日能量</div>${esc(dailyQuote())}</div>`;
@@ -2311,7 +2305,7 @@ const upN=holdings.filter(h=>{const q=_qp(h.code);return q&&typeof q.changePct==
 const downN=holdings.filter(h=>{const q=_qp(h.code);return q&&typeof q.changePct==="number"&&q.changePct<0;}).length;
 const reqGain=totalPl<0?(-totalPl)/totalMv*100:0;
 const bar=document.createElement("div");bar.className="card stock-bar";
-bar.innerHTML=`<div class="sb-grid">
+bar.innerHTML=`<h2>📈 股票持仓</h2><div class="sb-grid">
   <div class="sb"><span>总市值</span><b>¥${totalMv.toLocaleString()}</b></div>
   <div class="sb"><span>浮动盈亏</span><b style="color:${isLoss?'var(--ok)':'var(--bad)'}">${totalPl>=0?'+':''}¥${totalPl.toLocaleString()}</b></div>
   <div class="sb"><span>回本进度</span><b>${recoveryPct}%</b></div>
@@ -4746,7 +4740,8 @@ function renderKnowledge(main){
  const aiTotal=AI_CURRICULUM.reduce((a,m)=>a+1+m.s.length,0);
  const aiDoneCount=AI_CURRICULUM.reduce((a,m)=>a+(aiDone.has(m.n)?1:0)+m.s.filter(s=>aiDone.has(m.n+'/'+s)).length,0);
  const aiCard=document.createElement("div");aiCard.className="card grid-wide";
- let mm=`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px"><div style="font-weight:700;font-size:16px;color:var(--warm)">🎯 阶段性目标：系统学 AI（小白起步）</div><div class="goalbar" style="flex:1;min-width:160px"><i style="width:${aiTotal?Math.round(aiDoneCount/aiTotal*100):0}%"></i></div><span style="font-size:12px;color:var(--muted)">${aiDoneCount}/${aiTotal}</span></div>`;
+ let mm=`<h2>🧠 AI 学习作战室</h2>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px"><div style="font-weight:700;font-size:16px;color:var(--warm)">🎯 阶段性目标：系统学 AI（小白起步）</div><div class="goalbar" style="flex:1;min-width:160px"><i style="width:${aiTotal?Math.round(aiDoneCount/aiTotal*100):0}%"></i></div><span style="font-size:12px;color:var(--muted)">${aiDoneCount}/${aiTotal}</span></div>`;
  mm+=`<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:stretch">
    <div style="flex:0 0 auto;align-self:center;background:var(--warm);color:#fff;border-radius:14px;padding:14px 16px;font-weight:700;font-size:15px;text-align:center;line-height:1.4">🧠 AI<br>入门地图</div>
    <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:8px;border-left:3px solid var(--line);padding-left:12px">`+

@@ -1002,10 +1002,19 @@ function migrate(s){
  (s.film||[]).forEach(f=>{if(!f.cat||f.cat==="其他"){const t=(f.type||"").split("/")[0].trim();if(t)f.cat=t;}});
  // 记账：旧 S.account 拆为 多账户(S.accounts) + 流水(S.ledger) + 目标(S.goals)（幂等）
  if(!s.accounts)s.accounts=defaultAccounts();
- // 幂等补全新增默认账户（如养老金、医保），不覆盖已有账户
+ // 幂等补全新增默认账户（如养老金、医保），并同步外部账户真实余额/月度流水
  const _defAcc=defaultAccounts();
- (s.accounts||[]).forEach(a=>{if(a.type==="provident"&&!a.monthlyIn)a.monthlyIn=0;if(a.type==="provident"&&!a.monthlyOut)a.monthlyOut=0;});
- _defAcc.forEach(d=>{if(!s.accounts.find(a=>a.id===d.id)){s.accounts.push(JSON.parse(JSON.stringify(d)));}});
+ const syncIds=["acc_provident","acc_medical","acc_pension"];
+ _defAcc.forEach(d=>{
+  const ex=s.accounts.find(a=>a.id===d.id);
+  if(!ex){s.accounts.push(JSON.parse(JSON.stringify(d)));return;}
+  if(syncIds.indexOf(d.id)>=0){
+   ex.name=d.name;ex.type=d.type;ex.note=d.note;
+   if(d.opening!==undefined)ex.opening=d.opening;
+   if(d.monthlyIn!==undefined)ex.monthlyIn=d.monthlyIn;
+   if(d.monthlyOut!==undefined)ex.monthlyOut=d.monthlyOut;
+  }
+ });
  if(!Array.isArray(s.ledger))s.ledger=[];
  if(!Array.isArray(s.goals))s.goals=[];
  if(!Array.isArray(s.diary))s.diary=[];

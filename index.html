@@ -234,6 +234,38 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .shot-list{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
 .shot-tag{font-size:11px;padding:3px 8px;border-radius:10px;background:#e3d4f0;color:#5a3a6a}
 @media(max-width:680px){.stamps{grid-template-columns:repeat(3,1fr)}.nav{width:118px}}
+/* 首页：Hero + 动态 双栏 / 时间轴分区 */
+.home-hero-grid{display:block}
+.home-hero-right{margin-top:12px}
+.hr-title{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.home-activity{max-height:220px;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.tl-section{margin-top:12px}
+.tl-h{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.tl-box{background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:10px;font-size:13px;line-height:1.8}
+/* 我家：子导航状态条 / 设备卡 / 物品卡网格 */
+.myhome-badge{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.myhome-badge .mb{font-size:11px;padding:3px 8px;border-radius:999px;background:var(--card2);border:1px solid var(--line);color:var(--accent-ink);white-space:nowrap}
+.myhome-badge .mb.warn{background:var(--accent-weak);border-color:var(--accent);font-weight:600}
+.dev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+.dev-card{background:var(--card);border:2px dashed var(--line);border-radius:12px;padding:10px}
+.dev-card .dn{font-weight:700;color:var(--accent-ink);font-size:14px}
+.dev-card .dr{font-size:12px;color:var(--muted)}
+.dev-card .ds{font-size:12px;margin-top:4px}
+.stk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:10px}
+.stk-card{background:var(--card);border:2px dashed var(--line);border-radius:12px;padding:10px}
+.stk-card .sn{font-weight:700;color:var(--accent-ink);font-size:14px;display:flex;justify-content:space-between;gap:6px}
+.stk-card .srow{font-size:12px;color:var(--muted);margin-top:3px;display:flex;justify-content:space-between}
+/* 写作：合并仪表盘工具区 */
+.write-tools{display:block;margin-top:14px;gap:14px}
+.write-tool{background:var(--card2);border:2px dashed var(--line);border-radius:12px;padding:10px;margin-top:10px}
+/* 体态：总览 + 路线 合并双栏 */
+.fit-merge{display:block}
+.fit-merge-right{margin-top:12px}
+/* 股市：补仓逐支 */
+.be-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dotted #ece3d6}
+.be-name{flex:0 0 120px;font-size:13px;color:var(--accent-ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.be-in{display:flex;align-items:center;gap:6px;flex:1}
+.be-out{flex:1;min-width:0}
 /* 桌面宽屏布局（≥1024px）：横版网格。手机竖屏与 PWA 桌面图标打开时由 max-width:680px 控制，不受影响 */
 @media(min-width:1024px){
  .wrap{max-width:1280px;padding:20px 24px 90px}
@@ -249,6 +281,14 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  .card.grid-wide{grid-column:1/-1;margin-bottom:0}
  .cat-grid{grid-template-columns:repeat(4,1fr)}
  .stat-strip{gap:10px}
+ .home-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch}
+ .home-hero-right{margin-top:0;border-left:2px dashed var(--line);padding-left:22px}
+ .home-activity{max-height:180px}
+ .fit-merge{display:flex;gap:22px;align-items:flex-start}
+ .fit-merge-left{flex:1;min-width:0}
+ .fit-merge-right{flex:1;min-width:0;border-left:2px dashed var(--line);padding-left:22px}
+ .write-tools{display:grid;grid-template-columns:1fr 1fr}
+ .write-tool{margin-top:0}
  .pie-wrap{gap:22px}
  .pie-wrap>div:first-child{flex:0 0 150px!important}
  header h1{font-size:30px}
@@ -644,7 +684,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 
 <script type="application/json" id="morningSeed">{"text": "一句话结论：周日无强制现场节点，原三大 P0（水电验收 / 地插拍板 / 窗户定性）已全部闭环；今日轻松日——若有师傅到场养护，顺带确认地面空鼓与主卧胶补缝。\n\n🔴 今日必办（P0）\n🔴 无新增紧急项。若周日恰有师傅到场（泥水 / 养护），顺带现场确认 ⑦ 地面空鼓 与 ⑬ 主卧胶补缝 是否已处理。\n\n🟠 关键推进（P1）\n🟠 ⑤ 瓷砖铺贴排期：微信催陶工给明确排期（贴砖是复尺 + 全屋定制签约前置，不能一直悬着）。\n🟠 ⑥ 海棠角文字尺寸：催装修公司出文字版尺寸（加工厂看不懂 CAD，卡点）。\n🟠 ⑦ 地面空鼓：与师傅确认是否需重做（备注自相矛盾）。\n🟠 ⑧ 壹玖效果图：暂停催促、待贴砖推进；标注仍未终版，不视为已确认。\n\n🟡 顺手跟（P2）\n🟡 ⑨ 全屋定制签约：待贴砖完成 + 诗尼曼 / 派雅复尺后启动（暂挂起不催）。\n🟡 ⑩ 派雅退门：退房间门 + 卫生间门。\n🟡 ⑪ 预算超支统筹：当前超支 ¥30,684.46（+15.34%），持续压缩软装 / 家具待付空间。\n\n💰 预算：总超支 ¥30,684.46（+15.34%）\n\n详细复盘见 装修进度日报_2026-08-08.md"}</script>
 
-<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 33.51, "name": "紫金矿业", "open": 35.66, "high": 35.77, "low": 33.51, "preClose": 35.45, "change": -1.94, "changePct": -5.47, "amplitude": 6.38, "volumeRatio": 1.41, "amount": 1260742.0, "time": "20260811141638"}, "sh601717": {"price": 15.88, "name": "中创智领", "open": 16.3, "high": 16.47, "low": 15.88, "preClose": 16.03, "change": -0.15, "changePct": -0.94, "amplitude": 3.68, "volumeRatio": 1.23, "amount": 29746.0, "time": "20260811141639"}, "sh600879": {"price": 15.68, "name": "航天电子", "open": 15.65, "high": 15.87, "low": 15.29, "preClose": 16.45, "change": -0.77, "changePct": -4.68, "amplitude": 3.53, "volumeRatio": 1.22, "amount": 151771.0, "time": "20260811141641"}, "sh600501": {"price": 14.77, "name": "航天晨光", "open": 14.85, "high": 14.85, "low": 14.31, "preClose": 15.08, "change": -0.31, "changePct": -2.06, "amplitude": 3.58, "volumeRatio": 0.97, "amount": 7502.0, "time": "20260811141641"}, "sz002270": {"price": 20.54, "name": "华明装备", "open": 20.2, "high": 21.2, "low": 20.02, "preClose": 20.3, "change": 0.24, "changePct": 1.18, "amplitude": 5.81, "volumeRatio": 1.08, "amount": 38646.0, "time": "20260811141639"}, "sz000429": {"price": 13.33, "name": "粤高速Ａ", "open": 13.2, "high": 13.4, "low": 13.1, "preClose": 13.25, "change": 0.08, "changePct": 0.6, "amplitude": 2.26, "volumeRatio": 0.95, "amount": 13259.0, "time": "20260811141639"}, "sh605166": {"price": 8.83, "name": "聚合顺", "open": 8.89, "high": 8.97, "low": 8.79, "preClose": 8.86, "change": -0.03, "changePct": -0.34, "amplitude": 2.03, "volumeRatio": 0.91, "amount": 3009.0, "time": "20260811141640"}, "sh600343": {"price": 19.76, "name": "航天动力", "open": 19.58, "high": 19.99, "low": 19.36, "preClose": 20.7, "change": -0.94, "changePct": -4.54, "amplitude": 3.04, "volumeRatio": 1.23, "amount": 58883.0, "time": "20260811141639"}, "sz002997": {"price": 27.37, "name": "瑞鹄模具", "open": 27.6, "high": 27.6, "low": 27.23, "preClose": 27.49, "change": -0.12, "changePct": -0.44, "amplitude": 1.35, "volumeRatio": 0.69, "amount": 3297.0, "time": "20260811141639"}, "sz159928": {"price": 0.682, "name": "消费ETF汇添富", "open": 0.689, "high": 0.69, "low": 0.681, "preClose": 0.69, "change": -0.008, "changePct": -1.16, "amplitude": 1.3, "volumeRatio": 0.78, "amount": 31734.0, "time": "20260811141639"}, "sh513130": {"price": 0.602, "name": "恒生科技ETF华泰柏瑞", "open": 0.61, "high": 0.613, "low": 0.602, "preClose": 0.607, "change": -0.005, "changePct": -0.82, "amplitude": 1.81, "volumeRatio": 0.86, "amount": 187712.0, "time": "20260811141638"}, "sh562800": {"price": 0.98, "name": "稀有金属ETF嘉实", "open": 1.0, "high": 1.003, "low": 0.98, "preClose": 1.011, "change": -0.031, "changePct": -3.07, "amplitude": 2.27, "volumeRatio": 0.9, "amount": 28675.0, "time": "20260811141639"}, "sh601012": {"price": 12.85, "name": "隆基绿能", "open": 12.94, "high": 12.99, "low": 12.82, "preClose": 12.94, "change": -0.09, "changePct": -0.7, "amplitude": 1.31, "volumeRatio": 0.66, "amount": 78169.0, "time": "20260811141638"}}, "news": [], "updated": "2026-08-11 14:16", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
+<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 33.18, "name": "紫金矿业", "open": 35.66, "high": 35.77, "low": 33.11, "preClose": 35.45, "change": -2.27, "changePct": -6.4, "amplitude": 7.5, "volumeRatio": 1.41, "amount": 1529874.0, "time": "20260811152638"}, "sh601717": {"price": 15.86, "name": "中创智领", "open": 16.3, "high": 16.47, "low": 15.8, "preClose": 16.03, "change": -0.17, "changePct": -1.06, "amplitude": 4.18, "volumeRatio": 1.17, "amount": 34450.0, "time": "20260811152638"}, "sh600879": {"price": 15.53, "name": "航天电子", "open": 15.65, "high": 15.87, "low": 15.29, "preClose": 16.45, "change": -0.92, "changePct": -5.59, "amplitude": 3.53, "volumeRatio": 1.2, "amount": 182291.0, "time": "20260811152639"}, "sh600501": {"price": 14.66, "name": "航天晨光", "open": 14.85, "high": 14.85, "low": 14.31, "preClose": 15.08, "change": -0.42, "changePct": -2.79, "amplitude": 3.58, "volumeRatio": 0.93, "amount": 8783.0, "time": "20260811152639"}, "sz002270": {"price": 20.41, "name": "华明装备", "open": 20.2, "high": 21.2, "low": 20.02, "preClose": 20.3, "change": 0.11, "changePct": 0.54, "amplitude": 5.81, "volumeRatio": 1.01, "amount": 43782.0, "time": "20260811152545"}, "sz000429": {"price": 13.29, "name": "粤高速Ａ", "open": 13.2, "high": 13.4, "low": 13.1, "preClose": 13.25, "change": 0.04, "changePct": 0.3, "amplitude": 2.26, "volumeRatio": 0.95, "amount": 16137.0, "time": "20260811152600"}, "sh605166": {"price": 8.81, "name": "聚合顺", "open": 8.89, "high": 8.97, "low": 8.77, "preClose": 8.86, "change": -0.05, "changePct": -0.56, "amplitude": 2.26, "volumeRatio": 0.89, "amount": 3584.0, "time": "20260811152638"}, "sh600343": {"price": 19.58, "name": "航天动力", "open": 19.58, "high": 19.99, "low": 19.36, "preClose": 20.7, "change": -1.12, "changePct": -5.41, "amplitude": 3.04, "volumeRatio": 1.23, "amount": 72165.0, "time": "20260811152639"}, "sz002997": {"price": 27.21, "name": "瑞鹄模具", "open": 27.6, "high": 27.6, "low": 27.2, "preClose": 27.49, "change": -0.28, "changePct": -1.02, "amplitude": 1.46, "volumeRatio": 0.77, "amount": 4481.0, "time": "20260811152615"}, "sz159928": {"price": 0.681, "name": "消费ETF汇添富", "open": 0.689, "high": 0.69, "low": 0.68, "preClose": 0.69, "change": -0.009, "changePct": -1.3, "amplitude": 1.45, "volumeRatio": 0.74, "amount": 36495.0, "time": "20260811152600"}, "sh513130": {"price": 0.602, "name": "恒生科技ETF华泰柏瑞", "open": 0.61, "high": 0.613, "low": 0.6, "preClose": 0.607, "change": -0.005, "changePct": -0.82, "amplitude": 2.14, "volumeRatio": 0.81, "amount": 215945.0, "time": "20260811152639"}, "sh562800": {"price": 0.973, "name": "稀有金属ETF嘉实", "open": 1.0, "high": 1.003, "low": 0.972, "preClose": 1.011, "change": -0.038, "changePct": -3.76, "amplitude": 3.07, "volumeRatio": 0.97, "amount": 37464.0, "time": "20260811152639"}, "sh601012": {"price": 12.79, "name": "隆基绿能", "open": 12.94, "high": 12.99, "low": 12.78, "preClose": 12.94, "change": -0.15, "changePct": -1.16, "amplitude": 1.62, "volumeRatio": 0.72, "amount": 102668.0, "time": "20260811152639"}}, "news": [], "updated": "2026-08-11 15:26", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
 
 <script>
 const MORNING_FALLBACK=`🔴 今天最重要：水电验收前再核一遍智能点位（风管机/米家开关均在待付清单）。
@@ -2074,64 +2114,62 @@ function renderHome(main){
  const ds=homeDateStr();
  const readDone=S.reading.filter(b=>b.status==="已读").length;
  const filmDone=S.film.filter(f=>f.status==="已看").length;
- const hero=document.createElement("div");hero.className="card home-hero";
+ const act=recentActivity();
+ const hero=document.createElement("div");hero.className="card home-hero grid-wide";
  hero.innerHTML=`<div class="home-statusbar"><span>9:41</span><span class="sb-right">📶&nbsp;&nbsp;🔋</span></div>
-  <div class="home-datecard">
-   <div class="hdc-avatar">${esc(S.settings.avatar||"🗺")}</div>
-   <div class="hdc-main"><div class="hdc-name">${esc(S.settings.name||"我的闯关工作台")}</div><div class="hdc-date">${ds.y}.${ds.m}.${ds.d} · 周${ds.wd}</div></div>
-   <div class="hdc-lv">Lv.${li.l}</div>
-  </div>
-  <div class="home-statgrid">
-   <div class="home-stat"><b>${readDone}</b><span>📚 已读</span></div>
-   <div class="home-stat"><b>${fmtK(writingWords())}</b><span>✍️ 写作</span></div>
-   <div class="home-stat"><b>${S.fitness.streak}</b><span>💪 健身</span></div>
-   <div class="home-stat"><b>${filmDone}</b><span>🎬 已看</span></div>
-   <div class="home-stat"><b>${checkinStreak()}</b><span>🔥 打卡</span></div>
-   <div class="home-stat" onclick="view='myhome';render()" style="cursor:pointer"><b>🏠</b><span>我家</span></div>
+  <div class="home-hero-grid">
+   <div class="home-hero-left">
+    <div class="home-datecard">
+     <div class="hdc-avatar">${esc(S.settings.avatar||"🗺")}</div>
+     <div class="hdc-main"><div class="hdc-name">${esc(S.settings.name||"我的闯关工作台")}</div><div class="hdc-date">${ds.y}.${ds.m}.${ds.d} · 周${ds.wd}</div></div>
+     <div class="hdc-lv">Lv.${li.l}</div>
+    </div>
+    <div class="home-statgrid">
+     <div class="home-stat"><b>${readDone}</b><span>📚 已读</span></div>
+     <div class="home-stat"><b>${fmtK(writingWords())}</b><span>✍️ 写作</span></div>
+     <div class="home-stat"><b>${S.fitness.streak}</b><span>💪 健身</span></div>
+     <div class="home-stat"><b>${filmDone}</b><span>🎬 已看</span></div>
+     <div class="home-stat"><b>${checkinStreak()}</b><span>🔥 打卡</span></div>
+     <div class="home-stat" onclick="view='myhome';render()" style="cursor:pointer"><b>🏠</b><span>我家</span></div>
+    </div>
+   </div>
+   <div class="home-hero-right">
+    <div class="hr-title">📰 最近动态</div>
+    <div class="home-activity">${act.length?act.map(x=>`<div class="act-item"><span class="act-ico">${x.ico}</span><span class="act-txt">${esc(x.txt)}</span><span class="act-date">${esc(x.t||"")}</span></div>`).join(""):'<div class="act-empty">还没有动态，去打卡解锁吧～</div>'}</div>
+   </div>
   </div>`;
  main.appendChild(hero);
- // 最近动态
- const act=recentActivity();
- const ac=document.createElement("div");ac.className="card";
- ac.innerHTML=`<h2>📰 最近动态</h2><div class="home-activity">${act.length?act.map(x=>`<div class="act-item"><span class="act-ico">${x.ico}</span><span class="act-txt">${esc(x.txt)}</span><span class="act-date">${esc(x.t||"")}</span></div>`).join(""):'<div class="act-empty">还没有动态，去打卡解锁吧～</div>'}</div>`;
- main.appendChild(ac);
  // 今日能量语
  const qEl=document.createElement("div");qEl.className="card";
  qEl.innerHTML=`<div class="quote"><div class="q">🌟 今日能量</div>${esc(dailyQuote())}</div>`;
  main.appendChild(qEl);
  // 专注番茄钟
  renderFocusCard(main);
- // 今日并行计划 + 固定节奏
+ // 今日 / 本周 / 本月 时间轴
  const dayNames=["日","一","二","三","四","五","六"];
  const todayIdx=new Date().getDay();
  const isWed=todayIdx===3;
- const rhythm=document.createElement("div");rhythm.className="card";
+ const done=mk.tasks.filter(t=>t.done).length,tot=mk.tasks.length,pct=tot?Math.round(done/tot*100):0;
  let planItems=[];
  if(isWed) planItems.push("🕐 周三下午去覔书店：带一本候选书，阅读间隙做「靠墙站 3 min」矫正驼背");
  planItems.push("🌙 今晚观影时：梳头 100 次 + 死虫式 2 组 × 10 次（边看电影边练核心）");
  planItems.push("🧠 碎片时间：刷 1 条股票知识卡片，而不是行情");
- rhythm.innerHTML=`<h2>🎯 今日并行计划</h2>
-  <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:10px;font-size:13px;line-height:1.8;margin-bottom:10px">
-   ${planItems.map(x=>`<div>${x}</div>`).join("")}
+ const rhythm=document.createElement("div");rhythm.className="card grid-wide";
+ rhythm.innerHTML=`<h2>🗺 今日 / 本周 / 本月</h2>
+  <div class="tl-section"><div class="tl-h">🎯 今日并行计划</div><div class="tl-box">${planItems.map(x=>`<div>${x}</div>`).join("")}</div></div>
+  <div class="tl-section"><div class="tl-h">📅 本周固定节奏</div>
+   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">${dayNames.map((d,i)=>{const today=i===todayIdx,wknd=i===6,active=today||wknd;return `<div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px ${active?'solid var(--accent)':'dashed var(--line)'};background:${active?'var(--accent-weak)':'transparent'};color:${active?'var(--accent-ink)':'var(--muted)'}">${d}</div>`;}).join("")}</div>
+   <div style="font-size:12px;color:var(--accent-ink)"><div>📍 每周三下午：覔书店看书</div><div>🏛 每周六：安排一天去博物馆 / 文化馆学习（充电日）</div><div>🎬 每天晚上：电影 / 纪录片（本月主题：${esc(mk.filmTheme||"人文历史纪录片")}）</div></div>
   </div>
-  <h3>📅 本周固定节奏</h3>
-  <div style="display:flex;gap:6px;flex-wrap:wrap">
-   ${dayNames.map((d,i)=>{const today=i===todayIdx,wknd=i===6,active=today||wknd;return `<div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px ${active?'solid var(--accent)':'dashed var(--line)'};background:${active?'var(--accent-weak)':'transparent'};color:${active?'var(--accent-ink)':'var(--muted)'}">${d}</div>`;}).join("")}
-  </div>
-  <div style="margin-top:8px;font-size:12px;color:var(--accent-ink)">
-   <div>📍 每周三下午：覔书店看书</div>
-   <div>🏛 每周六：安排一天去博物馆 / 文化馆学习（充电日）</div>
-   <div>🎬 每天晚上：电影 / 纪录片（本月主题：${esc(mk.filmTheme||"人文历史纪录片")}）</div>
+  <div class="tl-section"><div class="tl-h">🗺 本月主线（${S.currentMonth}）</div>
+   <div class="qtitle">${esc(mk.main)}</div>
+   <div class="reward">🎁 ${esc(mk.reward)}</div>
+   <div style="display:flex;gap:10px;align-items:center;margin:6px 0"><div class="ring" style="--p:${pct}">${pct}%</div><div class="xptxt">支线 ${done}/${tot}</div></div>
+   <div style="margin:8px 0;font-size:13px;color:var(--accent-ink)">🎬 本月观影主题：<input id="ft" value="${esc(mk.filmTheme||"")}" style="border:2px dashed var(--line);border-radius:8px;padding:3px 6px;font-family:inherit;font-size:12px;width:150px"><button class="btn sm" onclick="setFilmTheme()">保存</button></div>
+   <div id="tl"></div>
+   <div class="add"><input id="nt" placeholder="加一条支线…"><select id="nx"><option>80</option><option>120</option><option>150</option><option>200</option><option>300</option></select><button class="btn" onclick="addTask()">添加</button></div>
   </div>`;
  main.appendChild(rhythm);
- const done=mk.tasks.filter(t=>t.done).length,tot=mk.tasks.length,pct=tot?Math.round(done/tot*100):0;
- const q=document.createElement("div");q.className="card";
- q.innerHTML=`<h2>🗺 本月主线（${S.currentMonth}）</h2><div class="qtitle">${esc(mk.main)}</div>
-  <div class="reward">🎁 ${esc(mk.reward)}</div>
-  <div style="display:flex;gap:10px;align-items:center;margin:6px 0"><div class="ring" style="--p:${pct}">${pct}%</div><div class="xptxt">支线 ${done}/${tot}</div></div>
-  <div style="margin:8px 0;font-size:13px;color:var(--accent-ink)">🎬 本月观影主题：<input id="ft" value="${esc(mk.filmTheme||"")}" style="border:2px dashed var(--line);border-radius:8px;padding:3px 6px;font-family:inherit;font-size:12px;width:150px"><button class="btn sm" onclick="setFilmTheme()">保存</button></div>
-  <div id="tl"></div><div class="add"><input id="nt" placeholder="加一条支线…"><select id="nx"><option>80</option><option>120</option><option>150</option><option>200</option><option>300</option></select><button class="btn" onclick="addTask()">添加</button></div>`;
- main.appendChild(q);
  const tl=document.getElementById("tl");mk.tasks.forEach(t=>{const d=document.createElement("div");d.className="task"+(t.done?" done":"");
   d.innerHTML=`<div class="cb" onclick="toggle(${t.id},event)">${t.done?'✓':''}</div><div class="txt">${esc(t.text)}</div><div class="xp">+${t.xp}</div>`;tl.appendChild(d);});
 }
@@ -2210,6 +2248,7 @@ function toggleStamp(k){const m=S.months[k];if(!m)return;
   document.getElementById("mTitle").textContent="🎉 补盖成功！";document.getElementById("mBody").innerHTML="盖下 <b>"+esc(m.stampName)+"</b>！<br>"+esc(m.reward||"");document.getElementById("modal").classList.add("show");}}
 
 // 炒股回本
+let STOCK_BE_OPEN=false;
 function renderStocks(main){
  const holdings=S.stocks.holdings.map(h=>{
   const price=priceOf(h.code)||h.price||h.cost;
@@ -2244,7 +2283,7 @@ function renderStocks(main){
  const secMap={};holdings.forEach(h=>{const k=h.sector||"未分类";secMap[k]=(secMap[k]||0)+h.mv;});
  const secs=Object.keys(secMap).map(k=>({k,v:secMap[k]/totalMv*100})).filter(x=>x.k!=="未分类");
  const hotSec=secs.filter(x=>x.v>30);
- const pieCard=document.createElement("div");pieCard.className="card";
+ const pieCard=document.createElement("div");pieCard.className="card grid-wide";
  pieCard.innerHTML=`<h3>🥧 仓位占比（按市值）</h3>
   <div class="pie-wrap">
    <div style="width:120px;height:120px;border-radius:50%;background:${grad};flex:0 0 auto"></div>
@@ -2254,40 +2293,39 @@ function renderStocks(main){
    ${secs.length?`行业分布：`+secs.sort((a,b)=>b.v-a.v).map(s=>`${esc(s.k)} ${s.v.toFixed(0)}%`).join(" · ")+`${hotSec.length?` · <b style="color:var(--bad)">⚠ ${hotSec.map(x=>x.k).join("/")} 集中度>30%</b>`:" · 分散合理"}`:`未填写行业，可在添加持仓时补充 sector 以监控行业集中度`}
   </div>`;
  main.appendChild(pieCard);
- // 回本所需涨幅计算器
+ // 回本所需涨幅（并入摘要卡）
  const reqGain=totalPl<0?(-totalPl)/totalMv*100:0;
- const recCard=document.createElement("div");recCard.className="card";
- recCard.innerHTML=`<h3>🎯 回本所需涨幅</h3>
-  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-   <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(${totalPl<0?'var(--bad)':'var(--ok)'} ${Math.min(100,reqGain)}%,var(--track) 0);display:flex;align-items:center;justify-content:center;flex-direction:column">
-    <div style="font-size:11px;color:var(--muted)">需涨</div><div style="font-size:16px;font-weight:bold;color:var(--accent-ink)">${reqGain.toFixed(1)}%</div></div>
-   <div style="flex:1;min-width:180px;font-size:13px;color:var(--accent-ink)">
-    ${totalPl<0?`当前浮亏 <b style="color:var(--ok)">¥${(-totalPl).toLocaleString()}</b>，市值 ¥${totalMv.toLocaleString()}，需整体上涨 <b>${reqGain.toFixed(1)}%</b> 才回本。`:`当前已盈利，回本目标已达成 ✅`}
-    <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">若再跌 <input id="recDrop" type="number" style="width:64px;padding:3px 6px;border:2px dashed var(--line);border-radius:8px;font-family:inherit;font-size:12px" placeholder="%"> % → <b id="recNew" style="color:var(--bad)"></b></div>
-   </div>
-  </div>
-  <div style="margin-top:8px;font-size:12px;color:var(--muted)">亏损 ↔ 回本所需涨幅对照：亏10%需涨11% · 20%→25% · 30%→43% · 40%→67% · 50%→100%（亏越深越难回）。</div>`;
- main.appendChild(recCard);
- // 补仓后回本价计算器
- const totalShares=holdings.reduce((a,h)=>a+h.shares,0);
- const avgP=totalShares?totalCost/totalShares:0;
+ c.insertAdjacentHTML("beforeend",`<div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)">
+   <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <div style="width:74px;height:74px;border-radius:50%;background:conic-gradient(${totalPl<0?'var(--bad)':'var(--ok)'} ${Math.min(100,reqGain)}%,var(--track) 0);display:flex;align-items:center;justify-content:center;flex-direction:column">
+     <div style="font-size:10px;color:var(--muted)">需涨</div><div style="font-size:14px;font-weight:bold;color:var(--accent-ink)">${reqGain.toFixed(1)}%</div></div>
+    <div style="flex:1;min-width:160px;font-size:13px;color:var(--accent-ink)">
+     ${totalPl<0?`当前浮亏 <b style="color:var(--ok)">¥${(-totalPl).toLocaleString()}</b>，市值 ¥${totalMv.toLocaleString()}，需整体上涨 <b>${reqGain.toFixed(1)}%</b> 才回本。`:`当前已盈利，回本目标已达成 ✅`}
+     <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">若再跌 <input id="recDrop" type="number" style="width:64px;padding:3px 6px;border:2px dashed var(--line);border-radius:8px;font-family:inherit;font-size:12px" placeholder="%"> % → <b id="recNew" style="color:var(--bad)"></b></div>
+    </div>
+   </div></div>`);
+ // 补仓后回本价（逐支，默认折叠）
  const beCard=document.createElement("div");beCard.className="card";
- beCard.innerHTML=`<h3>➕ 补仓后回本价</h3>
-  <div style="font-size:12px;color:var(--muted);margin-bottom:6px">当前均价 <b>¥${avgP.toFixed(3)}</b> · 总股数 <b>${totalShares.toLocaleString()}</b>（补仓可摊低/抬高回本价）</div>
-  <div class="addrow">
-   <input id="beShares" type="number" placeholder="补仓股数" value="${Math.round(totalShares*0.2)||1000}">
-   <input id="bePrice" type="number" placeholder="补仓价" value="${avgP.toFixed(2)}">
-   <button class="btn sm" id="beCalc">算一下</button>
-  </div>
-  <div id="beOut" style="margin-top:8px;font-size:13px;color:var(--accent-ink)"></div>`;
+ let beRows=holdings.map((h,i)=>{
+   const ap=h.price||h.cost;
+   return `<div class="be-row" data-i="${i}">
+     <div class="be-name">${esc(h.name||h.code)} <span style="font-size:11px;color:var(--muted)">${h.code}</span></div>
+     <div class="be-in"><input class="field-in be-sh" type="number" placeholder="补仓股数" value="0" style="width:80px"><input class="field-in be-pr" type="number" placeholder="补仓价" value="${ap.toFixed(2)}" style="width:80px"><span class="be-out"></span></div>
+   </div>`;
+ }).join("");
+ beCard.innerHTML=`<div class="card-head" onclick="STOCK_BE_OPEN=!STOCK_BE_OPEN;render()"><h3 style="margin:0">➕ 补仓后回本价（逐支）</h3><span class="chev" style="font-size:12px">${STOCK_BE_OPEN?'▾ 收起':'▸ 展开（默认收起）'}</span></div>
+  ${STOCK_BE_OPEN?`<div class="note-txt" style="margin:6px 0">逐支填入补仓股数与价格，看每股回本价（=补仓后平均成本）怎么变。</div>${beRows}`:`<div class="note-txt">补仓应按「每一支分别补」才有意义——点开逐支计算。</div>`}`;
  main.appendChild(beCard);
- const beSharesEl=document.getElementById("beShares"),bePriceEl=document.getElementById("bePrice"),beOut=document.getElementById("beOut");
- function calcBE(){const sh=parseFloat(beSharesEl.value)||0;const pr=parseFloat(bePriceEl.value)||0;if(sh<=0||pr<=0){beOut.textContent="请输入补仓股数与价格";return;}
-  const nCost=totalCost+sh*pr,nSh=totalShares+sh,nBE=nCost/nSh;const curP=totalShares?totalMv/totalShares:0;const need=curP>0?((nBE-curP)/curP*100):0;
-  beOut.innerHTML=`补仓后：总成本 <b>¥${Math.round(nCost).toLocaleString()}</b> · 总股数 <b>${Math.round(nSh).toLocaleString()}</b><br>👉 <b style="color:var(--bad)">回本价 ¥${nBE.toFixed(2)}</b>（组合盈亏归零所需卖出价）<br>较当前均价 ¥${curP.toFixed(2)} 需涨 <b>${need>=0?'+':''}${need.toFixed(1)}%</b>`;}
- const beBtn=document.getElementById("beCalc");if(beBtn)beBtn.onclick=calcBE;
- if(beSharesEl)beSharesEl.oninput=calcBE;if(bePriceEl)bePriceEl.oninput=calcBE;
- calcBE();
+ if(STOCK_BE_OPEN){
+   beCard.querySelectorAll('.be-row').forEach(row=>{
+     const i=+row.dataset.i;const h=holdings[i];
+     const sh=row.querySelector('.be-sh'),pr=row.querySelector('.be-pr'),out=row.querySelector('.be-out');
+     const calc=()=>{const a=parseFloat(sh.value)||0;const p=parseFloat(pr.value)||0;if(a<=0||p<=0){out.textContent="";return;}
+       const nBE=(h.shares*h.cost+a*p)/(h.shares+a);const diff=nBE-h.cost;
+       out.innerHTML=`回本价 <b style="color:var(--bad)">¥${nBE.toFixed(2)}</b> <span style="color:${diff<=0?'var(--ok)':'var(--bad)'}">(${diff>=0?'+':''}${diff.toFixed(2)} vs 现成本)</span>`;};
+     sh.oninput=calc;pr.oninput=calc;calc();
+   });
+ }
  const rd=document.getElementById("recDrop");if(rd)rd.oninput=e=>{const x=parseFloat(e.target.value)||0;const nm=totalMv*(1-x/100);const nl=totalCost-nm;document.getElementById("recNew").textContent=nl>0?("需涨 "+(nl/nm*100).toFixed(1)+"% 回本"):"已回本";};
  // 持仓
  const hcard=document.createElement("div");hcard.className="card";
@@ -2341,10 +2379,9 @@ function renderStocks(main){
    return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dotted #ece3d6"><span style="color:var(--accent-ink)">${esc(w.name||w.code)} <span style="color:var(--muted);font-size:11px">${esc(w.code)}</span>${w.note?` <span style="color:var(--muted);font-size:11px">· ${esc(w.note)}</span>`:""}</span><span style="white-space:nowrap"><span style="color:${col}">¥${pr?pr.toFixed(3):"—"} · ${badge}</span> <span style="color:var(--red);cursor:pointer" onclick="delWatch('${w.code}')">✕</span></span></div>`;
  }).join("")+`</div>`:`<div style="color:var(--muted);font-size:13px">暂无自选。在 holdings.json 的 "watchlist" 加代码与买点/卖点，或用下方「添加自选」表单。</div>`);
  main.appendChild(wcard);
- // 盈亏贡献条形图
+ // 盈亏贡献条形图（合并进仓位饼图卡）
  const maxAbs=Math.max(1,...holdings.map(h=>Math.abs(h.pl)));
- const bar=document.createElement("div");bar.className="card";
- bar.innerHTML=`<h3>📊 盈亏贡献（谁在拖后腿）</h3>`+
+ const barHtml=`<h3 style="margin-top:14px">📊 盈亏贡献（谁在拖后腿）</h3>`+
   holdings.slice().sort((a,b)=>a.pl-b.pl).map(h=>{
    const w=Math.round(Math.abs(h.pl)/maxAbs*100);
    const col=h.pl>=0?"var(--bad)":"var(--ok)";
@@ -2354,7 +2391,7 @@ function renderStocks(main){
     <div style="height:10px;background:#f0e9dd;border-radius:6px;overflow:hidden"><div style="height:100%;width:${w}%;background:${col}"></div></div>
    </div>`;
   }).join("");
- main.appendChild(bar);
+ pieCard.insertAdjacentHTML("beforeend",barHtml);
  // 知识点
  const kcard=document.createElement("div");kcard.className="card";
  const kidx=((new Date().getDate()-1)%S.stocks.knowledgeCards.length);
@@ -2501,27 +2538,31 @@ function renderFitness(main){
  const viewIdx=(POS_VIEW>=0&&POS_VIEW<totalIssues)?POS_VIEW:(allDone?0:curIdx);
  const cur=POSTURE_ISSUES[viewIdx];
  const checkedToday=f.lastDone===todayStr();
- // 1. 体态总览 / 当前主攻
- const diag=document.createElement("div");diag.className="card";
- diag.innerHTML=`<h2>🧘 体态训练</h2>
-  <div style="font-size:13px;color:var(--accent-ink);line-height:1.7">每天 15 分钟，一个一个解决体态问题。已完成 <b>${done.length}</b> / ${totalIssues} 个。</div>
-  <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:12px;margin:8px 0">
-   <div style="font-weight:700;color:var(--warm);font-size:18px;letter-spacing:-.2px">${esc(cur.id)}</div>
-   <div style="font-size:12px;color:var(--muted)">根源：${esc(cur.root)}</div>
-   <div style="font-size:13px;color:var(--accent-ink);margin-top:4px"><b>今日主攻：</b>${esc(cur.focus)}</div>
-  </div>`;
- main.appendChild(diag);
- // 2. 体态课程路线图（一个一个攻克）
- const road=document.createElement("div");road.className="card";
+ // 1+2. 体态总览 + 课程路线 合并为一张卡
+ const fr=document.createElement("div");fr.className="card grid-wide";
  let steps=POSTURE_ISSUES.map((x,i)=>{const isDone=done.includes(x.id);const isCur=(i===viewIdx);
   return `<div class="pos-step ${isCur?'active':''} ${isDone?'done':''}" onclick="posGoto(${i})">
     <div class="pos-no">${isDone?'✓':(i+1)}</div>
     <div style="flex:1;min-width:0"><div class="pos-name">${esc(x.id)}</div><div class="pos-sub">${esc(x.focus)}</div></div>
    </div>`;}).join("");
- road.innerHTML=`<h3>🪜 体态课程路线</h3><div class="pos-road">${steps}</div>
-  ${!allDone?`<button class="btn ghost sm" style="margin-top:8px" onclick="posMarkDone()">✅ 标记「${esc(cur.id)}」已攻克，进入下一个</button>`
-   :`<div style="font-size:13px;color:var(--ok);margin-top:6px">🎉 全部体态问题已攻克！继续保持，进入复习循环。</div>`}`;
- main.appendChild(road);
+ fr.innerHTML=`<h2>🧘 体态训练</h2>
+  <div class="fit-merge">
+   <div class="fit-merge-left">
+    <div style="font-size:13px;color:var(--accent-ink);line-height:1.7">每天 15 分钟，一个一个解决体态问题。已完成 <b>${done.length}</b> / ${totalIssues} 个。</div>
+    <div style="background:#fff7e8;border:2px dashed #e0b96a;border-radius:12px;padding:12px;margin:8px 0">
+     <div style="font-weight:700;color:var(--warm);font-size:18px;letter-spacing:-.2px">${esc(cur.id)}</div>
+     <div style="font-size:12px;color:var(--muted)">根源：${esc(cur.root)}</div>
+     <div style="font-size:13px;color:var(--accent-ink);margin-top:4px"><b>今日主攻：</b>${esc(cur.focus)}</div>
+    </div>
+   </div>
+   <div class="fit-merge-right">
+    <div style="font-weight:700;color:var(--accent);font-size:14px;margin-bottom:8px">🪜 课程路线</div>
+    <div class="pos-road">${steps}</div>
+    ${!allDone?`<button class="btn ghost sm" style="margin-top:8px" onclick="posMarkDone()">✅ 标记「${esc(cur.id)}」已攻克，进入下一个</button>`
+     :`<div style="font-size:13px;color:var(--ok);margin-top:6px">🎉 全部体态问题已攻克！继续保持，进入复习循环。</div>`}
+   </div>
+  </div>`;
+ main.appendChild(fr);
  // 3. 今日 15 分钟动作卡
  const c=document.createElement("div");c.className="card";
  const rHtml=(cur.routine||[]).map(p=>`<li><b>${esc(p.phase)}</b>（${p.min}分钟）：${esc(p.note)}<br><small style="color:var(--muted)">⚠ ${esc((p.cautions||[]).join("；"))}</small></li>`).join("");
@@ -3018,39 +3059,36 @@ function renderMoneyHome(main){
  const mReal=realIncomeOf(m);
  const mOut=m.filter(r=>r.type==="out").reduce((s,r)=>s+(+r.amount||0),0);
  const lab=ym.replace("-","年")+"月";
- const a=document.createElement("div");a.className="card grid-wide";
- a.innerHTML=`<h3>📅 ${lab} 收支</h3>
+  const cats=getMoneyCats();
+ const counts={};(S.ledger||[]).forEach(r=>{if(!r||r.type==="transfer")return;counts[r.cat||"其他"]=(counts[r.cat||"其他"]||0)+1;});
+ const sortedCats=cats.slice().sort((x,y)=>(counts[y.name]||0)-(counts[x.name]||0));
+ const hasMoreCats=sortedCats.length>8;
+ const shownCats=moneyCatExpanded?sortedCats:sortedCats.slice(0,8);
+ const dash=document.createElement("div");dash.className="card grid-wide";
+ dash.innerHTML=`<h3>💰 记账仪表盘</h3>
   <div class="stat-strip">
    <div class="stat" onclick="goRecords('in')" title="看收入明细" style="cursor:pointer"><b style="color:#67c23a">+¥${fmtMoney(mReal)}</b><span>真实收入</span></div>
    <div class="stat" onclick="goRecords('out')" title="看支出明细" style="cursor:pointer"><b style="color:#f56c6c">-¥${fmtMoney(mOut)}</b><span>支出</span></div>
    <div class="stat" onclick="goRecords('')" title="看全部明细" style="cursor:pointer"><b>¥${fmtMoney(mReal-mOut)}</b><span>净结余</span></div>
   </div>
-  <div style="font-size:11px;color:var(--muted);margin-top:4px">点击卡片可跳到「明细」只看对应类型。</div>`;
- main.appendChild(a);
- const cats=getMoneyCats();
- const counts={};(S.ledger||[]).forEach(r=>{if(!r||r.type==="transfer")return;counts[r.cat||"其他"]=(counts[r.cat||"其他"]||0)+1;});
-const catCard=document.createElement("div");catCard.className="card grid-wide";
-const sortedCats=cats.slice().sort((x,y)=>(counts[y.name]||0)-(counts[x.name]||0));
-const hasMoreCats=sortedCats.length>8;
-const shownCats=moneyCatExpanded?sortedCats:sortedCats.slice(0,8);
-catCard.innerHTML=`<div class="card-head" onclick="toggleMoneyCats()" title="${hasMoreCats?"点击展开 / 收起全部分类":"分类管理"}">
-   <h3 style="margin:0;display:flex;align-items:center;gap:6px">🏷️ 分类管理 <span style="font-size:11px;font-weight:400;color:var(--muted)">· 常用优先</span></h3>
+  <div style="font-size:11px;color:var(--muted);margin-top:4px">本月（${lab}）· 点击卡片可跳到「明细」只看对应类型。</div>
+  <div style="height:1px;background:var(--line);margin:12px 0"></div>
+  <div class="card-head" onclick="toggleMoneyCats()" title="${hasMoreCats?"点击展开 / 收起全部分类":"分类管理"}" style="margin:0 0 8px;cursor:pointer">
+   <h4 style="margin:0;display:flex;align-items:center;gap:6px;font-size:14px">🏷️ 分类管理 <span style="font-size:11px;font-weight:400;color:var(--muted)">· 常用优先</span></h4>
    <span class="chev" style="font-size:12px">${hasMoreCats?(moneyCatExpanded?"▾ 收起":"▸ 展开全部分类"):"共 "+sortedCats.length+" 个"}</span>
   </div>
-  <div class="card-body">
-   <div style="display:flex;justify-content:flex-end;margin:-2px 0 8px"><button class="btn sm ghost" onclick="event.stopPropagation();openCategoryManager()">管理</button></div>
-   <div class="cat-grid">${shownCats.map(c=>{
-    const n=counts[c.name]||0;
-    return `<div class="cat-tile" onclick="viewCatRecords('${esc(c.name)}')" style="--cat-color:${c.color};--cat-bg:${c.color}14">
-     <div class="cat-tile-icon">${c.icon}</div>
-     <div class="cat-tile-name">${esc(c.name)}</div>
-     <div class="cat-tile-desc">${esc(c.desc||"")}</div>
-     <div class="cat-tile-count">${n} 笔</div>
-    </div>`;
-   }).join("")}</div>
-   ${!moneyCatExpanded&&sortedCats.length>8?`<div style="font-size:11px;color:var(--muted);margin-top:8px">还有 ${sortedCats.length-shownCats.length} 个不常用分类已折叠，点上方「展开全部分类」查看。</div>`:""}
-  </div>`;
-main.appendChild(catCard);
+  <div style="display:flex;justify-content:flex-end;margin:-2px 0 8px"><button class="btn sm ghost" onclick="event.stopPropagation();openCategoryManager()">管理</button></div>
+  <div class="cat-grid">${shownCats.map(c=>{
+   const n=counts[c.name]||0;
+   return `<div class="cat-tile" onclick="viewCatRecords('${esc(c.name)}')" style="--cat-color:${c.color};--cat-bg:${c.color}14">
+    <div class="cat-tile-icon">${c.icon}</div>
+    <div class="cat-tile-name">${esc(c.name)}</div>
+    <div class="cat-tile-desc">${esc(c.desc||"")}</div>
+    <div class="cat-tile-count">${n} 笔</div>
+   </div>`;
+  }).join("")}</div>
+  ${!moneyCatExpanded&&sortedCats.length>8?`<div style="font-size:11px;color:var(--muted);margin-top:8px">还有 ${sortedCats.length-shownCats.length} 个不常用分类已折叠，点上方「展开全部分类」查看。</div>`:""}`;
+ main.appendChild(dash);
  const rc=document.createElement("div");rc.className="card";rc.innerHTML=moneyRecurringSummaryHTML();main.appendChild(rc);
  const gc=document.createElement("div");gc.className="card";gc.innerHTML=moneyGoalsSummaryHTML();main.appendChild(gc);
 }
@@ -4470,6 +4508,26 @@ function cycleFilmStatus(i){const s=["待看","在看","已看"];const cur=S.fil
 function addFilm(){const t=document.getElementById("nfTitle").value.trim();const cat=document.getElementById("nfCat").value;const y=document.getElementById("nfType").value.trim();const g=document.getElementById("nfTags").value.trim();if(!t)return;S.film.push({title:t,cat:cat,type:y,status:"待看",tags:g,rating:0,date:"",review:"",reviewBody:"",reviewDate:"",spoiler:false,quotes:"",intro:"",cast:"",releaseDate:"",douban:"",poster:""});save();render();toast("已添加");}
 
 // 自媒体矩阵（独立重做：粉丝目标 + 平台分布条 + 可编辑账号）
+// 自媒体：手机唤起 APP，电脑跳官网登录页（登录一次后浏览器留住会话，之后直达）
+function isMobileUA(){return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);}
+function socialAppScheme(p){
+ const m={"抖音":"snssdk1128://user/profile/","小红书":"xhsdiscover://user/","快手":"kwai://profile/","B站":"bilibili://","微博":"sinaweibo://","视频号":"weixin://","微信":"weixin://"};
+ return m[(p||"").trim()]||"";
+}
+function socialWeb(p,link){
+ const m={"抖音":"https://www.douyin.com/","小红书":"https://www.xiaohongshu.com/","快手":"https://www.kuaishou.com/","B站":"https://www.bilibili.com/","微博":"https://weibo.com/","视频号":"https://weixin.qq.com/","微信":"https://weixin.qq.com/"};
+ return link&&/^https?:\/\//.test(link)?link:(m[(p||"").trim()]||link||"#");
+}
+function openSocial(i){const it=S.social[i];if(!it)return;const p=it.platform||"";
+ if(isMobileUA()){const sc=socialAppScheme(p);
+  if(sc){const t=setTimeout(()=>{window.open(socialWeb(p,it.link),"_blank");},1800);
+   try{document.addEventListener("visibilitychange",function v(){if(!document.hidden){clearTimeout(t);}document.removeEventListener("visibilitychange",v);});}catch(e){}
+   window.location.href=sc;return;}
+  window.open(socialWeb(p,it.link),"_blank");
+ }else{
+  window.open(socialWeb(p,it.link),"_blank");
+ }
+}
 function renderSocial(main){
  const c=document.createElement("div");c.className="card";
  const arr=S.social||[];
@@ -4500,7 +4558,7 @@ function renderSocial(main){
    ${it.xhsId?`<div class="row"><span>小红书号</span><span>${esc(it.xhsId)}</span></div>`:""}
    ${it.note?`<div style="font-size:12px;color:var(--accent-ink);margin:4px 0">${esc(it.note)}</div>`:""}
    <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
-     ${link?`<a class="linkbtn" href="${esc(link)}" target="_blank" rel="noopener">🔗 前往主页</a>`:""}
+     <button class="linkbtn" style="cursor:pointer" onclick="openSocial(${i})">🔗 打开${esc(it.platform||"主页")}</button>
      <button class="btn sm ghost" onclick="openSocialEdit(${i})">✎ 编辑</button>
    </div>
   </div>`;}).join("");
@@ -4552,8 +4610,10 @@ function renderWriting(main){
  const drafting=arr.filter(x=>x.status==="写作中").length;
  const idea=arr.filter(x=>x.status==="灵感").length;
  const heat=heatmapHtml(S.writingLog||[],12);
- const c=document.createElement("div");c.className="card";
- c.innerHTML=`<h2>✍️ 写作追踪</h2>
+ // 写作仪表盘：追踪 + 番茄作家助手 + 灵感织机 合并为一张卡
+ CURRENT_WRITE_PROMPT=WRITING_PROMPTS[Math.floor(Math.random()*WRITING_PROMPTS.length)];
+ const dash=document.createElement("div");dash.className="card grid-wide";
+ dash.innerHTML=`<h2>✍️ 写作仪表盘</h2>
   <div style="font-size:13px;color:var(--muted);margin:2px 0 6px">年度字数目标 <b>${goal.toLocaleString()}</b> · 已写 <b style="color:var(--ok)">${totalW.toLocaleString()}</b> 字（${fp}%）</div>
   <div class="goalbar"><i style="width:${fp}%"></i></div>
   <div class="stat-strip" style="margin-top:12px">
@@ -4563,24 +4623,19 @@ function renderWriting(main){
    <div class="stat"><b>${idea}</b><span>灵感</span></div>
   </div>
   <div style="margin-top:12px;font-size:13px;color:var(--muted);font-weight:bold">写作打卡热力图</div>
-  <div style="margin-top:6px">${heat}</div>`;
- main.appendChild(c);
- // 番茄作家助手入口
- const wlk=document.createElement("div");wlk.className="card";
- wlk.innerHTML=`<h3>🍅 番茄作家助手</h3>
-  <div style="font-size:13px;color:var(--ink2);margin-bottom:8px">你的小说正在连载，点下方按钮直达写作后台（入口也可在「设置 → 写作助手入口」修改）。</div>
-  <a class="linkbtn" href="${esc(normalizeUrl(S.settings&&S.settings.writerUrl)||'https://writer.fanqie.com/')}" target="_blank" rel="noopener" style="justify-content:center;width:100%">🚀 打开番茄作家助手</a>`;
- main.appendChild(wlk);
- // 灵感织机
- CURRENT_WRITE_PROMPT=WRITING_PROMPTS[Math.floor(Math.random()*WRITING_PROMPTS.length)];
- const loom=document.createElement("div");loom.className="card";
- loom.innerHTML=`<h3>🧵 灵感织机</h3>
-  <div class="review-q">${esc(CURRENT_WRITE_PROMPT)}</div>
-  <div style="display:flex;gap:8px;margin-top:6px">
-   <button class="btn sm" onclick="render()">🎲 换一条</button>
-   <button class="btn sm green" onclick="writingPromptAdd()">➕ 存为灵感</button>
+  <div style="margin-top:6px">${heat}</div>
+  <div class="write-tools">
+   <div class="write-tool">
+    <div style="font-size:13px;color:var(--accent-ink);margin-bottom:6px">🍅 番茄作家助手</div>
+    <a class="linkbtn" href="${esc(normalizeUrl(S.settings&&S.settings.writerUrl)||'https://writer.fanqie.com/')}" target="_blank" rel="noopener" style="justify-content:center;width:100%">🚀 打开写作后台</a>
+   </div>
+   <div class="write-tool">
+    <div style="font-size:13px;color:var(--accent-ink);margin-bottom:6px">🧵 灵感织机</div>
+    <div class="review-q" style="margin-bottom:6px">${esc(CURRENT_WRITE_PROMPT)}</div>
+    <div style="display:flex;gap:8px"><button class="btn sm" onclick="render()">🎲 换一条</button><button class="btn sm green" onclick="writingPromptAdd()">➕ 存为灵感</button></div>
+   </div>
   </div>`;
- main.appendChild(loom);
+ main.appendChild(dash);
  // 标准写作视图（搜索 + 看板 + 添加）
  renderSimple(main);
 }
@@ -4842,7 +4897,7 @@ function confetti(){const cols=["#f4c7c3","#cde8d2","#cfe3f2","#fcebc2","#f8d2a8
 function openChest(mk){document.getElementById("mTitle").textContent="🎉 本月主线达标！";document.getElementById("mBody").innerHTML="盖下 <b>"+mk.stampName+"</b>！<br>"+esc(mk.reward);document.getElementById("modal").classList.add("show");render();}
 function openStage(n){document.getElementById("mTitle").textContent="🏅 "+n+" 阶段验收通过！";document.getElementById("mBody").innerHTML="本阶段盖下一枚章，装修进度+1！";document.getElementById("modal").classList.add("show");}
 // ================= 我家（小屋维护）=================
-let MYHOME_SUB="overview";
+let MYHOME_SUB="bills";
 function monthStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
 function billDueInfo(b){if(!b.lastDate||!b.cycle)return{cls:"",txt:"未记录"};
  const d=new Date(b.lastDate);d.setMonth(d.getMonth()+(parseInt(b.cycle)||1));const now=new Date();const days=Math.round((d-now)/86400000);
@@ -4857,40 +4912,22 @@ function recordPrice(){const comm=document.getElementById("pxComm").value.trim()
 function addStock(){const n=document.getElementById("stName").value.trim();if(!n)return;S.myhome.stocks.push({name:n,brand:document.getElementById("stBrand").value.trim(),count:document.getElementById("stCount").value.trim(),threshold:document.getElementById("stThr").value.trim(),samPrice:"",alertPrice:""});save();render();}
 function addSmart(){const d=document.getElementById("smDev").value.trim();if(!d)return;S.myhome.smart.push({device:d,room:document.getElementById("smRoom").value.trim(),status:"正常",note:""});save();render();}
 function renderMyHome(main){
- const tabs=[{k:"overview",t:"小屋总览"},{k:"bills",t:"缴费"},{k:"price",t:"房价"},{k:"smart",t:"智能家居"},{k:"stock",t:"囤货"}];
- const bar=document.createElement("div");bar.className="sub";
- tabs.forEach(t=>{const b=document.createElement("button");b.textContent=t.t;b.className=(MYHOME_SUB===t.k?"active":"");b.onclick=()=>{MYHOME_SUB=t.k;render();};bar.appendChild(b);});
- main.appendChild(bar);
- if(MYHOME_SUB==="overview")renderMyHomeOverview(main);
- else if(MYHOME_SUB==="bills")renderMyHomeBills(main);
- else if(MYHOME_SUB==="price")renderMyHomePrice(main);
- else if(MYHOME_SUB==="smart")renderMyHomeSmart(main);
- else if(MYHOME_SUB==="stock")renderMyHomeStock(main);
-}
-function renderMyHomeOverview(main){
- const mb=S.myhome;const bills=mb.bills;let dueCount=0;Object.values(bills).forEach(b=>{const i=billDueInfo(b);if(i.cls==="bad"||i.cls==="warn")dueCount++;});
+ const tabs=[{k:"bills",t:"缴费"},{k:"price",t:"房价"},{k:"smart",t:"智能家居"},{k:"stock",t:"囤货"}];
+ const mb=S.myhome;const bills=mb.bills;
+ let dueCount=0;Object.values(bills).forEach(b=>{const i=billDueInfo(b);if(i.cls==="bad"||i.cls==="warn")dueCount++;});
  const ph=mb.prices.history;const last=ph[ph.length-1];const prev=ph[ph.length-2];
  let chg="—";if(last&&prev&&prev.price>0){const p=(last.price-prev.price)/prev.price*100;chg=(p>=0?"+":"")+p.toFixed(2)+"%";}
  const lowStock=mb.stocks.filter(s=>(parseInt(s.count)||0)<=(parseInt(s.threshold)||0)).length;
- const c=document.createElement("div");c.className="card";
- c.innerHTML=`<div style="display:flex;align-items:center;gap:14px"><div style="font-size:42px">🏠</div><div><div style="font-weight:700;font-size:22px;color:var(--warm);letter-spacing:-.3px">我家 · 小屋</div><div style="font-size:12px;color:var(--muted)">${todayStr()} · 把家照顾好</div></div></div>
-  <div class="stat-strip" style="margin-top:14px">
-   <div class="stat"><b>${dueCount}</b><span>待缴费提醒</span></div>
-   <div class="stat"><b>${last?last.price:"—"}</b><span>房价(元/㎡)</span></div>
-   <div class="stat"><b style="font-size:15px">${chg}</b><span>本月涨跌</span></div>
-   <div class="stat"><b>${mb.smart.length}</b><span>智能设备</span></div>
-   <div class="stat"><b>${lowStock}</b><span>囤货预警</span></div>
-  </div>`;
- main.appendChild(c);
- const quick=document.createElement("div");quick.className="card";
- quick.innerHTML=`<h3>⚡ 快捷入口</h3><div class="addrow">
-   <a class="linkbtn" href="https://www.csg.cn/" target="_blank" rel="noopener">⚡ 南方电网</a>
-   <a class="linkbtn" href="https://www.towngas.com.cn/" target="_blank" rel="noopener">🔥 港华燃气</a>
-   <a class="linkbtn" href="https://www.ke.com/" target="_blank" rel="noopener">🏷 贝壳找房</a>
-   <a class="linkbtn" href="https://home.mi.com/" target="_blank" rel="noopener">📡 米家</a>
-   <a class="linkbtn" href="https://www.samsclub.cn/" target="_blank" rel="noopener">🛒 山姆</a>
-  </div><div class="note-txt">缴费平台已按你的要求预设：电费＝南方电网，燃气＝港华燃气；房价关联贝壳，智能家居关联米家，囤货监控山姆价格。</div>`;
- main.appendChild(quick);
+ const bar=document.createElement("div");bar.className="sub";
+ tabs.forEach(t=>{const b=document.createElement("button");b.textContent=t.t;b.className=(MYHOME_SUB===t.k?"active":"");b.onclick=()=>{MYHOME_SUB=t.k;render();};bar.appendChild(b);});
+ const badge=document.createElement("div");badge.className="myhome-badge";
+ badge.innerHTML=`<span class="mb ${dueCount?'warn':''}">🧾 ${dueCount} 待缴费</span><span class="mb">🏷 房价 ${last?last.price:"—"} <i style="color:${chg.startsWith('-')?'var(--ok)':'var(--bad)'}">${chg}</i></span><span class="mb">🛒 ${lowStock} 囤货预警</span><span class="mb">📡 ${mb.smart.length} 设备</span>`;
+ bar.appendChild(badge);
+ main.appendChild(bar);
+ if(MYHOME_SUB==="bills")renderMyHomeBills(main);
+ else if(MYHOME_SUB==="price")renderMyHomePrice(main);
+ else if(MYHOME_SUB==="smart")renderMyHomeSmart(main);
+ else if(MYHOME_SUB==="stock")renderMyHomeStock(main);
 }
 function renderMyHomeBills(main){
  const order=["water","electric","gas","property"];const mb=S.myhome;
@@ -4915,71 +4952,75 @@ function renderMyHomeBills(main){
       ${b.link?`<a class="linkbtn" href="${esc(b.link)}" target="_blank" rel="noopener" style="min-height:30px;padding:4px 9px">去缴费 →</a>`:`<span class="note-txt">线下/微信缴</span>`}
     </div>
   </div>`;});
- h+=`</div>`;c.innerHTML=h;main.appendChild(c);
+ h+=`</div>`; c.innerHTML=h;main.appendChild(c);
  c.querySelectorAll('.field-in').forEach(inp=>inp.onchange=()=>{const k=inp.dataset.k,f=inp.dataset.f;mb.bills[k][f]=inp.value;save();});
+ const quick=document.createElement("div");quick.className="card grid-wide";
+ quick.innerHTML=`<h3>⚡ 快捷入口</h3><div class="addrow">
+   <a class="linkbtn" href="https://www.csg.cn/" target="_blank" rel="noopener">⚡ 南方电网</a>
+   <a class="linkbtn" href="https://www.towngas.com.cn/" target="_blank" rel="noopener">🔥 港华燃气</a>
+   <a class="linkbtn" href="https://www.ke.com/" target="_blank" rel="noopener">🏷 贝壳找房</a>
+   <a class="linkbtn" href="https://home.mi.com/" target="_blank" rel="noopener">📡 米家</a>
+   <a class="linkbtn" href="https://www.samsclub.cn/" target="_blank" rel="noopener">🛒 山姆</a>
+  </div><div class="note-txt">电费＝南方电网，燃气＝港华燃气；房价关联贝壳，智能家居关联米家，囤货监控山姆价格。</div>`;
+ main.appendChild(quick);
 }
 function renderMyHomePrice(main){
  const p=S.myhome.prices;const ph=p.history;const last=ph[ph.length-1];const prev=ph[ph.length-2];
  const c=document.createElement("div");c.className="card grid-wide";
  let chg="—";if(last&&prev&&prev.price>0){const v=(last.price-prev.price)/prev.price*100;chg=(v>=0?"+":"")+v.toFixed(2)+"%";}
+ let rows=ph.length?ph.slice().reverse().map(r=>{let pp=0;if(r.prev>0){pp=(r.price-r.prev)/r.prev*100;}const d=pp?(pp>=0?"+":"")+pp.toFixed(2)+"%":"—";return `<tr><td>${esc(r.month)}</td><td>${r.price}</td><td style="color:${pp>=0?'var(--bad)':'var(--ok)'}">${d}</td></tr>`;}).join(""):`<tr><td colspan="3" class="note-txt">暂无记录，先在上方记录本月</td></tr>`;
  c.innerHTML=`<h2>🏷 房价行情</h2>
-  <div class="addrow">
-   <input id="pxComm" class="field-in" style="min-width:160px" placeholder="小区名称" value="${esc(p.community)}">
-   <input id="pxPrice" class="field-in" type="number" placeholder="当前单价 元/㎡">
+  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin:6px 0">
+   <div style="flex:1;min-width:150px"><div class="note-txt" style="margin-bottom:4px">小区</div><input id="pxComm" class="field-in" style="width:100%" placeholder="小区名称" value="${esc(p.community)}"></div>
+   <div style="flex:1;min-width:120px"><div class="note-txt" style="margin-bottom:4px">本月单价 元/㎡</div><input id="pxPrice" class="field-in" type="number" placeholder="如 9800"></div>
    <button class="btn sm" onclick="recordPrice()">📌 记录本月</button>
    <a class="linkbtn" href="https://www.ke.com/" target="_blank" rel="noopener">打开贝壳 ↗</a>
   </div>
-  <div class="note-txt">每月更新一次：填入当前单价，小屋自动对比上月算涨跌幅。建议每月 1 号更新。</div>
   <div class="stat-strip" style="margin-top:10px">
    <div class="stat"><b>${last?last.price:"—"}</b><span>最新单价</span></div>
    <div class="stat"><b style="font-size:16px">${chg}</b><span>本月涨跌</span></div>
    <div class="stat"><b>${ph.length}</b><span>已记录月份</span></div>
-  </div>`;
+  </div>
+  <h3 style="margin-top:12px">📈 历史记录</h3>
+  <table class="tbl"><thead><tr><th>月份</th><th>单价(元/㎡)</th><th>环比涨跌</th></tr></thead><tbody>${rows}</tbody></table>`;
  main.appendChild(c);
- const t=document.createElement("div");t.className="card grid-wide";
- let rows=ph.length?ph.slice().reverse().map(r=>{let d="—";if(r.prev>0){const p=(r.price-r.prev)/r.prev*100;d=(p>=0?"+":"")+p.toFixed(2)+"%";}return `<tr><td>${esc(r.month)}</td><td>${r.price}</td><td>${d}</td></tr>`;}).join(""):`<tr><td colspan="3" class="note-txt">暂无记录</td></tr>`;
- t.innerHTML=`<h3>📈 历史记录</h3><table class="tbl"><thead><tr><th>月份</th><th>单价(元/㎡)</th><th>环比涨跌</th></tr></thead><tbody>${rows}</tbody></table>`;
- main.appendChild(t);
 }
 function renderMyHomeSmart(main){
  const c=document.createElement("div");c.className="card grid-wide";
  c.innerHTML=`<h2>📡 智能家居（米家）</h2>
   <a class="linkbtn" href="https://home.mi.com/" target="_blank" rel="noopener">打开米家 App ↗</a>
-  <div class="note-txt">下方为本地设备清单备忘，状态可手动切换；真正的控制请在米家完成。</div>`;
+  <div class="note-txt">本地设备清单备忘，状态可手动切换；真正的控制请在米家完成。</div>
+  <div class="dev-grid" id="devGrid">${S.myhome.smart.map((d,i)=>`
+   <div class="dev-card">
+    <div class="dn"><input class="field-in" data-i="${i}" data-f="device" value="${esc(d.device)}" style="width:100%;font-weight:700;border:none;background:transparent;padding:2px 0"></div>
+    <div class="dr">📍 <input class="field-in" data-i="${i}" data-f="room" value="${esc(d.room)}" style="width:70px;border:none;background:transparent"></div>
+    <div class="ds">状态：<input class="field-in" data-i="${i}" data-f="status" value="${esc(d.status)}" style="width:70px;border:none;background:transparent"> <span class="x" data-i="${i}" style="float:right;cursor:pointer;color:var(--red)">✕</span></div>
+    <div class="dr">📝 <input class="field-in" data-i="${i}" data-f="note" value="${esc(d.note)}" placeholder="备注" style="width:100%;border:none;background:transparent"></div>
+   </div>`).join("")}</div>
+  <div class="addrow" style="margin-top:10px"><input id="smDev" class="field-in" placeholder="设备名"><input id="smRoom" class="field-in" placeholder="房间" style="max-width:70px"><button class="btn sm" onclick="addSmart()">添加</button></div>`;
  main.appendChild(c);
- const tbl=document.createElement("div");tbl.className="card grid-wide";
- let h=`<table class="tbl"><thead><tr><th>设备</th><th>房间</th><th>状态</th><th>备注</th><th></th></tr></thead><tbody>`;
- S.myhome.smart.forEach((d,i)=>{h+=`<tr>
-   <td><input class="field-in" data-i="${i}" data-f="device" value="${esc(d.device)}" style="min-width:90px"></td>
-   <td><input class="field-in" data-i="${i}" data-f="room" value="${esc(d.room)}" style="max-width:70px"></td>
-   <td><input class="field-in" data-i="${i}" data-f="status" value="${esc(d.status)}" style="max-width:70px"></td>
-   <td><input class="field-in" data-i="${i}" data-f="note" value="${esc(d.note)}"></td>
-   <td><span class="x" data-i="${i}">✕</span></td></tr>`;});
- h+=`</tbody></table><div class="addrow"><input id="smDev" class="field-in" placeholder="设备名"><input id="smRoom" class="field-in" placeholder="房间" style="max-width:70px"><button class="btn sm" onclick="addSmart()">添加</button></div>`;
- tbl.innerHTML=h;main.appendChild(tbl);
- tbl.querySelectorAll('td input').forEach(inp=>inp.onchange=()=>{S.myhome.smart[+inp.dataset.i][inp.dataset.f]=inp.value;save();});
- tbl.querySelectorAll('.x').forEach(x=>x.onclick=()=>{S.myhome.smart.splice(+x.dataset.i,1);save();render();});
+ const g=document.getElementById("devGrid");
+ g.querySelectorAll('input').forEach(inp=>inp.onchange=()=>{S.myhome.smart[+inp.dataset.i][inp.dataset.f]=inp.value;save();});
+ g.querySelectorAll('.x').forEach(x=>x.onclick=()=>{S.myhome.smart.splice(+x.dataset.i,1);save();render();});
 }
 function renderMyHomeStock(main){
  const c=document.createElement("div");c.className="card grid-wide";
  c.innerHTML=`<h2>🛒 日用品囤货</h2>
-  <div class="note-txt">记录常购品牌与库存，低于预警阈值会提醒；填入山姆单价与提醒价，价格合适时提示入手。点“一键购买”跳山姆搜同款。</div>`;
+  <div class="note-txt">记录常购品牌与库存，低于预警阈值会提醒；填入山姆单价与提醒价，价格合适时提示入手。点“一键购买”跳山姆搜同款。</div>
+  <div class="stk-grid" id="stkGrid">${S.myhome.stocks.map((s,i)=>{const st=stockStatus(s);return `
+   <div class="stk-card">
+    <div class="sn"><input class="field-in" data-i="${i}" data-f="name" value="${esc(s.name)}" style="width:100%;font-weight:700;border:none;background:transparent;padding:2px 0"> <span class="x" data-i="${i}" style="cursor:pointer;color:var(--red)">✕</span></div>
+    <div class="srow"><span>品牌</span><input class="field-in" data-i="${i}" data-f="brand" value="${esc(s.brand)}" style="width:90px;border:none;background:transparent"></div>
+    <div class="srow"><span>库存</span><input class="field-in" data-i="${i}" data-f="count" value="${esc(s.count)}" style="width:46px;border:none;background:transparent"> / 预警 <input class="field-in" data-i="${i}" data-f="threshold" value="${esc(s.threshold)}" style="width:46px;border:none;background:transparent"></div>
+    <div class="srow"><span>山姆价</span><input class="field-in" data-i="${i}" data-f="samPrice" value="${esc(s.samPrice)}" style="width:70px;border:none;background:transparent"></div>
+    <div class="srow"><span>提醒价</span><input class="field-in" data-i="${i}" data-f="alertPrice" value="${esc(s.alertPrice)}" style="width:70px;border:none;background:transparent"></div>
+    <div style="margin-top:4px"><span class="tag ${st}">${st==="bad"?"紧急":st==="warn"?"提醒购买":"充足"}</span>${ (s.samPrice&&s.alertPrice&&parseFloat(s.samPrice)<=parseFloat(s.alertPrice))?' <span class="tag ok">💡价优</span>':'' }</div>
+   </div>`;}).join("")}</div>
+  <div class="addrow" style="margin-top:10px"><input id="stName" class="field-in" placeholder="物品名"><input id="stBrand" class="field-in" placeholder="品牌(可选)" style="max-width:90px"><input id="stCount" class="field-in" placeholder="库存" style="max-width:54px"><input id="stThr" class="field-in" placeholder="预警值" style="max-width:54px"><button class="btn sm" onclick="addStock()">添加</button></div>`;
  main.appendChild(c);
- const tbl=document.createElement("div");tbl.className="card grid-wide";
- let h=`<table class="tbl"><thead><tr><th>物品</th><th>品牌偏好</th><th>库存</th><th>预警值</th><th>山姆单价</th><th>提醒价</th><th>状态</th><th></th></tr></thead><tbody>`;
- S.myhome.stocks.forEach((s,i)=>{const st=stockStatus(s);
-  h+=`<tr>
-   <td><input class="field-in" data-i="${i}" data-f="name" value="${esc(s.name)}" style="min-width:90px"></td>
-   <td><input class="field-in" data-i="${i}" data-f="brand" value="${esc(s.brand)}" style="max-width:90px"></td>
-   <td><input class="field-in" data-i="${i}" data-f="count" value="${esc(s.count)}" style="max-width:54px"></td>
-   <td><input class="field-in" data-i="${i}" data-f="threshold" value="${esc(s.threshold)}" style="max-width:54px"></td>
-   <td><input class="field-in" data-i="${i}" data-f="samPrice" value="${esc(s.samPrice)}" style="max-width:70px"></td>
-   <td><input class="field-in" data-i="${i}" data-f="alertPrice" value="${esc(s.alertPrice)}" style="max-width:70px"></td>
-   <td><span class="tag ${st}">${st==="bad"?"紧急":st==="warn"?"提醒购买":"充足"}</span>${ (s.samPrice&&s.alertPrice&&parseFloat(s.samPrice)<=parseFloat(s.alertPrice))?'<br><span class="tag ok">💡价优</span>':'' }</td>
-   <td><span class="x" data-i="${i}">✕</span></td></tr>`;});
- h+=`</tbody></table>
-  <div class="addrow"><input id="stName" class="field-in" placeholder="物品名"><input id="stBrand" class="field-in" placeholder="品牌(可选)" style="max-width:90px"><input id="stCount" class="field-in" placeholder="库存" style="max-width:54px"><input id="stThr" class="field-in" placeholder="预警值" style="max-width:54px"><button class="btn sm" onclick="addStock()">添加</button></div>`;
- tbl.innerHTML=h;main.appendChild(tbl);
+ const g=document.getElementById("stkGrid");
+ g.querySelectorAll('input').forEach(inp=>inp.onchange=()=>{S.myhome.stocks[+inp.dataset.i][inp.dataset.f]=inp.value;save();});
+ g.querySelectorAll('.x').forEach(x=>x.onclick=()=>{S.myhome.stocks.splice(+x.dataset.i,1);save();render();});
  const buy=document.createElement("div");buy.className="card grid-wide";
  let bh=`<h3>🛒 一键购买（快用完时）</h3><div class="addrow">`;
  S.myhome.stocks.filter(s=>stockStatus(s)!=="ok").forEach(s=>{const q=encodeURIComponent((s.brand? s.brand+" ":"")+s.name);
@@ -4987,8 +5028,6 @@ function renderMyHomeStock(main){
  if(!S.myhome.stocks.some(s=>stockStatus(s)!=="ok"))bh+=`<span class="note-txt">暂无急需购买物品 🎉</span>`;
  bh+=`</div><div class="note-txt">“一键购买”会按「品牌+物品名」在 山姆 搜索同款；你记录的品牌偏好会一并带入。</div>`;
  buy.innerHTML=bh;main.appendChild(buy);
- tbl.querySelectorAll('td input').forEach(inp=>inp.onchange=()=>{S.myhome.stocks[+inp.dataset.i][inp.dataset.f]=inp.value;save();});
- tbl.querySelectorAll('.x').forEach(x=>x.onclick=()=>{S.myhome.stocks.splice(+x.dataset.i,1);save();render();});
 }
 function toast(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800);}
 function openDModal(title,html){document.getElementById("dmTitle").textContent=title;document.getElementById("dmBody").innerHTML=html;document.getElementById("dmodal").classList.add("show");}
@@ -5076,7 +5115,7 @@ function heatmapHtml(datesArr,weeks){
 function renderFocusCard(main){
  const c=document.createElement("div");c.className="card";
  c.innerHTML=`<h2>⏳ 专注番茄钟</h2>
-  <div class="focus">
+  <div class="focus" style="justify-content:flex-start;text-align:left">
    <div class="focus-circle">
     <svg width="140" height="140" viewBox="0 0 140 140">
      <circle cx="70" cy="70" r="60" fill="none" stroke="var(--track)" stroke-width="10"/>
@@ -5084,13 +5123,16 @@ function renderFocusCard(main){
      <text id="fTime" x="70" y="78" text-anchor="middle" font-size="26" fill="var(--ink)" font-weight="bold">25:00</text>
     </svg>
    </div>
-   <div class="focus-btns">
-    <button class="btn" id="fToggle" onclick="focusToggle()">▶ 开始</button>
-    <button class="btn ghost" onclick="focusReset()">↺ 重置</button>
-    <button class="btn ghost" onclick="openFocusOverlay()">⛶ 沉浸</button>
+   <div style="flex:1;min-width:200px">
+    <div style="font-size:13px;color:var(--accent-ink);line-height:1.6;margin-bottom:8px">25 分钟，给大脑一次深度呼吸；每完成一个番茄 <b style="color:var(--ok)">+5 XP</b>。</div>
+    <div class="focus-btns" style="justify-content:flex-start">
+     <button class="btn" id="fToggle" onclick="focusToggle()">▶ 开始</button>
+     <button class="btn ghost" onclick="focusReset()">↺ 重置</button>
+     <button class="btn ghost" onclick="openFocusOverlay()">⛶ 沉浸</button>
+    </div>
+    <div class="xptxt" style="text-align:left;margin-top:8px">今日已完成 <b id="fCount">${todayFocus()}</b> 个 · 累计 ${S.focus.length} 次</div>
    </div>
-  </div>
-  <div class="xptxt" style="text-align:center">今日已完成 <b id="fCount">${todayFocus()}</b> 个专注番茄 · 累计 ${S.focus.length} 次（每完成 +5 XP）</div>`;
+  </div>`;
  main.appendChild(c);
  paintFocus();
 }

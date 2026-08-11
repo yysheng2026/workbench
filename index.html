@@ -462,9 +462,6 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .spine small{line-height:1.05;white-space:nowrap}
 [data-theme="dark"] .lib-hall{background:linear-gradient(160deg,#2e2a24,#322c22)}
 [data-theme="dark"] .shelf{background:linear-gradient(#5a4d3a,#4a3f2f)}
-/* 整馆书架：占满宽的书脊墙（多行换行，不滚动） */
-.shelf-wall{display:flex;flex-wrap:wrap;align-items:flex-end;align-content:flex-start;gap:5px;background:linear-gradient(#caa978,#b8975f);padding:14px 10px 10px;border-radius:8px;margin:8px 0 4px;min-height:120px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
-[data-theme="dark"] .shelf-wall{background:linear-gradient(#5a4d3a,#4a3f2f)}
 /* ---- 整馆片库：圆盘风琴旋转架 ---- */
 .cd-carousel{position:relative;height:200px;perspective:1200px;display:flex;align-items:center;justify-content:center;margin:8px 0 4px;overflow:hidden}
 .cd-disc-item{position:absolute;width:150px;height:150px;border-radius:50%;cursor:pointer;transition:transform .55s cubic-bezier(.2,.8,.25,1),opacity .45s,filter .45s;transform-style:preserve-3d;will-change:transform}
@@ -497,8 +494,6 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .cd-disc-item.is-center .cd-label .gen-cover{width:120px;height:120px}
 .cd-disc-item.is-center .cd-hole{width:22px;height:22px}
 [data-theme="dark"] .cd-disc.small .film-rating{background:#3a3c3e}
-/* 整馆片库：占满宽的圆盘墙（自适应列数，全展示不折叠） */
-.cd-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:16px 8px;margin:8px 0 2px;justify-items:center}
 /* ---- 书房三状态书架 + 拖拽 ---- */
 .shelf-block{margin:12px 0}
 .shelf-label{display:flex;align-items:center;gap:6px;font-weight:600;font-size:16px;color:var(--accent-ink);margin:6px 0 2px;letter-spacing:-.2px}
@@ -2631,12 +2626,12 @@ function renderReading(main){
  hall.innerHTML=`<h3>📚 ${esc(READ_ROOM)} · 书架</h3>${sh}<div style="font-size:11px;color:var(--muted);margin-top:4px">拖动书脊到别的书架可改状态 · 轻点 ⠿ 也能选状态 · 点书脊展开书本</div>`;
  main.appendChild(hall);
  } else {
-  // 整馆书架（放在魔法图书馆下方、书房上方）—— 占满宽的书脊墙
+  // 整馆书架（放在魔法图书馆下方、书房上方）
   const hall=document.createElement("div");hall.className="card lib-hall";
   let spines="";
-  all.forEach(b=>{const gi=all.indexOf(b);const col=catColor(bookCat(b));const h=Math.min(116,Math.max(60,18+b.title.length*10));
+  all.forEach(b=>{const gi=all.indexOf(b);const col=catColor(bookCat(b));const h=Math.max(60,18+b.title.length*11);
    spines+=`<div class="spine" style="height:${h}px;background:${col}" title="${esc(b.title)}" onclick="openBook(${gi})"><small>${esc(b.title)}</small></div>`;});
-  hall.innerHTML=`<h3 style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>📚 整馆书架（${all.length} 本）</span><button class="btn ghost sm" onclick="openBookCatManager()">🗂 管理分类</button></h3><div class="shelf-wall">${spines}</div><div style="font-size:11px;color:var(--muted);margin-top:6px">点击书脊查看详情 · 书脊颜色按分类区分 · 拖动换架见书房视图</div>`;
+  hall.innerHTML=`<h3 style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>📚 整馆书架</span><button class="btn ghost sm" onclick="openBookCatManager()">🗂 管理分类</button></h3><div class="shelf">${spines}</div><div class="shelf-scroll-hint">← 左右滑动查看更多 →</div><div style="font-size:11px;color:var(--muted);margin-top:2px">点击书脊查看详情 · 书脊颜色按分类区分</div>`;
   main.appendChild(hall);
   // 选择一间书房
   const lib=document.createElement("div");lib.className="card";
@@ -4261,23 +4256,20 @@ function renderFilm(main){
   if(collapsed)grid+=`<button class="btn ghost sm cd-expand-btn" id="cdExpandBtn" onclick="toggleRoomExpand('cdGridRoom')">▾ 展开全部 (${extra})</button>`;
   const roomCard=document.createElement("div");roomCard.className="card";roomCard.innerHTML=bh+grid;main.appendChild(roomCard);
  } else {
-  // 整馆片库：占满宽的圆盘墙（全部展示，不折叠）
+  // 整馆片库：圆盘风琴旋转架（置于放映厅上方）
   const N=S.film.length;
   let discs="";
-  S.film.forEach((f,i)=>{
-   const r=f.rating>0?"★".repeat(f.rating):(f.douban?("★".repeat(Math.max(1,Math.round(f.douban/2)))):"");
-   const stamp=f.status==="已看"?"kan":f.status==="在看"?"zai":"dai";
-   discs+=`<div class="cd-disc small" title="${esc(f.title)}" onclick="openFilmNotebook(${i})">
-     <div class="cd-face">${filmCoverCircle(f)}<span class="cd-hole"></span></div>
-     <span class="case-stamp ${stamp}">${esc(f.status)}</span>
-     ${r?`<span class="film-rating">${r}</span>`:""}
-    </div>`;
-  });
+  S.film.forEach((f,i)=>{discs+=`<div class="cd-disc-item" data-i="${i}" onclick="cdDiscClick(${i})"><div class="cd-face">${filmCoverCircle(f)}<span class="cd-hole"></span></div></div>`;});
   const lib=document.createElement("div");lib.className="card grid-wide lib-hall";
-  lib.innerHTML=`<h3 style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>🎞 整馆片库（${N} 部）</span><button class="btn ghost sm" onclick="openFilmCatManager()">🗂 管理分类</button></h3>
-   <div class="cd-wall">${discs}</div>
-   <div style="font-size:11px;color:var(--muted);margin-top:8px">点击碟片查看影片详情 · 彩色碟面为真实海报，中心圆点为分类色 · 全部 ${N} 部，不折叠</div>`;
+  lib.innerHTML=`<h3 style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>🎞 整馆片库</span><button class="btn ghost sm" onclick="openFilmCatManager()">🗂 管理分类</button></h3>
+   <div class="cd-top"><div class="cd-now-top" id="cdNowTop"></div><button class="btn sm" onclick="openCenteredFilm()">▾ 看影片</button></div>
+   <div class="cd-carousel">${discs}</div>
+   <div class="cd-bar"><button class="btn ghost sm" onclick="rotateCD(-1)">◂</button><button class="btn ghost sm" onclick="rotateCD(1)">▸</button></div>
+   <div class="shelf-scroll-hint">点击碟片旋转到中央 · 点中央碟翻到下一片</div>`;
   main.appendChild(lib);
+  CD_CAROUSEL_EL=lib.querySelector(".cd-carousel");
+  CD_IDX=Math.min(Math.max(CD_IDX,0),Math.max(0,N-1));
+  layoutCarousel(CD_CAROUSEL_EL);updateCDNow();
   // 选择放映厅
   const roomMap={};S.film.forEach(f=>{const cat=filmCat(f);(roomMap[cat]=roomMap[cat]||[]).push(f);});
   let rh=`<div class="lib">`;

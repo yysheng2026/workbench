@@ -433,6 +433,25 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 /* ---- 首页仪表盘 ---- */
 .home-hero{background:linear-gradient(160deg,var(--card),var(--card2));border:2px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
 .home-statusbar{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:8px}
+/* ---- 植物大战僵尸 防守条 ---- */
+.pvz-wrap{position:sticky;top:0;z-index:40;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:8px 10px;margin:6px 0 10px;box-shadow:var(--shadow)}
+.pvz-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.pvz-title{font-size:13px;font-weight:700;color:var(--accent-ink)}
+.pvz-sun{font-size:13px;font-weight:700;color:var(--warm);background:var(--yellow);border-radius:14px;padding:2px 10px}
+.pvz-track{position:relative;height:46px;background:repeating-linear-gradient(90deg,var(--green) 0 18px,#e6f3e8 18px 36px);border:2px solid var(--line);border-radius:8px;overflow:hidden}
+.pvz-sunflower{position:absolute;top:50%;transform:translateY(-50%);font-size:26px;right:2px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.2))}
+.pvz-plant{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:20px}
+.pvz-zombie{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:24px;transition:left .5s linear}
+.pvz-ok{font-size:12px;color:var(--ok);margin:6px 0 2px}
+.pvz-warn{font-size:12px;color:var(--warm);margin:6px 0 2px}
+.pvz-bad{font-size:12px;color:var(--bad);margin:6px 0 2px;font-weight:700}
+.pvz-shop{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pvz-shop-card{display:flex;flex-direction:column;align-items:center;gap:0;padding:5px 8px;border:2px dashed var(--line);border-radius:10px;background:var(--card2);font-family:inherit;cursor:pointer;min-width:62px;opacity:.55}
+.pvz-shop-card.on{opacity:1;border-color:var(--accent);background:var(--accent-weak)}
+.pvz-ico{font-size:20px}.pvz-nm{font-size:11px;color:var(--ink2)}.pvz-cost{font-size:11px;color:var(--warm);font-weight:700}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes brainShake{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+@keyframes zombieWalk{from{transform:translateX(40vw)}to{transform:translateX(0)}}
 .home-datecard{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .hdc-avatar{width:48px;height:48px;border-radius:50%;background:var(--accent-weak);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-size:24px;flex:0 0 auto}
 .hdc-main{flex:1;min-width:0}
@@ -634,6 +653,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
   <button class="btn ghost" id="cloudBtn">☁ 云同步</button>
 </div>
 <div class="banner" id="banner">🔨 今日装修待确认 —</div>
+<div id="pvzBar" class="pvz-wrap"></div>
 <div class="app">
   <div class="nav" id="nav"></div>
   <div class="main" id="main"></div>
@@ -1469,6 +1489,7 @@ function render(){
  else if(view==="myhome")renderMyHome(main);
  else renderSimple(main);
  updateBanner();
+ renderPvzBar();
 }
 function renderSplash(main){
  const st=S.settings||{};
@@ -1947,8 +1968,8 @@ function addLog(){
  const text=document.getElementById("lgText").value.trim();
  const file=document.getElementById("lgPhoto").files[0];
  if(!text && !file){toast("写点什么或传张图");return;}
- if(file){const r=new FileReader();r.onload=()=>{S.renovation.logs.push({id:Date.now(),date,text,photos:[r.result]});save();render();toast("已打卡");};r.readAsDataURL(file);}
- else{S.renovation.logs.push({id:Date.now(),date,text,photos:[]});save();render();toast("已打卡");}
+ if(file){const r=new FileReader();r.onload=()=>{S.renovation.logs.push({id:Date.now(),date,text,photos:[r.result]});pvzAward(6,"装修打卡");save();render();toast("已打卡");};r.readAsDataURL(file);}
+ else{S.renovation.logs.push({id:Date.now(),date,text,photos:[]});pvzAward(6,"装修打卡");save();render();toast("已打卡");}
 }
 function deleteLog(id){S.renovation.logs=S.renovation.logs.filter(l=>l.id!==id);save();render();}
 function addDefect(stage){
@@ -2596,7 +2617,7 @@ function posTick(){if(!posTimer.running)return;posTimer.remaining--;if(posTimer.
 function posPhaseInfo(rem){const el=900-rem;if(el<180)return{label:"🌡 热身激活",sub:"第 1/3 阶段 · 活动目标部位"};if(el<720)return{label:"💪 主训循环",sub:"第 2/3 阶段 · 按动作卡 3 组"};return{label:"🧘 放松收尾",sub:"第 3/3 阶段 · 拉伸 + 腹式呼吸"};}
 function paintPos(){const ph=document.getElementById("posPhase"),big=document.getElementById("posBig"),sub=document.getElementById("posSub");if(!ph)return;const m=Math.floor(posTimer.remaining/60),s=posTimer.remaining%60;big.textContent=`${m}:${String(s).padStart(2,"0")}`;const p=posPhaseInfo(posTimer.remaining);ph.textContent=p.label;sub.textContent=p.sub;}
 function posGoto(i){if(i<0||i>=POSTURE_ISSUES.length)return;POS_VIEW=i;if((S.fitness.postureDone||[]).includes(POSTURE_ISSUES[i].id))toast("该问题已攻克 ✅ 复习中");render();}
-function posMarkDone(){const f=S.fitness;const done=f.postureDone||[];const idx=POSTURE_ISSUES.findIndex(x=>!done.includes(x.id));if(idx<0){toast("已全部攻克，进入复习循环");return;}if(!done.includes(POSTURE_ISSUES[idx].id))done.push(POSTURE_ISSUES[idx].id);f.postureDone=done;POS_VIEW=-1;save();confetti();toast("🎉 已攻克「"+POSTURE_ISSUES[idx].id+"」！进入下一个");render();}
+function posMarkDone(){const f=S.fitness;const done=f.postureDone||[];const idx=POSTURE_ISSUES.findIndex(x=>!done.includes(x.id));if(idx<0){toast("已全部攻克，进入复习循环");return;}if(!done.includes(POSTURE_ISSUES[idx].id))done.push(POSTURE_ISSUES[idx].id);f.postureDone=done;POS_VIEW=-1;save();confetti();toast("🎉 已攻克「"+POSTURE_ISSUES[idx].id+"」！进入下一个");pvzAward(15,"体态打卡");render();}
 function fmtSec(s){const m=Math.floor((s||0)/60),ss=(s||0)%60;return m?`${m}分${ss?ss+"秒":""}`:`${ss}秒`;}
 function toEmbed(u){u=(u||"").trim();let m;if(m=u.match(/[?&]v=([\w-]+)/))return "https://www.youtube.com/embed/"+m[1];if(m=u.match(/youtu\.be\/([\w-]+)/))return "https://www.youtube.com/embed/"+m[1];if(m=u.match(/bilibili\.com\/video\/(BV[\w]+)/))return "https://player.bilibili.com/player.html?bvid="+m[1]+"&page=1&high_quality=1&danmaku=0";if(m=u.match(/bvid=(BV[\w]+)/i))return "https://player.bilibili.com/player.html?bvid="+m[1]+"&page=1&high_quality=1&danmaku=0";if(/^BV[\w]+$/.test(u))return "https://player.bilibili.com/player.html?bvid="+u+"&page=1&high_quality=1&danmaku=0";return u;}
 function openPostureVideo(i){const it=POSTURE_ISSUES[i]||{};const ov=(S.fitness.videoOverride)||{};const vidRaw=ov[i]||it.video||"";const vidSrc=vidRaw?toEmbed(vidRaw):"";const q=encodeURIComponent((it.id||"体态")+" 正确做法 教学");
@@ -2759,7 +2780,7 @@ function addExcerpt(i){if(!S.reading[i].excerpts)S.reading[i].excerpts=[];S.read
 function addNote(i){if(!S.reading[i].notes)S.reading[i].notes=[];S.reading[i].notes.push({text:"",date:""});const b=S.reading[i];const ex=b.excerpts?b.excerpts.length:0;bkPage=1+ex+b.notes.length;setBkPage(bkPage,true);save();toast("已新增感悟页");}
 function delExcerptK(i,k){if(!S.reading[i].excerpts)return;S.reading[i].excerpts.splice(k,1);save();const b=S.reading[i];const ex=b.excerpts.length,no=b.notes?b.notes.length:0;bkPage=Math.min(bkPage,1+ex+no);setBkPage(bkPage,false);toast("已删除该摘抄页");}
 function delNoteK(i,k){if(!S.reading[i].notes)return;S.reading[i].notes.splice(k,1);save();const b=S.reading[i];const ex=b.excerpts?b.excerpts.length:0,no=b.notes.length;bkPage=Math.min(bkPage,1+ex+no);setBkPage(bkPage,false);toast("已删除该感悟页");}
-function setBookStatus(i,status){if(!S.reading[i])return;if(S.reading[i].status===status)return;S.reading[i].status=status;save();render();if(document.getElementById("dmodal").classList.contains("show"))closeDModal();toast("已移到「"+status+"」");}
+function setBookStatus(i,status){if(!S.reading[i])return;if(S.reading[i].status===status)return;S.reading[i].status=status;save();if(status==="已读")pvzAward(12,"读完一本书");else if(status==="在读")pvzAward(8,"开始读一本书");render();if(document.getElementById("dmodal").classList.contains("show"))closeDModal();toast("已移到「"+status+"」");}
 function bookStatusMenu(i){const b=S.reading[i];if(!b)return;
  const html=`<div style="text-align:center;padding:6px 0;font-size:13px">把《${esc(b.title)}》移动到：</div>
   <div style="display:flex;gap:8px;margin-top:10px">
@@ -2788,7 +2809,7 @@ function setBookProgress(i){const v=Math.max(0,Math.min(100,parseInt(document.ge
 function delBook(i){S.reading.splice(i,1);save();render();closeDModal();}
 function logRead(i){if(!S.readingLog)S.readingLog=[];if(!S.readingLog.includes(todayStr())){S.readingLog.push(todayStr());S.checkinXp+=5;save();confetti();toast("阅读打卡 +5 XP 📖");render();}else{toast("今日已阅读打卡");render();}}
 function cycleBookStatus(i){const s=["已读","在读","待读"];const cur=S.reading[i].status;S.reading[i].status=s[(s.indexOf(cur)+1)%s.length];save();render();}
-function addBook(){const t=document.getElementById("nbTitle").value.trim();const a=document.getElementById("nbAuthor").value.trim();const g=document.getElementById("nbTags").value.trim();if(!t)return;S.reading.push({title:t,author:a,status:"待读",tags:g,excerpts:[],notes:[],rating:0,progress:0,intro:"",version:"",authorInfo:""});save();render();toast("已添加");}
+function addBook(){const t=document.getElementById("nbTitle").value.trim();const a=document.getElementById("nbAuthor").value.trim();const g=document.getElementById("nbTags").value.trim();if(!t)return;S.reading.push({title:t,author:a,status:"待读",tags:g,excerpts:[],notes:[],rating:0,progress:0,intro:"",version:"",authorInfo:""});pvzAward(5,"添加书籍");save();render();toast("已添加");}
 
 
 const READ_ROOMS=["史海沉钩","西风书阁","东方烟火","戏梦人间","心隅一盏","格物小筑","纹枰小筑","笔墨春秋","浮生书隅"];
@@ -2866,7 +2887,7 @@ function secMV(){let stock=0,fund=0;(S.stocks&&S.stocks.holdings||[]).forEach(h=
 function accountBalance(a){if(!a)return 0;if(a.type==="estate"){return +(a.marketValue!==undefined?a.marketValue:(a.opening||0));}if(a.linked){const mv=secMV();return a.type==="stock"?mv.stock:mv.fund;}let bal=+a.opening||0;const L=S.ledger||[];for(const r of L){if(r.type==="in"&&r.accountId===a.id)bal+=+r.amount||0;else if(r.type==="out"&&r.accountId===a.id)bal-=+r.amount||0;else if(r.type==="transfer"){if(r.accountId===a.id)bal-=+r.amount||0;if(r.toAccountId===a.id)bal+=+r.amount||0;}}return bal;}
 function totals(){let assets=0,liab=0;(S.accounts||[]).forEach(a=>{if(a.type==="deposit")return;if(a.linked){const mv=secMV();assets+=(a.type==="stock"?mv.stock:mv.fund);return;}const bal=accountBalance(a);if(a.type==="liability")liab+=-bal;else assets+=bal;});return {assets,liab,net:assets-liab};}
 function netWorthAt(dateMax){let nw=0;(S.accounts||[]).forEach(a=>{if(a.linked||a.type==="deposit")return;let bal=a.type==="estate"?(a.marketValue!==undefined?+a.marketValue:+(a.opening||0)):(+a.opening||0);(S.ledger||[]).forEach(r=>{if((r.date||"")>dateMax)return;if(r.type==="in"&&r.accountId===a.id)bal+=+r.amount||0;else if(r.type==="out"&&r.accountId===a.id)bal-=+r.amount||0;else if(r.type==="transfer"){if(r.accountId===a.id)bal-=+r.amount||0;if(r.toAccountId===a.id)bal+=+r.amount||0;}});nw+=bal;});const mv=secMV();nw+=mv.stock+mv.fund;return nw;}
-function ledgerAdd(r){if(!S.ledger)S.ledger=[];S.ledger.push(r);save();render();}
+function ledgerAdd(r){if(!S.ledger)S.ledger=[];S.ledger.push(r);if(!(r.src==="固定收支"&&r.recurringId))pvzAward(5,"记账一笔");save();render();}
 function ledgerRecs(){return (S.ledger||[]).slice();}
 function isNonIncome(r){return r.type==="in"&&NON_INCOME_CATS.indexOf(r.cat||"")>=0;}
 function realIncomeOf(recs){return recs.filter(r=>r.type==="in"&&!isNonIncome(r)).reduce((s,r)=>s+(+r.amount||0),0);}
@@ -4483,7 +4504,7 @@ function cdDiscClick(i){if(i===CD_IDX)rotateCD(1);else jumpCD(i);}
 function openCenteredFilm(){openFilmSummary(CD_IDX);}
 function setFilmPoster(i){const e=document.getElementById("fmPoster");if(e){S.film[i].poster=e.value.trim();save();toast("海报已保存");}}
 function searchPoster(i){const f=S.film[i];if(!f)return;window.open('https://search.douban.com/movie/subject_search?search_text='+encodeURIComponent(f.title),'_blank');}
-function rateFilm(i,r){S.film[i].rating=r;if(r>0&&S.film[i].status==="待看")S.film[i].status="已看";save();render();}
+function rateFilm(i,r){S.film[i].rating=r;if(r>0&&S.film[i].status==="待看"){S.film[i].status="已看";pvzAward(12,"看完一部影片");}save();render();}
 function setFilmDate(i){S.film[i].date=document.getElementById("fmDate").value;save();toast("已记录观影日期");}
 function setFilmReview(i){S.film[i].review=document.getElementById("fmReview").value;save();toast("短评已保存");}
 function setFilmReviewBody(i){const e=document.getElementById("fmReviewBody");if(e)S.film[i].reviewBody=e.value;save();toast("观后感已保存");}
@@ -4495,7 +4516,7 @@ function setFilmQuotes(i){const e=document.getElementById("fmQuotes");if(e)S.fil
 function setFilmIntro(i){const e=document.getElementById("fmIntro");if(e)S.film[i].intro=e.value;save();toast("简介已保存");}
 function setFilmCast(i){const e=document.getElementById("fmCast");if(e)S.film[i].cast=e.value;save();toast("角色已保存");}
 function delFilm(i){S.film.splice(i,1);save();render();closeDModal();}
-function cycleFilmStatus(i){const s=["待看","在看","已看"];const cur=S.film[i].status;S.film[i].status=s[(s.indexOf(cur)+1)%s.length];if(s[(s.indexOf(cur)+1)%s.length]==="已看"&&S.film[i].reviewDate==="")S.film[i].reviewDate=todayStr();save();render();}
+function cycleFilmStatus(i){const s=["待看","在看","已看"];const cur=S.film[i].status;const nx=s[(s.indexOf(cur)+1)%s.length];S.film[i].status=nx;if(nx==="已看"&&S.film[i].reviewDate==="")S.film[i].reviewDate=todayStr();if(nx==="已看")pvzAward(12,"看完一部影片");save();render();}
 function addFilm(){const t=document.getElementById("nfTitle").value.trim();const cat=document.getElementById("nfCat").value;const y=document.getElementById("nfType").value.trim();const g=document.getElementById("nfTags").value.trim();if(!t)return;S.film.push({title:t,cat:cat,type:y,status:"待看",tags:g,rating:0,date:"",review:"",reviewBody:"",reviewDate:"",spoiler:false,quotes:"",intro:"",cast:"",releaseDate:"",douban:"",poster:""});save();render();toast("已添加");}
 
 // 自媒体矩阵（独立重做：粉丝目标 + 平台分布条 + 可编辑账号）
@@ -4719,7 +4740,9 @@ function butlerParseCmd(content){const re=/```(?:json)?\s*([\s\S]*?)```/i;const 
 
 function butlerExecCmd(cmd){const a=cmd&&cmd.action;const p=cmd.payload||{};const ACC_ALIAS={银行卡:"acc_bank",微信:"acc_wechat",支付宝:"acc_alipay",现金:"acc_cash",公积金:"acc_provident",医保:"acc_medical",押金:"acc_deposit_sc",负债:"acc_liability",信用卡:"acc_liability"};try{if(a==="add_book"){const title=(p.title||"").trim();if(!title)return "⚠️ 缺少书名";S.reading.push({title:title,author:(p.author||"").trim(),status:p.status||"待读",tags:(p.tags||"").trim(),excerpts:[],notes:[],rating:0,progress:0,intro:"",version:"",authorInfo:""});save();render();return "📚 已添加书籍：《"+title+"》";}if(a==="add_film"){const title=(p.title||"").trim();if(!title)return "⚠️ 缺少片名";const st=p.type==="在看"?"在看":(p.type==="已看"?"已看":"待看");S.film.push({title:title,cat:p.cat||"电影",type:st,status:st,tags:(p.tags||"").trim(),rating:0,date:"",review:"",reviewBody:"",reviewDate:"",spoiler:false,quotes:"",intro:"",cast:"",releaseDate:"",douban:"",poster:""});save();render();return "🎬 已添加影片：《"+title+"》";}if(a==="add_ledger"){const type=p.type;const amount=+p.amount;if(!type||!(amount>0))return "⚠️ 账单需要 type(in/out/transfer) 与 amount";if(!S.ledger)S.ledger=[];let accId=p.account||(type==="in"?"acc_bank":"acc_wechat");if(ACC_ALIAS[accId])accId=ACC_ALIAS[accId];const rec={id:"butler_"+Date.now(),date:normDate(p.date||todayStr()),type:type==="transfer"?"transfer":(type==="in"?"in":"out"),cat:((p.cat||(type==="in"?"收入":"支出"))+"").trim()||"其他",amount:amount,accountId:accId,method:"管家",merchant:(p.merchant||"").trim(),note:(p.note||"").trim(),src:"管家",createdAt:Date.now(),img:""};if(type==="transfer")rec.toAccountId=ACC_ALIAS[p.toAccount]||p.toAccount||"acc_liability";S.ledger.push(rec);save();render();return "💰 已记一笔："+(type==="in"?"收入":type==="transfer"?"转账":"支出")+" ¥"+amount+(p.merchant?"（"+p.merchant+"）":"");}if(a==="add_task"){const text=(p.text||"").trim();if(!text)return "⚠️ 缺少任务内容";if(!S.months)S.months={};if(!S.months[S.currentMonth])S.months[S.currentMonth]={tasks:[]};if(!S.months[S.currentMonth].tasks)S.months[S.currentMonth].tasks=[];const mk=S.months[S.currentMonth];const id=Math.max(0,...mk.tasks.map(function(t){return t.id;}))+1;mk.tasks.push({id:id,text:text,xp:(+p.xp||80),done:false});save();render();return "📌 已添加任务："+text;}if(a==="add_knowledge"){const topic=(p.topic||"").trim();if(!topic)return "⚠️ 缺少主题";if(!S.knowledge)S.knowledge=[];S.knowledge.push({topic:topic,cat:(p.cat||"").trim(),src:"管家",note:(p.content||"").trim()});save();render();return "🧠 已添加知识："+topic;}if(a==="set_book_status"){const title=(p.title||"").trim();if(!title)return "⚠️ 缺少书名";const b=S.reading.find(function(x){return x.title===title;});if(!b)return "⚠️ 没找到《"+title+"》";b.status=p.status||"在读";save();render();return "📚 《"+title+"》状态改为："+b.status;}return "⚠️ 未识别的操作："+(a||"");}catch(e){return "⚠️ 执行出错："+e.message;}}
 
-async function butlerAsk(){const ai=JSON.parse(localStorage.getItem("wb_ai_cfg")||"{}");if(!(ai.key&&ai.base&&ai.model)){butlerChat.push({role:"assistant",text:"我已经预配好默认模型（OpenRouter，免费、浏览器可直连）。只差你的 API Key 啦——去「设置 → 🤖 AI 大模型配置」把 Key 粘进去保存，我就能上岗。还没有 Key？去 openrouter.ai/keys 领一个免费的（无需信用卡）。"});butlerSave();butlerRenderMsgs();return;}butlerBusy=true;butlerChat.push({role:"assistant",text:"…",_typing:true});butlerRenderMsgs();const h=document.getElementById("butlerHint");if(h)h.textContent="管家思考中…";try{const msgs=butlerBuildMsgs();const base=ai.base.replace(/\/+$/,"");const url=base+"/chat/completions";const headers={"Content-Type":"application/json","Authorization":"Bearer "+ai.key};const body=JSON.stringify({model:ai.model,messages:msgs,temperature:0.4});let res=null;try{res=await fetch(url,{method:"POST",headers:headers,body:body});}catch(e){if(ai.proxy){const sep=ai.proxy.indexOf("?")<0?"?":"&";const pu=ai.proxy+sep+"url="+encodeURIComponent(url);res=await fetch(pu,{method:"POST",headers:headers,body:body});}else{throw e;}}if(!res.ok){const t=await res.text().catch(function(){return "";});throw new Error("HTTP "+res.status+" "+t.slice(0,200));}const data=await res.json();let content="";if(data&&data.choices&&data.choices[0]&&data.choices[0].message)content=data.choices[0].message.content||"";else if(data&&data.choices&&data.choices[0]&&data.choices[0].text)content=data.choices[0].text;else throw new Error("返回格式异常");butlerChat=butlerChat.filter(function(m){return !m._typing;});const parsed=butlerParseCmd(content);let actionLabel="";if(parsed.cmd)actionLabel=butlerExecCmd(parsed.cmd);butlerChat.push({role:"assistant",text:parsed.text,action:actionLabel});butlerSave();butlerRenderMsgs();}catch(err){butlerChat=butlerChat.filter(function(m){return !m._typing;});butlerChat.push({role:"assistant",text:"抱歉，调用 AI 出错了："+err.message+"。请检查「设置 → AI 大模型配置」里的 Key / Base / 模型；若是 CORS 错误（Failed to fetch / 跨域），到该页底部填写一个 CORS 代理地址即可。"});butlerSave();butlerRenderMsgs();}finally{butlerBusy=false;const hh=document.getElementById("butlerHint");if(hh)hh.textContent="";}}
+async function butlerAsk(){const ai=JSON.parse(localStorage.getItem("wb_ai_cfg")||"{}");if(!(ai.key&&ai.base&&ai.model)){butlerChat.push({role:"assistant",text:"我已经预配好默认模型（OpenRouter，免费、浏览器可直连）。只差你的 API Key 啦——去「设置 → 🤖 AI 大模型配置」把 Key 粘进去保存，我就能上岗。还没有 Key？去 openrouter.ai/keys 领一个免费的（无需信用卡）。"});butlerSave();butlerRenderMsgs();return;}butlerBusy=true;butlerChat.push({role:"assistant",text:"…",_typing:true});butlerRenderMsgs();const h=document.getElementById("butlerHint");if(h)h.textContent="管家思考中…";try{const msgs=butlerBuildMsgs();const base=ai.base.replace(/\/+$/,"");const url=base+"/chat/completions";const headers={"Content-Type":"application/json","Authorization":"Bearer "+ai.key};const body=JSON.stringify({model:ai.model,messages:msgs,temperature:0.4});let res=null;try{res=await fetch(url,{method:"POST",headers:headers,body:body});}catch(e){if(ai.proxy){const sep=ai.proxy.indexOf("?")<0?"?":"&";const pu=ai.proxy+sep+"url="+encodeURIComponent(url);res=await fetch(pu,{method:"POST",headers:headers,body:body});}else{throw e;}}if(!res.ok){const t=await res.text().catch(function(){return "";});throw new Error("HTTP "+res.status+" "+t.slice(0,200));}const data=await res.json();let content="";if(data&&data.choices&&data.choices[0]&&data.choices[0].message)content=data.choices[0].message.content||"";else if(data&&data.choices&&data.choices[0]&&data.choices[0].text)content=data.choices[0].text;else throw new Error("返回格式异常");butlerChat=butlerChat.filter(function(m){return !m._typing;});const parsed=butlerParseCmd(content);let actionLabel="";if(parsed.cmd)actionLabel=butlerExecCmd(parsed.cmd);
+ if(parsed.cmd&&parsed.cmd.action){const a=parsed.cmd.action;const amt={"add_ledger":5,"add_book":5,"add_film":5,"add_task":5,"add_knowledge":8,"set_book_status":8}[a];if(amt)pvzAward(amt,"管家帮你记录");}
+ butlerChat.push({role:"assistant",text:parsed.text,action:actionLabel});butlerSave();butlerRenderMsgs();}catch(err){butlerChat=butlerChat.filter(function(m){return !m._typing;});butlerChat.push({role:"assistant",text:"抱歉，调用 AI 出错了："+err.message+"。请检查「设置 → AI 大模型配置」里的 Key / Base / 模型；若是 CORS 错误（Failed to fetch / 跨域），到该页底部填写一个 CORS 代理地址即可。"});butlerSave();butlerRenderMsgs();}finally{butlerBusy=false;const hh=document.getElementById("butlerHint");if(hh)hh.textContent="";}}
 
 // 知识库（独立重做：SM-2 间隔复习队列 + 可编辑条目）
 const AI_CURRICULUM=[
@@ -4789,7 +4812,7 @@ function gradeKnowledge(i,g){const k=S.knowledge[i];if(!k)return;
  else if(g==="good"){iv=reps===0?1:Math.round(iv*2.5);reps+=1;ease=Math.min(3.0,ease+0.05);}
  else if(g==="easy"){iv=reps===0?4:Math.round(iv*3.5);reps+=1;ease=Math.min(3.2,ease+0.15);}
  k.interval=iv;k.reps=reps;k.ease=Math.round(ease*100)/100;k.last=today;k.due=addDaysStr(today,iv);
- save();closeDModal();render();toast("已记录 · 下次复习 "+k.due);}
+ pvzAward(4,"复习知识");save();closeDModal();render();toast("已记录 · 下次复习 "+k.due);}
 function addDaysStr(dateStr,n){const d=new Date(dateStr);d.setDate(d.getDate()+n);return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
 function openKnowledgeEdit(i){const k=S.knowledge[i];if(!k)return;
  const html=`<div style="font-size:13px;color:var(--accent-ink);margin-bottom:6px">编辑知识条目</div>
@@ -4880,9 +4903,9 @@ function swAddForm(view){
 }
 function delSw(gi){if(S[view]&&S[view][gi]){S[view].splice(gi,1);save();render();}}
 function cycleWritingStatus(gi){const s=["灵感","写作中","已发布"];const cur=S.writing[gi].status;S.writing[gi].status=s[(s.indexOf(cur)+1)%s.length];save();render();}
-function addSocial(){const o={platform:val("saPlatform"),name:val("saName"),freq:val("saFreq"),fans:val("saFans"),note:val("saNote"),link:val("saLink"),xhsId:val("saXhs")};if(!o.platform&&!o.name)return;S.social.push(o);save();render();toast("已添加账号");}
-function addWriting(){const w=parseInt(val("saWords"))||0;const o={title:val("saTitle"),type:val("saType"),status:(document.getElementById("saStatus")||{}).value||"灵感",words:w,note:val("saNote")};if(!o.title)return;S.writing.push(o);save();render();toast("已添加作品");}
-function addKnowledge(){const o={topic:val("saTopic"),cat:val("saCat"),src:val("saSrc"),note:val("saNote")};if(!o.topic)return;S.knowledge.push(o);save();render();toast("已添加知识");}
+function addSocial(){const o={platform:val("saPlatform"),name:val("saName"),freq:val("saFreq"),fans:val("saFans"),note:val("saNote"),link:val("saLink"),xhsId:val("saXhs")};if(!o.platform&&!o.name)return;S.social.push(o);pvzAward(6,"运营打卡");save();render();toast("已添加账号");}
+function addWriting(){const w=parseInt(val("saWords"))||0;const o={title:val("saTitle"),type:val("saType"),status:(document.getElementById("saStatus")||{}).value||"灵感",words:w,note:val("saNote")};if(!o.title)return;S.writing.push(o);pvzAward(w>0?10:6,"写作打卡");save();render();toast("已添加作品");}
+function addKnowledge(){const o={topic:val("saTopic"),cat:val("saCat"),src:val("saSrc"),note:val("saNote")};if(!o.topic)return;S.knowledge.push(o);pvzAward(8,"新增知识");save();render();toast("已添加知识");}
 function val(id){const e=document.getElementById(id);return e?e.value.trim():"";}
 // 补充默认值（首次进入简单模块）
 S.social=S.social||[];S.writing=S.writing||[];S.reading=S.reading||[];S.film=S.film||[];S.knowledge=S.knowledge||[];S.diary=S.diary||[];
@@ -4986,6 +5009,18 @@ if(!S.stocks.knowledgeCards||!S.stocks.knowledgeCards.length)S.stocks.knowledgeC
 ];
 S.fitness=S.fitness||{issues:["肋骨外翻","驼背","脖子前倾","小腹突出"],today:{name:"",sets:"",tip:"",while:""},streak:0,lastDone:"",history:[],videoOverride:{}};
 if(!S.fitness.postureDone)S.fitness.postureDone=[];
+// ===== 植物大战僵尸 · 每日防守小游戏 =====
+const PVZ_PLANTS=[
+ {t:"pea",name:"豌豆射手",ico:"🌱",cost:20,def:30,desc:"阻挡 30 分钟"},
+ {t:"sun",name:"向日葵",ico:"🌻",cost:15,def:20,desc:"阻挡 20 分钟"},
+ {t:"wall",name:"坚果墙",ico:"🥥",cost:35,def:90,desc:"高墙阻挡 90 分钟"},
+ {t:"snow",name:"寒冰射手",ico:"❄️",cost:30,def:45,desc:"阻挡 45 分钟"},
+ {t:"repeater",name:"双发射手",ico:"🌿",cost:40,def:50,desc:"阻挡 50 分钟"},
+ {t:"jalapeno",name:"火爆辣椒",ico:"🌶️",cost:25,def:25,desc:"阻挡 25 分钟"},
+ {t:"potato",name:"土豆地雷",ico:"🥔",cost:18,def:25,desc:"阻挡 25 分钟"},
+];
+S.pvz=S.pvz||{day:null,sun:0,plants:[],shop:[],pendingBrain:false,brainShown:false};
+if(!S.pvz.day)S.pvz.day=null;if(S.pvz.sun===undefined)S.pvz.sun=0;if(!S.pvz.plants)S.pvz.plants=[];if(!S.pvz.shop)S.pvz.shop=[];
 // 记账多账户：确保 accounts/ledger/goals 存在（不再使用旧 S.account）
 if(!S.accounts)S.accounts=defaultAccounts();
 if(!Array.isArray(S.ledger))S.ledger=[];
@@ -5247,7 +5282,7 @@ function renderFocusCard(main){
 
 
 // 工具栏
-document.getElementById("checkin").onclick=()=>{if(S.lastCheckin===todayStr())return;S.checkinXp+=20;S.lastCheckin=todayStr();if(!S.checkinDays.includes(todayStr()))S.checkinDays.push(todayStr());save();confetti();toast("今日打卡 +20 XP 🌱");render();};
+document.getElementById("checkin").onclick=()=>{if(S.lastCheckin===todayStr())return;S.checkinXp+=20;S.lastCheckin=todayStr();if(!S.checkinDays.includes(todayStr()))S.checkinDays.push(todayStr());save();confetti();toast("今日打卡 +20 XP 🌱");pvzAward(20,"每日打卡");render();};
 document.getElementById("newmonth").onclick=()=>{const mm=prompt("新月份主线条（例：2026-09 金秋收官）","2026-09 新主线");if(!mm)return;const a=mm.split(/\s+/);const k=a[0];const t=a.slice(1).join(" ")||"新主线";
  if(!/^\d{4}-\d{2}$/.test(k)){toast("月份格式应为 2026-09");return;}if(S.months[k]){toast("该月份已存在");return;}
  S.months[k]={main:t,reward:"自定义犒劳",stampName:"✨ 新印记",tasks:[]};S.currentMonth=k;save();render();toast("已开启 "+k);};
@@ -5286,10 +5321,99 @@ document.getElementById("ckPull").onclick=()=>cloudPull(false);
 document.getElementById("ckPush").onclick=()=>{S.__updatedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(S));cloudSave();toast("已上传到云端");};
 document.getElementById("ckClear").onclick=()=>{localStorage.removeItem(CLOUD_KEY);localStorage.removeItem(CLOUD_BIN);setCloudStatus("云端未配置","off");document.getElementById("ckStatus").textContent="已断开（本机数据保留）";toast("已断开云同步");};
 
+// ===== 植物大战僵尸 · 每日防守小游戏 =====
+function pvzStartOfDay(now){const d=new Date(now);d.setHours(0,0,0,0);return d.getTime();}
+function pvzPickShop(){const pool=PVZ_PLANTS.slice();for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;}return pool.slice(0,4).map(p=>({t:p.t}));}
+function pvzRollDay(){
+ const t=todayStr();
+ if(S.pvz.day===t)return;
+ if(S.pvz.day && S.pvz.day!==t){
+  const prevDef=(S.pvz.plants||[]).reduce(function(a,p){return a+(p.def||0);},0);
+  if(prevDef<=0){S.pvz.pendingBrain=true;S.pvz.brainShown=false;} // 昨天没布置任何植物 → 脑子被吃
+ }
+ S.pvz.day=t;S.pvz.sun=0;S.pvz.plants=[];S.pvz.shop=pvzPickShop();
+ save();
+}
+function pvzSim(now){
+ pvzRollDay();
+ const ds=pvzStartOfDay(now);
+ const elapsed=Math.max(0,Math.min(1440*3,(now-ds)/60000));
+ const step=100/1440; // 每分钟推进的距离单位（100 格 / 1440 分钟）
+ const plants=(S.pvz.plants||[]).filter(function(p){return p.alive!==false;}).map(function(p){return {pos:p.pos,def:p.def,eaten:0,id:p.id};});
+ plants.sort(function(a,b){return a.pos-b.pos;});
+ let realT=0,pos=0;
+ while(realT<elapsed && pos<100){
+  let cur=null;
+  for(const p of plants){ if(p.eaten<p.def && p.pos<=pos+0.0001){ if(!cur||p.pos>cur.pos)cur=p; } }
+  if(cur && cur.eaten<cur.def){ cur.eaten+=1; } else { pos+=step; }
+  realT+=1;
+ }
+ const posPct=Math.min(100,pos);
+ const arrived=pos>=100;
+ const totalDef=plants.reduce(function(a,p){return a+p.def;},0);
+ const arrivalMin=1440+totalDef; // 僵尸走到脑子(100%)所需的真实分钟数（含植物阻挡）
+ const remainToMid=Math.max(0,1440-elapsed);
+ return {posPct:posPct,arrived:arrived,plants:plants,pos:pos,totalDef:totalDef,arrivalMin:arrivalMin,remainToMid:remainToMid,elapsed:elapsed};
+}
+function pvzAward(amount,reason){
+ pvzRollDay();
+ if(!S.pvz)S.pvz={day:null,sun:0,plants:[],shop:[],pendingBrain:false,brainShown:false};
+ S.pvz.sun=(S.pvz.sun||0)+amount;
+ S.pvz.log=S.pvz.log||[];
+ S.pvz.log.push({t:todayStr(),amount:amount,reason:reason});
+ if(S.pvz.log.length>200)S.pvz.log=S.pvz.log.slice(-200);
+ save();renderPvzBar();
+}
+function pvzBuy(t){
+ pvzRollDay();
+ const def=PVZ_PLANTS.find(function(p){return p.t===t;});if(!def)return;
+ if((S.pvz.sun||0)<def.cost){toast("阳光不足，先去完成任务赚阳光吧 🌞");return;}
+ S.pvz.sun-=def.cost;
+ const slots=[92,84,76,68,60,52,44,36,28,20];
+ const used=(S.pvz.plants||[]).map(function(p){return p.pos;});
+ let pos=slots.find(function(s){return used.indexOf(s)<0;});
+ if(pos===undefined)pos=10+Math.floor(Math.random()*10);
+ S.pvz.plants.push({id:"p"+Date.now()+Math.floor(Math.random()*999),t:def.t,pos:pos,def:def.def});
+ save();renderPvzBar();toast("已种下 "+def.name+" "+def.ico);
+}
+function renderPvzBar(){
+ const el=document.getElementById("pvzBar");if(!el)return;
+ const now=Date.now();
+ const st=pvzSim(now);
+ const sun=S.pvz.sun||0;
+ const shop=(S.pvz.shop||[]).map(function(s){const d=PVZ_PLANTS.find(function(p){return p.t===s.t;});const can=sun>=d.cost;return `<button class="pvz-shop-card${can?' on':''}" onclick="pvzBuy('${d.t}')" title="${esc(d.desc)}">
+   <span class="pvz-ico">${d.ico}</span><span class="pvz-nm">${esc(d.name)}</span><span class="pvz-cost">🌞${d.cost}</span></button>`;}).join("");
+ const plantEls=(S.pvz.plants||[]).map(function(p){const d=PVZ_PLANTS.find(function(x){return x.t===p.t;});return `<span class="pvz-plant" style="left:${p.pos}%" title="${esc(d.name)} 阻挡${p.def}分钟">${d.ico}</span>`;}).join("");
+ let status,statusCls="pvz-ok";
+ if(st.arrived){status="🧟 僵尸已到达！脑子被吃掉了…明天重新种植物抢回来";statusCls="pvz-bad";}
+ else if(st.totalDef<=0){status="⚠️ 还没布置植物，僵尸正直奔你的脑子！去做任务赚阳光种植物吧";statusCls="pvz-bad";}
+ else{const leftMin=(st.arrivalMin-st.elapsed).toFixed(0);status="🛡 已布置 "+(S.pvz.plants.length)+" 株植物（共阻挡 "+st.totalDef+" 分钟），僵尸距脑子还剩 "+((100-st.posPct)).toFixed(0)+"%，还要 "+(leftMin)+" 分钟才到（超过午夜即安全）";statusCls="pvz-ok";}
+ el.innerHTML=`<div class="pvz-head"><span class="pvz-title">🧟 每日僵尸防守战</span><span class="pvz-sun">🌞 ${sun}</span></div>
+  <div class="pvz-track">
+   <span class="pvz-sunflower" style="right:0">🌻</span>
+   ${plantEls}
+   <span class="pvz-zombie" style="left:${st.posPct}%">🧟</span>
+  </div>
+  <div class="${statusCls}">${status}</div>
+  <div class="pvz-shop">${shop}</div>`;
+}
+function showBrainEaten(){
+ if(!S.pvz.pendingBrain||S.pvz.brainShown)return;
+ S.pvz.brainShown=true;save();
+ const ov=document.createElement("div");ov.id="brainEaten";ov.style.cssText="position:fixed;inset:0;z-index:9999;background:rgba(20,10,10,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;animation:fadeIn .4s";
+ ov.innerHTML=`<div style="font-size:60px;animation:brainShake 1s infinite">🧠</div>
+  <div style="font-size:40px;margin-top:6px;animation:zombieWalk 3s linear forwards">🧟‍♂️</div>
+  <div style="font-size:20px;margin-top:18px;font-weight:700">昨天你没守住防线…</div>
+  <div style="font-size:15px;margin-top:8px;opacity:.85">僵尸吃掉了你的脑子 🧟 今天重新种植物，把脑子抢回来！</div>
+  <button class="btn" style="margin-top:22px" onclick="document.getElementById('brainEaten').remove()">💪 我知道了，开始今天的反击</button>`;
+ document.body.appendChild(ov);
+ setTimeout(function(){const o=document.getElementById("brainEaten");if(o)o.remove();},8000);
+}
 document.getElementById("d").textContent="今天 "+todayStr();
 applyTheme();updateWbTitle();
 if(window.matchMedia){try{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if((S.settings&&S.settings.theme)==="auto")applyTheme();});}catch(e){}}
-render();
+pvzRollDay();render();showBrainEaten();
+setInterval(function(){try{renderPvzBar();}catch(e){}},30000);
 initSearch();
 initCloudSync();
 if('serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}

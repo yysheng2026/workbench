@@ -1006,6 +1006,13 @@ function migrate(s){
  if(!Array.isArray(s.diary))s.diary=[];
  if(!Array.isArray(s.recurring))s.recurring=defaultRecurring();
  if(!s.incomePlan)s.incomePlan=defaultIncomePlan();
+ // 兼容旧 incomePlan：补齐新版字段（工资/租金/自动识别/保险会员项），不覆盖用户已有值
+ if(s.incomePlan&&typeof s.incomePlan==="object"){
+  const d=defaultIncomePlan();
+  ["monthlyIncome","incomeAuto","savingsGoal","savingsNote","salary","salaryAuto","rentIncome"].forEach(k=>{if(s.incomePlan[k]===undefined)s.incomePlan[k]=d[k];});
+  if(!Array.isArray(s.incomePlan.fixed))s.incomePlan.fixed=d.fixed;
+  else{["fx_ins","fx_mem"].forEach(id=>{if(!s.incomePlan.fixed.find(x=>x.id===id)){const f=d.fixed.find(x=>x.id===id);if(f)s.incomePlan.fixed.push(JSON.parse(JSON.stringify(f)));}});}
+ }
  // 增量补齐真实资产账户（按 id 判存，不覆盖已有）
  (defaultAccounts()||[]).forEach(a=>{ if(a&&a.id&&!s.accounts.find(x=>x.id===a.id)) s.accounts.push(JSON.parse(JSON.stringify(a))); });
  // 兼容：万科尚城押金原归类 bank，统一为 deposit 分组

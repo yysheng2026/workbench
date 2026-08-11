@@ -272,13 +272,12 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  .nav{width:188px;position:sticky;top:84px;align-self:flex-start}
  .nav button{font-size:15px;padding:12px 14px;min-height:48px}
  /* 用 CSS Grid 取代 masonry columns：卡片规整铺满两列，消除底部大片留白 */
- .main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
- /* 子标签栏（我家/装修）始终横跨整行，不被挤进某一列 */
- .main>.sub{grid-column:1/-1}
- .card{padding:16px;margin:0;width:100%;transition:box-shadow .25s ease,transform .25s cubic-bezier(.16,1,.3,1)}
- /* 克制的悬浮微动效：仅抬升一点 + 加深阴影，符合 ease-out 缓动 */
- .card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
- .card.grid-wide{grid-column:1/-1;margin-bottom:0}
+ /* 桌面用多列瀑布流（masonry）铺满，消除卡片高低不齐造成的留白 */
+ .main{display:block;column-count:2;column-gap:16px}
+ .main>.card{break-inside:avoid;margin:0 0 16px;width:100%;display:block;transition:box-shadow .25s ease,transform .25s cubic-bezier(.16,1,.3,1)}
+ .main>.card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+ /* 子标签栏 / 整宽卡 横跨所有列 */
+ .main>.sub,.main>.card.grid-wide{grid-column:auto;column-span:all;margin-bottom:16px}
  .cat-grid{grid-template-columns:repeat(4,1fr)}
  .stat-strip{gap:10px}
  .home-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch}
@@ -296,7 +295,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  .box.wide{max-width:640px}
  .hdr-top h1{font-size:22px}
 }
-@media(min-width:1600px){.main{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1600px){.main{column-count:3}}
 /* fitness redesign */
 .fit-block{margin:8px 0;padding:8px 10px;background:#fffdfa;border:2px dashed var(--line);border-radius:10px}
 .fit-h{font-size:12px;font-weight:bold;color:var(--accent-ink);margin-bottom:4px}
@@ -704,7 +703,12 @@ const STOCK_DATA=(function(){try{const el=document.getElementById('stockSeed');i
 // 盯盘阈值：单日涨/跌超该百分比触发自动异动提醒（持仓补仓/减仓、自选关注/追高）
 const WATCH_DROP_PCT=3, WATCH_RISE_PCT=3;
 // 行情价格取值：兼容 prices[code] 为对象（含 changePct 等）或旧版浮点
-function priceOf(code){const p=STOCK_DATA.prices[code];return (p&&typeof p==='object')?p.price:(p||null);}
+function priceOf(code){
+  const sp=(S.stocks&&S.stocks.prices&&S.stocks.prices[code]);
+  if(sp!==undefined&&sp!==null)return (typeof sp==='object')?sp.price:(sp);
+  const p=STOCK_DATA.prices[code];
+  return (p&&typeof p==='object')?p.price:(p||null);
+}
 // ---------- 默认书单 / 片单 ----------
 const DEFAULT_BOOKS=[
 {title:"疑案里的中国史",author:"艾公子",status:"已读",tags:"历史/悬疑",note:"1-3册",version:"2021·辽宁人民出版社",authorInfo:"艾公子，历史自媒体团队，专注以通俗笔法重述中国史。",intro:"从一桩桩疑案、悬案切入，借扑朔迷离的历史谜团串联起历朝历代的政治、人物与社会图景。"},
@@ -1436,6 +1440,9 @@ function renderNav(){const n=document.getElementById("nav");n.innerHTML="";
  updateNavToggleIcon();}
 function updateNavToggleIcon(){const b=document.getElementById("navToggle");if(b)b.innerHTML=((S.settings&&S.settings.navCollapsed)?NAV_ICON_COLLAPSE:NAV_ICON_MENU);}
 function toggleNav(){if(!S.settings)S.settings={};S.settings.navCollapsed=!S.settings.navCollapsed;save();renderNav();}
+// 导航栏手势：左划收起、右划（从左边缘起）展开
+function initNavSwipe(){if(window.__navSwipeDone)return;window.__navSwipeDone=true;let sx=0,sy=0,tracking=false;document.addEventListener('touchstart',function(e){if(e.touches&&e.touches.length){sx=e.touches[0].clientX;sy=e.touches[0].clientY;tracking=true;}},{passive:true});document.addEventListener('touchend',function(e){if(!tracking)return;tracking=false;const t=e.changedTouches&&e.changedTouches[0];if(!t)return;const dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){const collapsed=!!(S.settings&&S.settings.navCollapsed);if(dx<0&&!collapsed){if(!S.settings)S.settings={};S.settings.navCollapsed=true;save();renderNav();}else if(dx>0&&collapsed&&sx<60){if(!S.settings)S.settings={};S.settings.navCollapsed=false;save();renderNav();}}},{passive:true});}
+initNavSwipe();
 
 // ---------- 主渲染 ----------
 function render(){
@@ -2421,6 +2428,8 @@ more.innerHTML=`<div class="card-head" onclick="STOCK_MORE_OPEN=!STOCK_MORE_OPEN
   <div style="margin-top:8px;font-size:12px;color:var(--muted)">💡 自动同步：把同花顺导出文件放到 OneDrive，运行 sync_stocks.py 即可更新持仓与行情；或点顶部「同步行情」拉实时价。</div>`
  :`<div class="note-txt" style="margin:6px 0">补仓计算、增删持仓与自选等深度功能收起于此，点开使用。</div>`);
 main.appendChild(more);
+ // 首次进入若无快讯，自动拉取一次（不重复刷）
+ if(!(S.stocks.dailyNews&&S.stocks.dailyNews.length)&&!window.__stockNewsLoading){window.__stockNewsLoading=true;stockNewsSync().then(function(a){window.__stockNewsLoading=false;if(a>0){save();render();}}).catch(function(){window.__stockNewsLoading=false;});}
 }
 function addHolding(){const code=document.getElementById("shCode").value.trim();const name=document.getElementById("shName").value.trim();const shares=parseFloat(document.getElementById("shShares").value)||0;const cost=parseFloat(document.getElementById("shCost").value)||0;const price=parseFloat(document.getElementById("shPrice").value)||0;if(!code||!shares)return;const sector=document.getElementById("shSector").value.trim();const stop=parseFloat(document.getElementById("shStop").value)||null;const target=parseFloat(document.getElementById("shTarget").value)||null;const idx=S.stocks.holdings.findIndex(h=>h.code===code);if(idx>=0){const o=S.stocks.holdings[idx];S.stocks.holdings[idx]={code,name:name||o.name,shares,cost,price:price||cost,group:"A股",sector:sector||o.sector,stop:stop||null,target:target||null};}else{S.stocks.holdings.push({code,name:name||code,shares,cost,price:price||cost,group:"A股",sector,stop,target});}save();render();toast("持仓已更新");}
 function addWatch(){const code=document.getElementById("shwCode").value.trim();const name=document.getElementById("shwName").value.trim();if(!code)return;const buyBelow=parseFloat(document.getElementById("shwBuyBelow").value)||null;const sellAbove=parseFloat(document.getElementById("shwSellAbove").value)||null;const note=document.getElementById("shwNote").value.trim();const wl=S.stocks.watchlist||(S.stocks.watchlist=[]);const idx=wl.findIndex(w=>w.code===code);if(idx>=0){const o=wl[idx];wl[idx]={code,name:name||o.name,buyBelow:buyBelow||null,sellAbove:sellAbove||null,note:note||o.note};}else{wl.push({code,name:name||code,buyBelow,sellAbove,note});}save();render();toast("自选已更新");}
@@ -2432,8 +2441,8 @@ function stockPhase(){const d=new Date();const t=d.getHours()*60+d.getMinutes();
 function newsAnalysis(t){t=t||'';let mood='中性',advice='观望，结合自身仓位';if(/利好|增长|回购|分红|签约|中标|获批|超预期|上调/.test(t)){mood='偏多';advice='关注持有 / 分批加仓';}else if(/减持|风险|亏损|下滑|处罚|诉讼|下调|暴雷|退市|利空/.test(t)){mood='偏空';advice='注意规避 / 减仓';}else if(/业绩|公告|发布|募资/.test(t)){mood='中性';advice='看具体内容再定';}return {mood,advice};}
 function emSecid(code){code=(code||'').trim();if(code.indexOf('.')>0)return code;let mkt='1';if(/^(0|3|2|9)/.test(code))mkt='0';return mkt+'.'+code.replace(/^(sh|sz|bj)/i,'');}
 function jsonp(url,timeout){timeout=timeout||8000;return new Promise(function(resolve,reject){const cb='wbjp_'+Date.now()+'_'+Math.floor(Math.random()*10000);const sc=document.createElement('script');const t=setTimeout(function(){cleanup();reject(new Error('timeout'));},timeout);function cleanup(){clearTimeout(t);if(sc.parentNode)sc.parentNode.removeChild(sc);try{delete window[cb];}catch(e){window[cb]=undefined;}}window[cb]=function(data){cleanup();resolve(data);};sc.onerror=function(){cleanup();reject(new Error('load error'));};const sep=url.indexOf('?')>=0?'&':'?';sc.src=url+sep+'cb='+cb;document.head.appendChild(sc);});}
-async function stockNewsSync(){const codes=[...new Set((S.stocks.holdings||[]).map(h=>h.name||h.code).concat((S.stocks.watchlist||[]).map(w=>w.name||w.code)))];if(!codes.length)return 0;let added=0;for(const kw of codes.slice(0,5)){const param=JSON.stringify({uid:"",keyword:kw,type:["cmsArticleWebOld"],client:"web",clientType:"web",clientVersion:"curr",param:{cmsArticleWebOld:{searchScope:"default",sort:"default",pageIndex:1,pageSize:5,preTag:"",postTag:""}}});const u='https://search-api-web.eastmoney.com/search/jsonp?param='+encodeURIComponent(param);try{const j=await jsonp(u,6000);const arr=j&&j.result&&j.result.datas||[];arr.forEach(function(n){if(!n||!n.title)return;const item={title:String(n.title),url:n.url||'',source:n.source||'东方财富',time:n.publishTime||'',phase:stockPhase()};if(!S.stocks.dailyNews.some(x=>x.title===item.title)){S.stocks.dailyNews.push(item);added++;}});}catch(e){}}S.stocks.dailyNews=(S.stocks.dailyNews||[]).sort((a,b)=>String(b.time||'').localeCompare(a.time||'')).slice(0,30);return added;}
-async function stockLiveSync(){const codes=[...new Set((S.stocks.holdings||[]).map(h=>h.code).concat((S.stocks.watchlist||[]).map(w=>w.code)))];if(!codes.length){toast('暂无持仓/自选');return;}toast('正在同步行情…');let ok=0;for(const c of codes){const secid=emSecid(c);const u='https://push2.eastmoney.com/api/qt/stock/get?secid='+encodeURIComponent(secid)+'&fields=f43,f57,f58,f170';try{const j=await jsonp(u,6000);const d=j&&j.data;if(!d)continue;const price=+d.f43;const pct=+d.f170;if(price>0){STOCK_DATA.prices[c]={price:price,changePct:pct};ok++;}}catch(e){}}let newsOk=0;try{newsOk=await stockNewsSync();}catch(e){}STOCK_DATA.updated='实时 '+new Date().toLocaleTimeString();save();render();toast('已同步 '+ok+'/'+codes.length+' 只行情'+(newsOk?' · 新增 '+newsOk+' 条快讯':'')+(ok<codes.length?' · 失败的请检查代码或网络':''));}
+async function stockNewsSync(){const codes=[...new Set((S.stocks.holdings||[]).map(h=>h.name||h.code).concat((S.stocks.watchlist||[]).map(w=>w.name||w.code)))];if(!codes.length)return 0;let added=0;for(const kw of codes.slice(0,8)){const param=JSON.stringify({uid:"",keyword:kw,type:["cmsArticleWebOld"],client:"web",clientType:"web",clientVersion:"curr",param:{cmsArticleWebOld:{searchScope:"default",sort:"default",pageIndex:1,pageSize:5,preTag:"",postTag:""}}});const u='https://search-api-web.eastmoney.com/search/jsonp?param='+encodeURIComponent(param);try{const j=await jsonp(u,6000);const arr=(j&&j.result&&j.result.cmsArticleWebOld)||[];arr.forEach(function(n){if(!n||!n.title)return;const item={title:String(n.title),url:n.url||"",source:n.mediaName||"东方财富",time:n.date||"",phase:stockPhase()};if(!S.stocks.dailyNews.some(x=>x.title===item.title)){S.stocks.dailyNews.push(item);added++;}});}catch(e){}}S.stocks.dailyNews=(S.stocks.dailyNews||[]).sort((a,b)=>String(b.time||"").localeCompare(a.time||"")).slice(0,40);return added;}
+async function stockLiveSync(){const codes=[...new Set((S.stocks.holdings||[]).map(h=>h.code).concat((S.stocks.watchlist||[]).map(w=>w.code)))];if(!codes.length){toast('暂无持仓/自选');return;}toast('正在同步行情…');let ok=0;for(const c of codes){const secid=emSecid(c);const u='https://push2.eastmoney.com/api/qt/stock/get?secid='+encodeURIComponent(secid)+'&fields=f43,f57,f58,f170';try{const j=await jsonp(u,6000);const d=j&&j.data;if(!d)continue;const price=+d.f43;const pct=+d.f170;if(price>0){STOCK_DATA.prices[c]={price:price,changePct:pct};if(!S.stocks.prices)S.stocks.prices={};S.stocks.prices[c]={price:price,pct:pct};ok++;}}catch(e){}}let newsOk=0;try{newsOk=await stockNewsSync();}catch(e){}STOCK_DATA.updated='实时 '+new Date().toLocaleTimeString();save();render();toast('已同步 '+ok+'/'+codes.length+' 只行情'+(newsOk?' · 新增 '+newsOk+' 条快讯':'')+(ok<codes.length?' · 失败的请检查代码或网络':''));}
 function calcBuyback(){const sh=parseFloat(document.getElementById('bcShares').value)||0;const cost=parseFloat(document.getElementById('bcCost').value)||0;const a=parseFloat(document.getElementById('bcAddSh').value)||0;const p=parseFloat(document.getElementById('bcAddPr').value)||0;const out=document.getElementById('bcOut');if(sh<=0||cost<=0||a<=0||p<=0){out.textContent='请填完四项';return;}const nBE=(sh*cost+a*p)/(sh+a);const diff=nBE-cost;out.innerHTML='补仓后回本价（平均成本）<b style="color:var(--bad)">¥'+nBE.toFixed(2)+'</b> <span style="color:'+(diff<=0?'var(--ok)':'var(--bad)')+'">('+(diff>=0?'+':'')+diff.toFixed(2)+' vs 现成本)</span>';}
 // 体态（原健身）
 // 体态（原健身模块）——每天 15 分钟，一个一个解决体态问题
@@ -2475,7 +2484,7 @@ const POSTURE_ISSUES=[
    {phase:"放松",min:3,note:"胸小肌拉伸 每侧 1 分钟 + 靠墙站",cautions:["拉伸到牵拉感","不憋气"]}
   ]}
 ];
-(function(){const _vm={"肋骨外翻":"BV1Rp421C7KF","驼背":"BV1Yk4y1d7Wn","脖子前倾":"BV1VF411E75X","小腹突出":"BV1Rp421C7KF","骨盆前倾":"BV1VF411E75X","翼状肩胛":"BV1VF411E75X"};POSTURE_ISSUES.forEach(x=>{if(!x.video)x.video=_vm[x.id]||"";});})();
+(function(){const _vm={"肋骨外翻":"BV1XdrHBSEAM","驼背":"BV1Gz421C7G1","脖子前倾":"BV1qVFCzYEW8","小腹突出":"BV1pQ4y1g7C3","骨盆前倾":"BV1244y1a7Nt","翼状肩胛":"BV1tt421u7QW"};POSTURE_ISSUES.forEach(x=>{if(!x.video)x.video=_vm[x.id]||"";});})();
 let POS_VIEW=-1;
 let posTimer={remaining:900,running:false,iv:null};
 function renderFitness(main){
@@ -4898,7 +4907,7 @@ if(!_mb.bills)_mb.bills={water:{t:"水费",account:"",lastDate:"",lastAmount:"",
 if(!_mb.prices)_mb.prices={community:"",history:[]};
 if(!_mb.smart)_mb.smart=[];
 if(!_mb.stocks)_mb.stocks=[];
-S.stocks=S.stocks||{mode:"tonghuashun",holdings:[],watchlist:[],targetRecovery:67000,dailyNews:[],knowledgeCards:[],knowledgeIdx:0,trades:[]};
+S.stocks=S.stocks||{mode:"tonghuashun",holdings:[],watchlist:[],targetRecovery:67000,dailyNews:[],prices:{},knowledgeCards:[],knowledgeIdx:0,trades:[]};
 S.stocks.trades=S.stocks.trades||[];
 S.stocks.watchlist=S.stocks.watchlist||[];
 S.stocks.holdings.forEach(h=>{if(h.stop===undefined)h.stop=null;if(h.target===undefined)h.target=null;if(!h.sector)h.sector="";});
@@ -4907,17 +4916,22 @@ S.stocks.watchlist.forEach(w=>{if(w.buyBelow===undefined)w.buyBelow=null;if(w.se
 // 关键：以 json(行情同步) 为基底，叠加本地手动设的 stop/target/sector/buyBelow/sellAbove/note
 //（网页里改的优先），避免每次同步后把手动设的止损/止盈/买点清空。
 if(STOCK_DATA.holdings && STOCK_DATA.holdings.length){
-  const localMap={}; (S.stocks.holdings||[]).forEach(h=>{if(h&&h.code)localMap[h.code]=h;});
-  const jsonCodes=new Set(STOCK_DATA.holdings.map(h=>h.code));
-  const localOnly=(S.stocks.holdings||[]).filter(h=>h&&h.code&&!jsonCodes.has(h.code));
-  S.stocks.holdings=STOCK_DATA.holdings.map(h=>{
-    const lo=localMap[h.code]||{};
-    return Object.assign({},h,{
-      stop:(lo.stop!==undefined?lo.stop:h.stop)||null,
-      target:(lo.target!==undefined?lo.target:h.target)||null,
-      sector:(lo.sector!==undefined&&lo.sector!=="")?lo.sector:(h.sector||""),
-    });
-  }).concat(localOnly);
+  // 关键：以「用户本地持仓」为权威（shares/cost/price 不被种子覆盖），仅补充本地缺失的字段，
+  // 并把种子里新增的代码（如 sync_stocks.py 同步进来的）追加进去，避免每次刷新把用户真实持仓清空。
+  const local=(S.stocks.holdings||[]).filter(h=>h&&h.code);
+  const localMap={}; local.forEach(h=>{localMap[h.code]=h;});
+  const seedMap={}; STOCK_DATA.holdings.forEach(h=>{if(h&&h.code)seedMap[h.code]=h;});
+  const merged=[];
+  local.forEach(h=>{
+    const sd=seedMap[h.code]||{};
+    merged.push(Object.assign({}, sd, h, {
+      stop:(h.stop!==undefined?h.stop:(sd.stop||null))||null,
+      target:(h.target!==undefined?h.target:(sd.target||null))||null,
+      sector:(h.sector!==undefined&&h.sector!=="")?h.sector:(sd.sector||""),
+    }));
+  });
+  STOCK_DATA.holdings.forEach(h=>{ if(h&&h.code&&!localMap[h.code]) merged.push(h); });
+  S.stocks.holdings=merged;
 }
 if(STOCK_DATA.watchlist && STOCK_DATA.watchlist.length){
   const localMap={}; (S.stocks.watchlist||[]).forEach(w=>{if(w&&w.code)localMap[w.code]=w;});

@@ -438,20 +438,40 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .pvz-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .pvz-title{font-size:13px;font-weight:700;color:var(--accent-ink)}
 .pvz-sun{font-size:13px;font-weight:700;color:var(--warm);background:var(--yellow);border-radius:14px;padding:2px 10px}
-.pvz-track{position:relative;height:46px;background:repeating-linear-gradient(90deg,var(--green) 0 18px,#e6f3e8 18px 36px);border:2px solid var(--line);border-radius:8px;overflow:hidden}
-.pvz-sunflower{position:absolute;top:50%;transform:translateY(-50%);font-size:26px;right:2px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.2))}
-.pvz-plant{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:20px}
-.pvz-zombie{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:24px;transition:left .5s linear}
+.pvz-track{position:relative;height:62px;background:repeating-linear-gradient(90deg,var(--green) 0 18px,#e6f3e8 18px 36px);border:2px solid var(--line);border-radius:8px}
+.pvz-sunflower{position:absolute;bottom:3px;right:2px;transform:translateX(50%);z-index:3}
+.pvz-sunflower .pvz-svg{width:44px;height:52px;display:block;animation:sfGlow 2.4s ease-in-out infinite}
+.pvz-brain{position:absolute;bottom:8px;right:34px;z-index:2;opacity:.95}
+.pvz-brain .pvz-svg{width:26px;height:26px;display:block;animation:sfGlow 2.4s ease-in-out infinite}
+.pvz-plant{position:absolute;bottom:6px;transform:translateX(-50%);z-index:4;cursor:grab;touch-action:none;user-select:none}
+.pvz-plant .pvz-svg{display:block;width:38px;height:46px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.pvz-plant.dragging{cursor:grabbing;z-index:9;filter:drop-shadow(0 6px 8px rgba(0,0,0,.45))}
+.pvz-plant.will-withdraw{outline:2px dashed #e3554b;outline-offset:2px;border-radius:6px}
+.pvz-plant.eating .pvz-svg{animation:plShake .22s linear infinite!important}
+.pvz-del{position:absolute;top:-10px;right:-10px;width:18px;height:18px;border-radius:50%;background:#e3554b;color:#fff;font-size:14px;line-height:18px;text-align:center;display:none;box-shadow:0 1px 3px rgba(0,0,0,.35);cursor:pointer}
+.pvz-plant:hover .pvz-del,.pvz-plant.dragging .pvz-del{display:block}
+.pvz-zombie{position:absolute;bottom:2px;transform:translateX(-50%);z-index:6;transition:left .25s linear;animation:zLurch .55s ease-in-out infinite}
+.pvz-zombie .z-svg{width:42px;height:54px;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.pvz-zombie .z-arm{transform-origin:31px 26px;animation:zArm .55s ease-in-out infinite}
 .pvz-ok{font-size:12px;color:var(--ok);margin:6px 0 2px}
 .pvz-warn{font-size:12px;color:var(--warm);margin:6px 0 2px}
 .pvz-bad{font-size:12px;color:var(--bad);margin:6px 0 2px;font-weight:700}
 .pvz-shop{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .pvz-shop-card{display:flex;flex-direction:column;align-items:center;gap:0;padding:5px 8px;border:2px dashed var(--line);border-radius:10px;background:var(--card2);font-family:inherit;cursor:pointer;min-width:62px;opacity:.55}
 .pvz-shop-card.on{opacity:1;border-color:var(--accent);background:var(--accent-weak)}
-.pvz-ico{font-size:20px}.pvz-nm{font-size:11px;color:var(--ink2)}.pvz-cost{font-size:11px;color:var(--warm);font-weight:700}
+.pvz-ico .pvz-svg{width:30px;height:34px;display:block}
+.pvz-nm{font-size:11px;color:var(--ink2)}.pvz-cost{font-size:11px;color:var(--warm);font-weight:700}
+.pvz-hint{font-size:11px;color:var(--ink3);margin:4px 0 2px}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes brainShake{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
 @keyframes zombieWalk{from{transform:translateX(40vw)}to{transform:translateX(0)}}
+@keyframes plBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes plSpin{to{transform:rotate(360deg)}}
+@keyframes plPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes plShake{0%{transform:translateX(-2px) rotate(-4deg)}50%{transform:translateX(2px) rotate(4deg)}100%{transform:translateX(-2px) rotate(-4deg)}}
+@keyframes zLurch{0%{transform:translateX(-50%) translateY(0) rotate(-2deg)}50%{transform:translateX(-50%) translateY(-2px) rotate(2deg)}100%{transform:translateX(-50%) translateY(0) rotate(-2deg)}}
+@keyframes zArm{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+@keyframes sfGlow{0%,100%{filter:drop-shadow(0 0 2px #ffd23f)}50%{filter:drop-shadow(0 0 9px #ffd23f)}}
 .home-datecard{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .hdc-avatar{width:48px;height:48px;border-radius:50%;background:var(--accent-weak);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-size:24px;flex:0 0 auto}
 .hdc-main{flex:1;min-width:0}
@@ -5010,14 +5030,27 @@ if(!S.stocks.knowledgeCards||!S.stocks.knowledgeCards.length)S.stocks.knowledgeC
 S.fitness=S.fitness||{issues:["肋骨外翻","驼背","脖子前倾","小腹突出"],today:{name:"",sets:"",tip:"",while:""},streak:0,lastDone:"",history:[],videoOverride:{}};
 if(!S.fitness.postureDone)S.fitness.postureDone=[];
 // ===== 植物大战僵尸 · 每日防守小游戏 =====
+// ===== 植物大战僵尸 · 每日防守小游戏 精灵素材（还原 PvZ 形象） =====
+function pvzPetals(){let s='';for(let i=0;i<12;i++){const a=i*30*Math.PI/180;const x=(20+Math.cos(a)*15).toFixed(1),y=(17+Math.sin(a)*15).toFixed(1);s+=`<ellipse cx="${x}" cy="${y}" rx="4.6" ry="2.3" transform="rotate(${i*30} ${x} ${y})" fill="#ffd23f" stroke="#f0b400" stroke-width="0.5"/>`;}return s;}
+const PVZ_SVG={
+ pea:`<svg class="pvz-svg bob" viewBox="0 0 40 48"><rect x="18" y="24" width="4" height="20" fill="#3f9b3a"/><path d="M13 42 q-8 -3 -6 -12 q8 1 8 11z" fill="#4caf50"/><g><circle cx="20" cy="18" r="12" fill="#5bbf4a" stroke="#3f9b3a" stroke-width="1.5"/><rect x="30" y="14" width="9" height="8" rx="4" fill="#7ed957" stroke="#3f9b3a" stroke-width="1"/><circle cx="16" cy="15" r="2.1" fill="#1f3d1c"/><circle cx="24" cy="15" r="2.1" fill="#1f3d1c"/><path d="M15 21 q5 3 10 0" stroke="#1f3d1c" stroke-width="1.4" fill="none"/></g></svg>`,
+ sun:`<svg class="pvz-svg spin" viewBox="0 0 40 48"><rect x="18" y="26" width="4" height="18" fill="#3f9b3a"/><g>${pvzPetals()}<circle cx="20" cy="17" r="10" fill="#8a5a2b"/><circle cx="16" cy="15" r="2" fill="#2b1c0e"/><circle cx="24" cy="15" r="2" fill="#2b1c0e"/><path d="M15 21 q5 4 10 0" stroke="#2b1c0e" stroke-width="1.4" fill="none"/></g></svg>`,
+ wall:`<svg class="pvz-svg pulse" viewBox="0 0 40 48"><ellipse cx="20" cy="26" rx="14" ry="18" fill="#c8915a" stroke="#a9743f" stroke-width="2"/><path d="M20 9 q3 -4 0 -6" stroke="#3f9b3a" stroke-width="2.4" fill="none"/><ellipse cx="15" cy="22" rx="2.6" ry="3.2" fill="#3a2410"/><ellipse cx="25" cy="22" rx="2.6" ry="3.2" fill="#3a2410"/><path d="M14 31 q6 4 12 0" stroke="#3a2410" stroke-width="1.6" fill="none"/></svg>`,
+ snow:`<svg class="pvz-svg bob" viewBox="0 0 40 48"><rect x="18" y="24" width="4" height="20" fill="#3f9b3a"/><path d="M13 42 q-8 -3 -6 -12 q8 1 8 11z" fill="#4caf50"/><g><circle cx="20" cy="18" r="12" fill="#6fb7d6" stroke="#3f88a8" stroke-width="1.5"/><rect x="30" y="14" width="9" height="8" rx="4" fill="#aee0f2" stroke="#3f88a8" stroke-width="1"/><circle cx="16" cy="15" r="2.1" fill="#173b47"/><circle cx="24" cy="15" r="2.1" fill="#173b47"/><path d="M15 21 q5 3 10 0" stroke="#173b47" stroke-width="1.4" fill="none"/></g></svg>`,
+ repeater:`<svg class="pvz-svg bob" viewBox="0 0 40 48"><rect x="18" y="24" width="4" height="20" fill="#3f9b3a"/><path d="M13 42 q-8 -3 -6 -12 q8 1 8 11z" fill="#4caf50"/><g><circle cx="20" cy="18" r="12" fill="#5bbf4a" stroke="#3f9b3a" stroke-width="1.5"/><rect x="29" y="13" width="9" height="7" rx="3.5" fill="#7ed957" stroke="#3f9b3a" stroke-width="1"/><rect x="29" y="21" width="9" height="7" rx="3.5" fill="#7ed957" stroke="#3f9b3a" stroke-width="1"/><circle cx="16" cy="15" r="2.1" fill="#1f3d1c"/><circle cx="23" cy="15" r="2.1" fill="#1f3d1c"/></g></svg>`,
+ jalapeno:`<svg class="pvz-svg bob" viewBox="0 0 40 48"><path d="M14 44 q-4 -22 8 -34 q10 10 6 32 q-7 6 -14 2z" fill="#e23b2e" stroke="#b3261b" stroke-width="1.5"/><path d="M22 10 q2 -6 8 -6" stroke="#3f9b3a" stroke-width="3" fill="none"/><path d="M22 10 q-2 -4 -6 -4" stroke="#3f9b3a" stroke-width="3" fill="none"/></svg>`,
+ potato:`<svg class="pvz-svg bob" viewBox="0 0 40 48"><path d="M12 30 q-4 -14 12 -16 q16 2 12 18 q-2 8 -12 8 q-10 0 -12 -10z" fill="#b98a4a" stroke="#8a6230" stroke-width="1.5"/><circle cx="20" cy="14" r="2" fill="#e23b2e"/><path d="M20 12 q0 -6 4 -8" stroke="#3f9b3a" stroke-width="2" fill="none"/><circle cx="16" cy="26" r="1.4" fill="#6b4a22"/><circle cx="25" cy="30" r="1.4" fill="#6b4a22"/></svg>`,
+};
+const PVZ_ZOMBIE=`<svg class="pvz-svg z-svg" viewBox="0 0 44 58"><g class="z-leg"><rect x="14" y="40" width="6" height="14" rx="2" fill="#5b6068"/><rect x="13" y="52" width="9" height="5" rx="2" fill="#3d3f45"/><rect x="24" y="40" width="6" height="14" rx="2" fill="#52565e"/><rect x="23" y="52" width="9" height="5" rx="2" fill="#36383d"/></g><g><path d="M12 22 q10 -4 20 0 l2 20 q-12 4 -24 0 z" fill="#6c7079"/><path d="M19 22 l1.5 20 M25 22 l-1 20" stroke="#565a62" stroke-width="1.4" fill="none"/><rect x="16" y="24" width="12" height="9" fill="#e9e4d8"/><g class="z-arm"><rect x="30" y="23" width="5" height="16" rx="2.5" fill="#9bbf6b"/><circle cx="33" cy="40" r="3" fill="#9bbf6b"/></g><g><ellipse cx="21" cy="13" rx="11" ry="10" fill="#9bbf6b"/><ellipse cx="17" cy="11" rx="2.4" ry="3" fill="#2b2f26"/><ellipse cx="25" cy="11" rx="2.4" ry="3" fill="#2b2f26"/><path d="M14 17 q7 6 14 0 q-2 4 -7 4 q-5 0 -7 -4z" fill="#3a1212"/><rect x="9" y="5" width="24" height="3" rx="1.5" fill="#7a9a52" opacity=".45"/></g></g></svg>`;
+const PVZ_BRAIN=`<svg class="pvz-svg" viewBox="0 0 40 40"><path d="M20 8 q-8 0 -9 7 q-6 1 -6 7 q0 5 5 6 q-1 6 6 7 q5 1 9 -2 q4 3 9 2 q7 -1 6 -7 q5 -1 5 -6 q0 -6 -6 -7 q-1 -7 -9 -7 q-5 0 -10 0z" fill="#f4b9c4" stroke="#d98aa0" stroke-width="1.5"/><path d="M20 10 v18 M14 14 q4 2 0 6 M26 14 q-4 2 0 6" stroke="#d98aa0" stroke-width="1.2" fill="none"/></svg>`;
 const PVZ_PLANTS=[
- {t:"pea",name:"豌豆射手",ico:"🌱",cost:20,def:30,desc:"阻挡 30 分钟"},
- {t:"sun",name:"向日葵",ico:"🌻",cost:15,def:20,desc:"阻挡 20 分钟"},
- {t:"wall",name:"坚果墙",ico:"🥥",cost:35,def:90,desc:"高墙阻挡 90 分钟"},
- {t:"snow",name:"寒冰射手",ico:"❄️",cost:30,def:45,desc:"阻挡 45 分钟"},
- {t:"repeater",name:"双发射手",ico:"🌿",cost:40,def:50,desc:"阻挡 50 分钟"},
- {t:"jalapeno",name:"火爆辣椒",ico:"🌶️",cost:25,def:25,desc:"阻挡 25 分钟"},
- {t:"potato",name:"土豆地雷",ico:"🥔",cost:18,def:25,desc:"阻挡 25 分钟"},
+ {t:"pea",name:"豌豆射手",ico:"🌱",cost:20,def:30,desc:"阻挡 30 分钟",svg:PVZ_SVG.pea},
+ {t:"sun",name:"向日葵",ico:"🌻",cost:15,def:20,desc:"阻挡 20 分钟",svg:PVZ_SVG.sun},
+ {t:"wall",name:"坚果墙",ico:"🥥",cost:35,def:90,desc:"高墙阻挡 90 分钟",svg:PVZ_SVG.wall},
+ {t:"snow",name:"寒冰射手",ico:"❄️",cost:30,def:45,desc:"阻挡 45 分钟",svg:PVZ_SVG.snow},
+ {t:"repeater",name:"双发射手",ico:"🌿",cost:40,def:50,desc:"阻挡 50 分钟",svg:PVZ_SVG.repeater},
+ {t:"jalapeno",name:"火爆辣椒",ico:"🌶️",cost:25,def:25,desc:"阻挡 25 分钟",svg:PVZ_SVG.jalapeno},
+ {t:"potato",name:"土豆地雷",ico:"🥔",cost:18,def:25,desc:"阻挡 25 分钟",svg:PVZ_SVG.potato},
 ];
 S.pvz=S.pvz||{day:null,sun:0,plants:[],shop:[],pendingBrain:false,brainShown:false};
 if(!S.pvz.day)S.pvz.day=null;if(S.pvz.sun===undefined)S.pvz.sun=0;if(!S.pvz.plants)S.pvz.plants=[];if(!S.pvz.shop)S.pvz.shop=[];
@@ -5322,6 +5355,7 @@ document.getElementById("ckPush").onclick=()=>{S.__updatedAt=Date.now();localSto
 document.getElementById("ckClear").onclick=()=>{localStorage.removeItem(CLOUD_KEY);localStorage.removeItem(CLOUD_BIN);setCloudStatus("云端未配置","off");document.getElementById("ckStatus").textContent="已断开（本机数据保留）";toast("已断开云同步");};
 
 // ===== 植物大战僵尸 · 每日防守小游戏 =====
+var pvzDrag=null,pvzRAF=null;
 function pvzStartOfDay(now){const d=new Date(now);d.setHours(0,0,0,0);return d.getTime();}
 function pvzPickShop(){const pool=PVZ_PLANTS.slice();for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;}return pool.slice(0,4).map(p=>({t:p.t}));}
 function pvzRollDay(){
@@ -5369,32 +5403,100 @@ function pvzBuy(t){
  const def=PVZ_PLANTS.find(function(p){return p.t===t;});if(!def)return;
  if((S.pvz.sun||0)<def.cost){toast("阳光不足，先去完成任务赚阳光吧 🌞");return;}
  S.pvz.sun-=def.cost;
- const slots=[92,84,76,68,60,52,44,36,28,20];
+ const slots=[95,88,80,72,64,56,48,40,32,24,16,8];
  const used=(S.pvz.plants||[]).map(function(p){return p.pos;});
  let pos=slots.find(function(s){return used.indexOf(s)<0;});
  if(pos===undefined)pos=10+Math.floor(Math.random()*10);
  S.pvz.plants.push({id:"p"+Date.now()+Math.floor(Math.random()*999),t:def.t,pos:pos,def:def.def});
- save();renderPvzBar();toast("已种下 "+def.name+" "+def.ico);
+ save();renderPvzBar();toast("已购买 "+def.name+"（拖动可摆放位置，× 撤回退阳光）");
+}
+function pvzWithdraw(pid){
+ const plants=S.pvz.plants||[];
+ const i=plants.findIndex(function(x){return x.id===pid;});
+ if(i<0)return;
+ const p=plants[i];
+ const def=PVZ_PLANTS.find(function(x){return x.t===p.t;});
+ S.pvz.sun+=(def?def.cost:0);
+ plants.splice(i,1);
+ save();renderPvzBar();toast("已撤回 "+(def?def.name:"植物")+"，阳光 +"+(def?def.cost:0));
+}
+function pvzPlantDown(e,el,pid){
+ if(pvzDrag)return;
+ const track=el.parentNode;
+ const rect=track.getBoundingClientRect();
+ pvzDrag={pid:pid,el:el,startX:e.clientX,origPct:parseFloat(el.style.left)||0,rect:rect};
+ el.classList.add("dragging");
+ if(el.setPointerCapture&&e.pointerId!==undefined){try{el.setPointerCapture(e.pointerId);}catch(_){}}
+ if(e.preventDefault)e.preventDefault();
+}
+function pvzPlantMove(e){
+ if(!pvzDrag)return;
+ const dx=e.clientX-pvzDrag.startX;
+ let pct=pvzDrag.origPct+dx/pvzDrag.rect.width*100;
+ pct=Math.max(3,Math.min(95,pct));
+ pvzDrag.el.style.left=pct+"%";
+ const shop=document.querySelector(".pvz-shop");
+ if(shop){const sr=shop.getBoundingClientRect();const over=e.clientY>sr.top-12&&e.clientX>sr.left&&e.clientX<sr.right;pvzDrag.el.classList.toggle("will-withdraw",over);}
+ if(e.preventDefault)e.preventDefault();
+}
+function pvzPlantUp(e){
+ if(!pvzDrag)return;
+ const pid=pvzDrag.pid,el=pvzDrag.el;
+ el.classList.remove("dragging");
+ const shop=document.querySelector(".pvz-shop");
+ let withdraw=false;
+ if(shop){const sr=shop.getBoundingClientRect();withdraw=e.clientY>sr.top-12&&e.clientX>sr.left&&e.clientX<sr.right;}
+ el.classList.remove("will-withdraw");
+ pvzDrag=null;
+ if(withdraw){pvzWithdraw(pid);return;}
+ const slots=[95,88,80,72,64,56,48,40,32,24,16,8];
+ let best=slots[0],bd=1e9;
+ const cur=parseFloat(el.style.left)||0;
+ for(const s of slots){const d=Math.abs(s-cur);if(d<bd){bd=d;best=s;}}
+ const p=(S.pvz.plants||[]).find(function(x){return x.id===pid;});
+ if(p){p.pos=best;save();}
+ renderPvzBar();
+}
+function pvzAnimLoop(){
+ try{
+  const z=document.getElementById("pvzZombie");
+  if(z){
+   const st=pvzSim(Date.now());
+   z.style.left=st.posPct+"%";
+   const plants=S.pvz.plants||[];
+   for(const p of plants){
+    const pe=document.querySelector('.pvz-plant[data-pid="'+p.id+'"]');
+    if(!pe)continue;
+    const simP=st.plants.find(function(s){return s.id===p.id;});
+    const eating=!!(simP&&simP.eaten<simP.def&&p.pos<=st.posPct+0.8);
+    pe.classList.toggle("eating",eating);
+   }
+  }
+ }catch(_){}
+ pvzRAF=setTimeout(pvzAnimLoop,240);
 }
 function renderPvzBar(){
+ if(pvzDrag)return;
  const el=document.getElementById("pvzBar");if(!el)return;
  const now=Date.now();
  const st=pvzSim(now);
  const sun=S.pvz.sun||0;
  const shop=(S.pvz.shop||[]).map(function(s){const d=PVZ_PLANTS.find(function(p){return p.t===s.t;});const can=sun>=d.cost;return `<button class="pvz-shop-card${can?' on':''}" onclick="pvzBuy('${d.t}')" title="${esc(d.desc)}">
-   <span class="pvz-ico">${d.ico}</span><span class="pvz-nm">${esc(d.name)}</span><span class="pvz-cost">🌞${d.cost}</span></button>`;}).join("");
- const plantEls=(S.pvz.plants||[]).map(function(p){const d=PVZ_PLANTS.find(function(x){return x.t===p.t;});return `<span class="pvz-plant" style="left:${p.pos}%" title="${esc(d.name)} 阻挡${p.def}分钟">${d.ico}</span>`;}).join("");
+   <span class="pvz-ico">${d.svg}</span><span class="pvz-nm">${esc(d.name)}</span><span class="pvz-cost">🌞${d.cost}</span></button>`;}).join("");
+ const plantEls=(S.pvz.plants||[]).map(function(p){const d=PVZ_PLANTS.find(function(x){return x.t===p.t});return `<span class="pvz-plant" data-pid="${p.id}" style="left:${p.pos}%" title="${esc(d.name)}：拖动调整位置，点 × 撤回并退还阳光" onpointerdown="pvzPlantDown(event,this,'${p.id}')">${d.svg}<span class="pvz-del" onpointerdown="event.stopPropagation()" onclick="pvzWithdraw('${p.id}')">×</span></span>`;}).join("");
  let status,statusCls="pvz-ok";
  if(st.arrived){status="🧟 僵尸已到达！脑子被吃掉了…明天重新种植物抢回来";statusCls="pvz-bad";}
  else if(st.totalDef<=0){status="⚠️ 还没布置植物，僵尸正直奔你的脑子！去做任务赚阳光种植物吧";statusCls="pvz-bad";}
  else{const leftMin=(st.arrivalMin-st.elapsed).toFixed(0);status="🛡 已布置 "+(S.pvz.plants.length)+" 株植物（共阻挡 "+st.totalDef+" 分钟），僵尸距脑子还剩 "+((100-st.posPct)).toFixed(0)+"%，还要 "+(leftMin)+" 分钟才到（超过午夜即安全）";statusCls="pvz-ok";}
  el.innerHTML=`<div class="pvz-head"><span class="pvz-title">🧟 每日僵尸防守战</span><span class="pvz-sun">🌞 ${sun}</span></div>
   <div class="pvz-track">
-   <span class="pvz-sunflower" style="right:0">🌻</span>
+   <span class="pvz-brain">${PVZ_BRAIN}</span>
+   <span class="pvz-sunflower">${PVZ_SVG.sun}</span>
    ${plantEls}
-   <span class="pvz-zombie" style="left:${st.posPct}%">🧟</span>
+   <span class="pvz-zombie" id="pvzZombie" style="left:${st.posPct}%">${PVZ_ZOMBIE}</span>
   </div>
   <div class="${statusCls}">${status}</div>
+  <div class="pvz-hint">💡 拖动植物摆放/挪动位置；把植物拖回下方商店区，或点 ×，可撤回并原数退还阳光。</div>
   <div class="pvz-shop">${shop}</div>`;
 }
 function showBrainEaten(){
@@ -5413,6 +5515,10 @@ document.getElementById("d").textContent="今天 "+todayStr();
 applyTheme();updateWbTitle();
 if(window.matchMedia){try{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if((S.settings&&S.settings.theme)==="auto")applyTheme();});}catch(e){}}
 pvzRollDay();render();showBrainEaten();
+document.addEventListener("pointermove",pvzPlantMove);
+document.addEventListener("pointerup",pvzPlantUp);
+document.addEventListener("pointercancel",pvzPlantUp);
+pvzAnimLoop();
 setInterval(function(){try{renderPvzBar();}catch(e){}},30000);
 initSearch();
 initCloudSync();

@@ -974,6 +974,7 @@ function defaultAccounts(){return [
  {id:"acc_alipay_gold",name:"支付宝黄金",type:"fund",opening:9160.68,note:"博时黄金ETF联接C"},
  {id:"acc_alipay_fund",name:"支付宝基金",type:"fund",opening:11137.06,note:"国联安中证全指半导体ETF联接A 007300"},
  {id:"acc_medical",name:"医保账户",type:"medical",opening:15749.61,monthlyIn:520.66,note:"医保卡余额，每月入账520.66，可用于看病买药"},
+ {id:"acc_pension",name:"个人养老金",type:"pension",opening:12003.91,note:"个人养老金账户余额12000元本金+3.91元利息"},
  {id:"acc_boc_deposit",name:"中国银行存单",type:"bank",opening:30000,note:"5年整存整取 2.4% 2024/05/05-2029/05/05"},
  {id:"acc_deposit_sc",name:"万科尚城押金",type:"deposit",opening:0,note:"租房押金2个月¥6000，可退"},
  {id:"acc_estate_sc",name:"万科尚城B8-3701",type:"estate",opening:2800000,marketValue:1800000,note:"问题资产，对外出租中，购买价280万/现价180万"},
@@ -1001,6 +1002,10 @@ function migrate(s){
  (s.film||[]).forEach(f=>{if(!f.cat||f.cat==="其他"){const t=(f.type||"").split("/")[0].trim();if(t)f.cat=t;}});
  // 记账：旧 S.account 拆为 多账户(S.accounts) + 流水(S.ledger) + 目标(S.goals)（幂等）
  if(!s.accounts)s.accounts=defaultAccounts();
+ // 幂等补全新增默认账户（如养老金、医保），不覆盖已有账户
+ const _defAcc=defaultAccounts();
+ (s.accounts||[]).forEach(a=>{if(a.type==="provident"&&!a.monthlyIn)a.monthlyIn=0;if(a.type==="provident"&&!a.monthlyOut)a.monthlyOut=0;});
+ _defAcc.forEach(d=>{if(!s.accounts.find(a=>a.id===d.id)){s.accounts.push(JSON.parse(JSON.stringify(d)));}});
  if(!Array.isArray(s.ledger))s.ledger=[];
  if(!Array.isArray(s.goals))s.goals=[];
  if(!Array.isArray(s.diary))s.diary=[];
@@ -2797,6 +2802,7 @@ const ACCOUNT_TYPES=[
  {type:"cash",label:"现金",icon:"💵",cls:"liquid"},{type:"wechat",label:"微信",icon:"💬",cls:"liquid"},
  {type:"alipay",label:"支付宝",icon:"🔵",cls:"liquid"},{type:"bank",label:"银行卡/存单",icon:"🏦",cls:"fixed"},
  {type:"deposit",label:"押金",icon:"🔐",cls:"fixed"},{type:"provident",label:"公积金",icon:"🏛",cls:"floating"},
+ {type:"medical",label:"医保",icon:"🏥",cls:"fixed"},{type:"pension",label:"养老金",icon:"🧓",cls:"fixed"},
  {type:"liability",label:"负债",icon:"💳",cls:"liability"},
  {type:"stock",label:"股票",icon:"📈",linked:true,cls:"floating"},{type:"fund",label:"基金",icon:"📊",linked:true,cls:"floating"},
  {type:"estate",label:"房产",icon:"🏠",cls:"fixed"}
@@ -2804,7 +2810,7 @@ const ACCOUNT_TYPES=[
 // 账户总览分组：按资产性质（固定 / 浮动 / 现金 / 押金 / 负债）归并；押金为可退资金，不计入净资产
 const ACCT_GROUPS=[
  {key:"floating",label:"📈 浮动资产（每日更新）",types:["stock","fund","provident"]},
- {key:"fixed",label:"🏠 固定资产",types:["bank","estate"]},
+ {key:"fixed",label:"🏠 固定资产",types:["bank","estate","medical","pension"]},
  {key:"liquid",label:"💳 现金 / 钱包 / 活期",types:["cash","wechat","alipay"]},
  {key:"deposit",label:"🔒 押金 / 保证金（不计入净资产）",types:["deposit"]},
  {key:"liability",label:"💸 负债 / 信用卡",types:["liability"]}
@@ -3273,6 +3279,8 @@ function renderMoneyStats(main){
   "基金":{sum:0,items:[]},
   "黄金":{sum:0,items:[]},
   "公积金":{sum:0,items:[]},
+  "医保账户":{sum:0,items:[]},
+  "养老金":{sum:0,items:[]},
   "现金/活期":{sum:0,items:[]}
  };
  assetAcc.forEach(a=>{
@@ -3284,6 +3292,8 @@ function renderMoneyStats(main){
   else if(a.type==="fund"&&(a.id==="acc_alipay_gold"||a.name.includes("黄金"))){acGroups["黄金"].sum+=b;acGroups["黄金"].items.push(item);}
   else if(a.type==="fund"){acGroups["基金"].sum+=b;acGroups["基金"].items.push(item);}
   else if(a.type==="provident"){acGroups["公积金"].sum+=b;acGroups["公积金"].items.push(item);}
+  else if(a.type==="medical"){acGroups["医保账户"].sum+=b;acGroups["医保账户"].items.push(item);}
+  else if(a.type==="pension"){acGroups["养老金"].sum+=b;acGroups["养老金"].items.push(item);}
   else if(["cash","wechat","alipay"].includes(a.type)){acGroups["现金/活期"].sum+=b;acGroups["现金/活期"].items.push(item);}
   else{acGroups["现金/活期"].sum+=b;acGroups["现金/活期"].items.push(item);}
  });

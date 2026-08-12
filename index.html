@@ -5524,7 +5524,7 @@ function renderPvzBar(){
  if(pvzDrag)return;
  const el=document.getElementById("pvzBar");if(!el)return;
  if(view==="splash"){el.style.display="none";return;}
- el.style.display="";
+ el.style.display="block";
  const collapsed=!!S.pvz.collapsed;
  el.classList.toggle("pvz-collapsed",collapsed);
  const now=Date.now();

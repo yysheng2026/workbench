@@ -5491,7 +5491,7 @@ document.getElementById("ckClear").onclick=()=>{localStorage.removeItem(CLOUD_KE
 // ===== 植物大战僵尸 · 每日防守小游戏 =====
 var pvzDrag=null,pvzRAF=null;
 function pvzStartOfDay(now){const d=new Date(now);d.setHours(0,0,0,0);return d.getTime();}
-function pvzPickShop(){const pool=PVZ_PLANTS.slice();for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;}return pool.slice(0,4).map(p=>({t:p.t}));}
+function pvzPickShop(){return PVZ_PLANTS.slice().sort(function(a,b){return a.cost-b.cost;}).map(function(p){return{t:p.t};});}
 function pvzRollDay(){
  const t=todayStr();
  if(S.pvz.day===t)return;
@@ -5695,11 +5695,11 @@ function pvzSelectZombie(t){
  save();renderPvzBar();toast("已选择对手："+z.name);
 }
 function pvzOpenZombiePrison(){
- const list=PVZ_ZOMBIES.map(function(z){const on=S.pvz.zombie===z.t;return `<button class="pvz-zombie-opt${on?' on':''}" onclick="pvzSelectZombie('${z.t}');closeDModal()">
+ const list=PVZ_ZOMBIES.filter(function(z){return z.t==="zombie";}).map(function(z){const on=S.pvz.zombie===z.t;return `<button class="pvz-zombie-opt${on?' on':''}" onclick="pvzSelectZombie('${z.t}');closeDModal()">
   <span class="pvz-z-ico">${pvzZombieSprite(z.t,z.hp,z.hp,false)}</span>
   <span><b>${esc(z.name)}</b><br><span style="font-size:11px;color:var(--muted)">血量 ${z.hp} · 速度 ${z.speed} · ${esc(z.desc)}</span></span>
  </button>`;}).join("");
- openDModal("🧟 僵尸监狱（选择今日对手）",`<div class="pvz-zombie-list">${list}</div><div class="note-txt" style="margin-top:8px">血量越高、速度越快的僵尸越难阻挡。选择后当天不可更换，明天会自动重置。</div>`);
+ openDModal("🧟 僵尸监狱（选择今日对手）",`<div class="pvz-zombie-list">${list}</div><div class="note-txt" style="margin-top:8px">目前只开放了普通僵尸；其他僵尸形象后续随截图更新。</div>`);
 }
 function pvzDailyCheckin(){
  pvzRollDay();

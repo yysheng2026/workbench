@@ -437,6 +437,8 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .pvz-wrap{position:sticky;top:0;z-index:40;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:8px 10px;margin:6px 0 10px;box-shadow:var(--shadow)}
 .pvz-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .pvz-title{font-size:13px;font-weight:700;color:var(--accent-ink)}
+.pvz-zname{cursor:pointer;color:var(--warm);border-bottom:1px dashed var(--warm)}
+.pvz-zname:hover{color:var(--accent);border-color:var(--accent)}
 .pvz-sun{font-size:13px;font-weight:700;color:var(--warm);background:var(--yellow);border-radius:14px;padding:2px 10px}
 .pvz-track{position:relative;height:62px;background:repeating-linear-gradient(90deg,var(--green) 0 18px,#e6f3e8 18px 36px);border:2px solid var(--line);border-radius:8px}
 .pvz-sunflower{position:absolute;bottom:3px;right:2px;transform:translateX(50%);z-index:3}
@@ -453,6 +455,11 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .pvz-zombie{position:absolute;bottom:2px;transform:translateX(-50%);z-index:6;transition:left .25s linear;animation:zLurch .55s ease-in-out infinite}
 .pvz-zombie .z-svg{width:42px;height:54px;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
 .pvz-zombie .z-arm{transform-origin:31px 26px;animation:zArm .55s ease-in-out infinite}
+.pvz-zombie.z-eating{animation:zBite .35s ease-in-out infinite}
+.pvz-zombie.z-slow .z-svg{filter:drop-shadow(0 0 5px #7bc8e6) sepia(0.3) hue-rotate(160deg)}
+.pvz-zombie.z-injured .z-svg{filter:drop-shadow(0 0 4px #e3554b) sepia(0.4) hue-rotate(-40deg) saturate(1.3)}
+.pvz-hpbar{position:absolute;bottom:56px;transform:translateX(-50%);width:34px;height:5px;background:rgba(0,0,0,.35);border-radius:3px;overflow:hidden;z-index:7}
+.pvz-hpbar span{display:block;height:100%;width:var(--hp);background:var(--hp-color);transition:width .25s linear}
 .pvz-ok{font-size:12px;color:var(--ok);margin:6px 0 2px}
 .pvz-warn{font-size:12px;color:var(--warm);margin:6px 0 2px}
 .pvz-bad{font-size:12px;color:var(--bad);margin:6px 0 2px;font-weight:700}
@@ -462,6 +469,11 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .pvz-ico .pvz-svg{width:30px;height:34px;display:block}
 .pvz-nm{font-size:11px;color:var(--ink2)}.pvz-cost{font-size:11px;color:var(--warm);font-weight:700}
 .pvz-hint{font-size:11px;color:var(--ink3);margin:4px 0 2px}
+.pvz-zombie-list{display:flex;flex-direction:column;gap:8px;max-height:62vh;overflow:auto}
+.pvz-zombie-opt{display:flex;align-items:center;gap:10px;padding:8px;border:2px dashed var(--line);border-radius:10px;background:var(--card2);cursor:pointer;text-align:left;font-family:inherit}
+.pvz-zombie-opt.on{border-color:var(--accent);background:var(--accent-weak)}
+.pvz-zombie-opt .pvz-z-ico{width:46px;height:46px;display:flex;align-items:center;justify-content:center}
+.pvz-zombie-opt .pvz-z-ico .pvz-svg{width:36px;height:auto}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes brainShake{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
 @keyframes zombieWalk{from{transform:translateX(40vw)}to{transform:translateX(0)}}
@@ -470,10 +482,11 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 @keyframes plPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 @keyframes plShake{0%{transform:translateX(-2px) rotate(-4deg)}50%{transform:translateX(2px) rotate(4deg)}100%{transform:translateX(-2px) rotate(-4deg)}}
 @keyframes zLurch{0%{transform:translateX(-50%) translateY(0) rotate(-2deg)}50%{transform:translateX(-50%) translateY(-2px) rotate(2deg)}100%{transform:translateX(-50%) translateY(0) rotate(-2deg)}}
+@keyframes zBite{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-3px) scale(1.05)}}
 @keyframes zArm{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
 @keyframes sfGlow{0%,100%{filter:drop-shadow(0 0 2px #ffd23f)}50%{filter:drop-shadow(0 0 9px #ffd23f)}}
-@keyframes peaFly{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(calc(50vw - 100%),-50%) scale(1)}}}
-@keyframes iceFly{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(calc(50vw - 100%),-50%) scale(1)}}}
+@keyframes peaFly{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(calc(-1 * var(--fly-dist, 200px)),-50%) scale(1)}}
+@keyframes iceFly{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(calc(-1 * var(--fly-dist, 200px)),-50%) scale(1)}}
 @keyframes mineBlink{0%,100%{fill:#e23b2e}50%{fill:#ff6b6b}}
 @keyframes flamePulse{0%,100%{opacity:.55}50%{opacity:.95}}
 @keyframes crackShow{0%{opacity:0}100%{opacity:1}}
@@ -681,15 +694,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  <div class="search-bar" id="searchBar"><input id="globalSearch" placeholder="搜索任务、书名、影视、账号、知识、股票..." autocomplete="off"></div>
  <span class="date" id="d"></span></header>
 <div class="search-dropdown" id="searchDropdown"></div>
-<div class="toolbar" id="toolbar">
-  <button class="btn green" id="checkin">✅ 今日打卡 +20</button>
-  <button class="btn alt" id="newmonth">➕ 新月份</button>
-  <button class="btn ghost" id="export">⬇ 导出</button>
-  <button class="btn ghost" id="import">⬆ 导入</button>
-  <input type="file" id="file" accept="application/json" style="display:none">
-  <span class="cloud-status off" id="cloudStatus">云端未配置</span>
-  <button class="btn ghost" id="cloudBtn">☁ 云同步</button>
-</div>
+<!-- 工具栏已整体移入「设置」页面，首页不再显示打卡/导入/导出/云同步/新月份按钮 -->
 <div class="banner" id="banner">🔨 今日装修待确认 —</div>
 <div id="pvzBar" class="pvz-wrap"></div>
 <div class="app">
@@ -741,7 +746,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 
 <script type="application/json" id="morningSeed">{"text": "今天最重要的一件事：先把贴砖耗材争议闭环（陶工语音里\"缺什么料/合同含不含/谁买谁送\"听清楚）。不解决，贴砖就继续卡着（已拖 1 天），后面排期全堵。\n\n🔴 今日必办（P0）\n🔴 贴砖耗材争议闭环：听清陶工 08-10 17:08 语音，明确缺料名称 / 合同是否含 / 谁采购谁送。解决后立刻问铺贴复工日。对接人：陶工（盛居）。\n🔴 闭水试验状态：妈妈 08-11「明后天试水」→ 确认 08-12 是否已蓄水、蓄水时长，务必去楼下看有无渗漏（蓄水 48h 窗口）。对接人：妈妈 / 现场。\n\n🟠 关键推进（P1）\n🟠 橱柜方案定稿：催壹玖出橱柜+衣柜+电视柜/梳妆台定稿，落实\"贴砖期间定方案、复尺按定稿\"，设明确 deadline（已拖 >27 天）。对接人：壹玖。\n🟠 徐工效果图催终版：末条 08-10 仍活跃未拍板，催交终版并定稿。对接人：徐工。\n🟠 铺贴复工 + 海棠角文字尺寸：耗材解决后问陶工贴砖排期；同步催装修公司给加工厂\"海棠角书面尺寸\"（CAD 加工厂看不懂）。对接人：陶工 / 装修公司。\n🟠 主卧补缝确认：问汉森张生 07-23 主卧窗室内补缝是否已完成。对接人：汉森张生。\n🟠 全屋智能回执：向付广金索要 07-30 现场点位核对回执。对接人：付广金。\n\n🟡 顺手跟（P2）\n🟡 全屋定制签约回填：挂起，待贴砖复尺后再启动（钟镜桓近窗无动态）。\n🟡 派雅退门：房间门+卫生间门，未启动。\n🟡 地面空鼓确认：行 69 金额¥0，待与师傅定是否重做。\n\n💰 预算：总超支 ¥30,684.46（+15.34%）；电器/全屋智能/硬装三分类已触顶，无缓冲。\n\n详细复盘见 装修进度日报_2026-08-11.md。"}</script>
 
-<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 33.86, "name": "紫金矿业", "open": 33.19, "high": 33.87, "low": 33.18, "preClose": 33.18, "change": 0.68, "changePct": 2.05, "amplitude": 2.08, "volumeRatio": 1.59, "amount": 178615.0, "time": "20260812095116"}, "sh601717": {"price": 15.7, "name": "中创智领", "open": 15.82, "high": 15.86, "low": 15.65, "preClose": 15.86, "change": -0.16, "changePct": -1.01, "amplitude": 1.32, "volumeRatio": 2.97, "amount": 7821.0, "time": "20260812095113"}, "sh600879": {"price": 15.82, "name": "航天电子", "open": 15.49, "high": 15.87, "low": 15.48, "preClose": 15.53, "change": 0.29, "changePct": 1.87, "amplitude": 2.51, "volumeRatio": 2.15, "amount": 31372.0, "time": "20260812095115"}, "sh600501": {"price": 14.83, "name": "航天晨光", "open": 14.67, "high": 14.84, "low": 14.64, "preClose": 14.66, "change": 0.17, "changePct": 1.16, "amplitude": 1.36, "volumeRatio": 1.51, "amount": 1336.0, "time": "20260812095115"}, "sz002270": {"price": 20.48, "name": "华明装备", "open": 20.49, "high": 20.54, "low": 20.28, "preClose": 20.41, "change": 0.07, "changePct": 0.34, "amplitude": 1.27, "volumeRatio": 1.28, "amount": 4955.0, "time": "20260812095115"}, "sz000429": {"price": 13.1, "name": "粤高速Ａ", "open": 13.29, "high": 13.3, "low": 13.01, "preClose": 13.29, "change": -0.19, "changePct": -1.43, "amplitude": 2.18, "volumeRatio": 2.51, "amount": 4094.0, "time": "20260812095115"}, "sh605166": {"price": 8.86, "name": "聚合顺", "open": 8.79, "high": 8.86, "low": 8.79, "preClose": 8.81, "change": 0.05, "changePct": 0.57, "amplitude": 0.79, "volumeRatio": 1.18, "amount": 438.0, "time": "20260812095114"}, "sh600343": {"price": 19.87, "name": "航天动力", "open": 19.58, "high": 19.88, "low": 19.4, "preClose": 19.58, "change": 0.29, "changePct": 1.48, "amplitude": 2.45, "volumeRatio": 1.69, "amount": 9899.0, "time": "20260812095114"}, "sz002997": {"price": 27.28, "name": "瑞鹄模具", "open": 27.21, "high": 27.33, "low": 27.0, "preClose": 27.21, "change": 0.07, "changePct": 0.26, "amplitude": 1.21, "volumeRatio": 1.11, "amount": 538.0, "time": "20260812095109"}, "sz159928": {"price": 0.68, "name": "消费ETF汇添富", "open": 0.68, "high": 0.686, "low": 0.677, "preClose": 0.681, "change": -0.001, "changePct": -0.15, "amplitude": 1.32, "volumeRatio": 1.84, "amount": 7922.0, "time": "20260812095115"}, "sh513130": {"price": 0.595, "name": "恒生科技ETF华泰柏瑞", "open": 0.596, "high": 0.597, "low": 0.593, "preClose": 0.602, "change": -0.007, "changePct": -1.16, "amplitude": 0.66, "volumeRatio": 2.1, "amount": 48072.0, "time": "20260812095115"}, "sh562800": {"price": 0.988, "name": "稀有金属ETF嘉实", "open": 0.968, "high": 0.988, "low": 0.967, "preClose": 0.973, "change": 0.015, "changePct": 1.54, "amplitude": 2.16, "volumeRatio": 2.66, "amount": 9857.0, "time": "20260812095113"}, "sh601012": {"price": 12.79, "name": "隆基绿能", "open": 12.79, "high": 12.87, "low": 12.71, "preClose": 12.79, "change": 0.0, "changePct": 0.0, "amplitude": 1.25, "volumeRatio": 1.06, "amount": 13063.0, "time": "20260812095115"}}, "news": [], "updated": "2026-08-12 09:51", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
+<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 33.74, "name": "紫金矿业", "open": 33.19, "high": 34.08, "low": 33.18, "preClose": 33.18, "change": 0.56, "changePct": 1.69, "amplitude": 2.71, "volumeRatio": 0.77, "amount": 440965.0, "time": "20260812112116"}, "sh601717": {"price": 15.62, "name": "中创智领", "open": 15.82, "high": 15.86, "low": 15.51, "preClose": 15.86, "change": -0.24, "changePct": -1.51, "amplitude": 2.21, "volumeRatio": 1.43, "amount": 19055.0, "time": "20260812112110"}, "sh600879": {"price": 15.86, "name": "航天电子", "open": 15.49, "high": 15.88, "low": 15.48, "preClose": 15.53, "change": 0.33, "changePct": 2.12, "amplitude": 2.58, "volumeRatio": 0.92, "amount": 68543.0, "time": "20260812112115"}, "sh600501": {"price": 14.88, "name": "航天晨光", "open": 14.67, "high": 14.89, "low": 14.64, "preClose": 14.66, "change": 0.22, "changePct": 1.5, "amplitude": 1.71, "volumeRatio": 0.74, "amount": 3324.0, "time": "20260812112115"}, "sz002270": {"price": 20.58, "name": "华明装备", "open": 20.49, "high": 20.69, "low": 20.28, "preClose": 20.41, "change": 0.17, "changePct": 0.83, "amplitude": 2.01, "volumeRatio": 0.77, "amount": 15281.0, "time": "20260812112115"}, "sz000429": {"price": 13.21, "name": "粤高速Ａ", "open": 13.29, "high": 13.3, "low": 13.01, "preClose": 13.29, "change": -0.08, "changePct": -0.6, "amplitude": 2.18, "volumeRatio": 0.84, "amount": 6943.0, "time": "20260812112115"}, "sh605166": {"price": 8.85, "name": "聚合顺", "open": 8.79, "high": 8.92, "low": 8.79, "preClose": 8.81, "change": 0.04, "changePct": 0.45, "amplitude": 1.48, "volumeRatio": 0.73, "amount": 1376.0, "time": "20260812112105"}, "sh600343": {"price": 20.13, "name": "航天动力", "open": 19.58, "high": 20.18, "low": 19.4, "preClose": 19.58, "change": 0.55, "changePct": 2.81, "amplitude": 3.98, "volumeRatio": 0.94, "amount": 28167.0, "time": "20260812112114"}, "sz002997": {"price": 27.34, "name": "瑞鹄模具", "open": 27.21, "high": 27.39, "low": 27.0, "preClose": 27.21, "change": 0.13, "changePct": 0.48, "amplitude": 1.43, "volumeRatio": 0.74, "amount": 1822.0, "time": "20260812112115"}, "sz159928": {"price": 0.68, "name": "消费ETF汇添富", "open": 0.68, "high": 0.686, "low": 0.677, "preClose": 0.681, "change": -0.001, "changePct": -0.15, "amplitude": 1.32, "volumeRatio": 0.94, "amount": 20569.0, "time": "20260812112115"}, "sh513130": {"price": 0.594, "name": "恒生科技ETF华泰柏瑞", "open": 0.596, "high": 0.597, "low": 0.593, "preClose": 0.602, "change": -0.008, "changePct": -1.33, "amplitude": 0.66, "volumeRatio": 0.8, "amount": 92993.0, "time": "20260812112115"}, "sh562800": {"price": 0.988, "name": "稀有金属ETF嘉实", "open": 0.968, "high": 0.998, "low": 0.967, "preClose": 0.973, "change": 0.015, "changePct": 1.54, "amplitude": 3.19, "volumeRatio": 0.98, "amount": 18628.0, "time": "20260812112116"}, "sh601012": {"price": 12.97, "name": "隆基绿能", "open": 12.79, "high": 13.12, "low": 12.71, "preClose": 12.79, "change": 0.18, "changePct": 1.41, "amplitude": 3.21, "volumeRatio": 1.39, "amount": 88153.0, "time": "20260812112115"}}, "news": [], "updated": "2026-08-12 11:21", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
 
 <script>
 const MORNING_FALLBACK=`🔴 今天最重要：水电验收前再核一遍智能点位（风管机/米家开关均在待付清单）。
@@ -1663,6 +1668,22 @@ function renderSettings(main){
    <div style="font-size:11px;color:var(--muted);margin-top:6px">想换 DeepSeek / 通义 / 智谱？填好对应 Base URL 与模型名；若调用报 CORS 错误，再填上面的代理地址（注意：用公共代理会经过第三方，慎填密钥）。</div>
   </div>`;
  main.appendChild(aiCard);
+
+ // 数据管理
+ const dataCard=document.createElement("div");dataCard.className="card";
+ const cloud=cloudCfg();
+ dataCard.innerHTML=`<h2>💾 数据管理</h2>
+  <div class="set-sec">备份、迁移与跨设备同步</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+   <button class="btn sm alt" onclick="exportData()">⬇ 导出备份</button>
+   <button class="btn sm alt" onclick="openImport()">⬆ 导入备份</button>
+   <button class="btn sm ${cloud.on?'green':'ghost'}" onclick="openCloudModal()">☁ 云同步${cloud.on?'（已连接）':''}</button>
+   <input type="file" id="file" accept="application/json" style="display:none" onchange="handleFileImport(event)">
+  </div>
+  <div class="set-sec" style="margin-top:12px">月份主线条</div>
+  <div class="note-txt" style="margin:4px 0 8px">「+ 新月份」用于开启一个新的月度闯关周期（例如 2026-09），并设定该月主线目标。它会在首页生成新的月度任务章，便于你按月复盘。</div>
+  <button class="btn sm" onclick="newMonthPrompt()">➕ 新月份</button>`;
+ main.appendChild(dataCard);
 
  // 写作助手入口
  const wCard=document.createElement("div");wCard.className="card";
@@ -5048,30 +5069,57 @@ if(!S.stocks.knowledgeCards||!S.stocks.knowledgeCards.length)S.stocks.knowledgeC
 S.fitness=S.fitness||{issues:["肋骨外翻","驼背","脖子前倾","小腹突出"],today:{name:"",sets:"",tip:"",while:""},streak:0,lastDone:"",history:[],videoOverride:{}};
 if(!S.fitness.postureDone)S.fitness.postureDone=[];
 // ===== 植物大战僵尸 · 每日防守小游戏 =====
-// ===== 植物大战僵尸 · 每日防守小游戏 精灵素材（还原 PvZ 形象） =====
-function pvzSunPetals(){let s='';for(let i=0;i<12;i++){const a=i*30*Math.PI/180;const x=(22+Math.cos(a)*16).toFixed(1),y=(18+Math.sin(a)*16).toFixed(1);s+=`<ellipse cx="${x}" cy="${y}" rx="5" ry="2.6" transform="rotate(${i*30} ${x} ${y})" fill="#ffd23f" stroke="#f0b400" stroke-width="0.6"/>`;}return s;}
+// ===== 植物大战僵尸 · 每日防守小游戏 精灵素材（更贴近原版形象） =====
+function pvzSunPetals(){let s='';for(let i=0;i<16;i++){const a=i*22.5*Math.PI/180;const x=(22+Math.cos(a)*17).toFixed(1),y=(18+Math.sin(a)*17).toFixed(1);s+=`<ellipse cx="${x}" cy="${y}" rx="5.5" ry="2.4" transform="rotate(${i*22.5} ${x} ${y})" fill="#ffd23f" stroke="#f0b400" stroke-width="0.5"/>`;}return s;}
 const PVZ_SVG={
- pea:`<svg class="pvz-svg bob" viewBox="0 0 48 52"><g><rect x="22" y="28" width="4" height="18" fill="#3f9b3a"/><path d="M15 44 q-4 -2 -5 -8 q5 2 6 7z" fill="#4caf50"/><path d="M33 44 q4 -2 5 -8 q-5 2 -6 7z" fill="#4caf50"/></g><g><circle cx="20" cy="20" r="13" fill="#5bbf4a" stroke="#2e7d32" stroke-width="1.4"/><ellipse cx="34" cy="20" rx="10" ry="8" fill="#7ed957" stroke="#2e7d32" stroke-width="1.4"/><ellipse cx="39" cy="20" rx="4" ry="5.5" fill="#2e7d32"/><circle cx="16" cy="17" r="2.4" fill="#1a3c16"/><circle cx="23" cy="17" r="2.4" fill="#1a3c16"/><path d="M15 24 q7 4 13 0" stroke="#1a3c16" stroke-width="1.6" fill="none"/><path d="M6 18 q-3 -6 2 -9 q4 5 2 9z" fill="#4caf50" stroke="#2e7d32" stroke-width="1"/></g></svg>`,
- sun:`<svg class="pvz-svg spin" viewBox="0 0 48 52"><rect x="23" y="30" width="3" height="16" fill="#3f9b3a"/><path d="M18 44 q-3 -2 -4 -6 q4 1 5 5z" fill="#4caf50"/><path d="M30 44 q3 -2 4 -6 q-4 1 -5 5z" fill="#4caf50"/><g>${pvzSunPetals()}<circle cx="22" cy="18" r="11" fill="#8a5a2b"/><circle cx="18" cy="15" r="2.4" fill="#2b1c0e"/><circle cx="26" cy="15" r="2.4" fill="#2b1c0e"/><path d="M17 22 q5 5 10 0" stroke="#2b1c0e" stroke-width="1.6" fill="none"/></g></svg>`,
- wall:`<svg class="pvz-svg pulse" viewBox="0 0 48 52"><g><ellipse cx="24" cy="29" rx="18" ry="20" fill="#c8915a" stroke="#8d5e32" stroke-width="2.2"/><path d="M10 20 q14 -6 28 0" stroke="#a0703f" stroke-width="1.5" fill="none"/><path d="M8 30 q16 -4 32 0" stroke="#a0703f" stroke-width="1.5" fill="none"/><path d="M10 40 q14 -4 28 0" stroke="#a0703f" stroke-width="1.5" fill="none"/></g><g class="wall-face"><ellipse cx="18" cy="25" rx="3.2" ry="4" fill="#3a2410"/><ellipse cx="30" cy="25" rx="3.2" ry="4" fill="#3a2410"/><path d="M16 36 q8 5 16 0" stroke="#3a2410" stroke-width="2" fill="none"/></g><g class="wall-crack" opacity="0"><path d="M12 15 l4 3 l-2 4 M34 12 l-3 5 l2 4" stroke="#6b4323" stroke-width="1.8" fill="none"/></g></svg>`,
- snow:`<svg class="pvz-svg bob" viewBox="0 0 48 52"><g><rect x="22" y="28" width="4" height="18" fill="#3f9b3a"/><path d="M15 44 q-4 -2 -5 -8 q5 2 6 7z" fill="#4caf50"/><path d="M33 44 q4 -2 5 -8 q-5 2 -6 7z" fill="#4caf50"/></g><g><circle cx="20" cy="20" r="13" fill="#7bc8e6" stroke="#3f88a8" stroke-width="1.4"/><ellipse cx="34" cy="20" rx="10" ry="8" fill="#aee0f2" stroke="#3f88a8" stroke-width="1.4"/><ellipse cx="39" cy="20" rx="4" ry="5.5" fill="#3f88a8"/><circle cx="16" cy="17" r="2.4" fill="#173b47"/><circle cx="23" cy="17" r="2.4" fill="#173b47"/><path d="M15 24 q7 4 13 0" stroke="#173b47" stroke-width="1.6" fill="none"/><path d="M6 18 q-3 -6 2 -9 q4 5 2 9z" fill="#4caf50" stroke="#2e7d32" stroke-width="1"/></g></svg>`,
- repeater:`<svg class="pvz-svg bob" viewBox="0 0 48 52"><g><rect x="22" y="28" width="4" height="18" fill="#3f9b3a"/><path d="M15 44 q-4 -2 -5 -8 q5 2 6 7z" fill="#4caf50"/><path d="M33 44 q4 -2 5 -8 q-5 2 -6 7z" fill="#4caf50"/></g><g><circle cx="20" cy="20" r="13" fill="#5bbf4a" stroke="#2e7d32" stroke-width="1.4"/><ellipse cx="33" cy="16" rx="9" ry="6.5" fill="#7ed957" stroke="#2e7d32" stroke-width="1.3"/><ellipse cx="33" cy="25" rx="9" ry="6.5" fill="#7ed957" stroke="#2e7d32" stroke-width="1.3"/><ellipse cx="37" cy="16" rx="3" ry="4.5" fill="#2e7d32"/><ellipse cx="37" cy="25" rx="3" ry="4.5" fill="#2e7d32"/><circle cx="15" cy="17" r="2.2" fill="#1a3c16"/><circle cx="22" cy="17" r="2.2" fill="#1a3c16"/><path d="M14 24 q7 4 13 0" stroke="#1a3c16" stroke-width="1.6" fill="none"/><path d="M6 18 q-3 -6 2 -9 q4 5 2 9z" fill="#4caf50" stroke="#2e7d32" stroke-width="1"/></g></svg>`,
- jalapeno:`<svg class="pvz-svg bob" viewBox="0 0 48 52"><g><path d="M16 46 q-6 -26 10 -40 q14 12 8 38 q-9 8 -18 2z" fill="#e23b2e" stroke="#9e1b13" stroke-width="1.8"/><path d="M26 6 q2 -8 10 -8" stroke="#3f9b3a" stroke-width="3.5" fill="none"/><path d="M26 6 q-3 -5 -8 -5" stroke="#3f9b3a" stroke-width="3.5" fill="none"/></g><g class="jal-face"><ellipse cx="21" cy="22" rx="3" ry="3.8" fill="#3a0e0e"/><ellipse cx="31" cy="22" rx="3" ry="3.8" fill="#3a0e0e"/><path d="M19 32 q7 5 14 -1" stroke="#3a0e0e" stroke-width="1.8" fill="none"/><path d="M34 14 l6 -4 M34 18 l7 -1" stroke="#fff" stroke-width="1.2" opacity="0.7"/></g></svg>`,
- potato:`<svg class="pvz-svg bob" viewBox="0 0 48 52"><g><ellipse cx="24" cy="38" rx="20" ry="9" fill="#6d4c2a"/></g><g><path d="M10 34 q-2 -18 18 -20 q20 2 16 22 q-2 8 -16 8 q-14 0 -18 -10z" fill="#b98a4a" stroke="#7a5631" stroke-width="1.6"/><circle cx="18" cy="28" r="2" fill="#3a2410"/><circle cx="30" cy="30" r="2" fill="#3a2410"/><path d="M18 36 q6 4 12 0" stroke="#3a2410" stroke-width="1.4" fill="none"/><circle cx="20" cy="22" r="1.5" fill="#6b4a22"/><circle cx="28" cy="24" r="1.5" fill="#6b4a22"/></g><g class="potato-mine"><line x1="24" y1="18" x2="24" y2="6" stroke="#666" stroke-width="3"/><circle cx="24" cy="5" r="4.5" fill="#e23b2e" stroke="#9e1b13" stroke-width="1"/><circle cx="24" cy="5" r="1.6" fill="#fff" opacity="0.8"/></g></svg>`,
+ pea:`<svg class="pvz-svg bob" viewBox="0 0 48 54"><g><rect x="23" y="30" width="3" height="18" fill="#3f9b3a"/><path d="M16 46 q-4 -2 -5 -8 q5 2 6 7z" fill="#4caf50"/><path d="M32 46 q4 -2 5 -8 q-5 2 -6 7z" fill="#4caf50"/></g><g><circle cx="20" cy="21" r="13" fill="#5bbf4a" stroke="#2e7d32" stroke-width="1.5"/><ellipse cx="36" cy="21" rx="11" ry="8.5" fill="#7ed957" stroke="#2e7d32" stroke-width="1.5"/><ellipse cx="42" cy="21" rx="4.5" ry="6" fill="#2e7d32"/><circle cx="16" cy="18" r="2.6" fill="#1a3c16"/><circle cx="24" cy="18" r="2.6" fill="#1a3c16"/><path d="M15 25 q8 4 15 0" stroke="#1a3c16" stroke-width="1.6" fill="none"/><path d="M6 19 q-3 -6 2 -9 q4 5 2 9z" fill="#4caf50" stroke="#2e7d32" stroke-width="1"/></g></svg>`,
+ sun:`<svg class="pvz-svg spin" viewBox="0 0 48 54"><rect x="23" y="30" width="3" height="18" fill="#3f9b3a"/><path d="M18 46 q-3 -2 -4 -6 q4 1 5 5z" fill="#4caf50"/><path d="M30 46 q3 -2 4 -6 q-4 1 -5 5z" fill="#4caf50"/><g>${pvzSunPetals()}<circle cx="22" cy="18" r="12" fill="#8a5a2b"/><circle cx="18" cy="15" r="2.6" fill="#2b1c0e"/><circle cx="26" cy="15" r="2.6" fill="#2b1c0e"/><path d="M17 23 q5 5 10 0" stroke="#2b1c0e" stroke-width="1.6" fill="none"/></g></svg>`,
+ wall:`<svg class="pvz-svg pulse" viewBox="0 0 48 54"><g><ellipse cx="24" cy="30" rx="19" ry="21" fill="#c8915a" stroke="#8d5e32" stroke-width="2.4"/><path d="M9 20 q15 -6 30 0" stroke="#a0703f" stroke-width="1.6" fill="none"/><path d="M7 30 q17 -4 34 0" stroke="#a0703f" stroke-width="1.6" fill="none"/><path d="M9 41 q15 -4 30 0" stroke="#a0703f" stroke-width="1.6" fill="none"/></g><g class="wall-face"><ellipse cx="18" cy="26" rx="3.4" ry="4.2" fill="#3a2410"/><ellipse cx="30" cy="26" rx="3.4" ry="4.2" fill="#3a2410"/><path d="M16 38 q8 5 16 0" stroke="#3a2410" stroke-width="2" fill="none"/></g><g class="wall-crack" opacity="0"><path d="M12 16 l4 3 l-2 4 M35 13 l-3 5 l2 4" stroke="#6b4323" stroke-width="2" fill="none"/></g></svg>`,
+ snow:`<svg class="pvz-svg bob" viewBox="0 0 48 54"><g><rect x="23" y="30" width="3" height="18" fill="#3f9b3a"/><path d="M16 46 q-4 -2 -5 -8 q5 2 6 7z" fill="#4caf50"/><path d="M32 46 q4 -2 5 -8 q-5 2 -6 7z" fill="#4caf50"/></g><g><circle cx="20" cy="21" r="13" fill="#7bc8e6" stroke="#3f88a8" stroke-width="1.5"/><ellipse cx="36" cy="21" rx="11" ry="8.5" fill="#aee0f2" stroke="#3f88a8" stroke-width="1.5"/><ellipse cx="42" cy="21" rx="4.5" ry="6" fill="#3f88a8"/><circle cx="16" cy="18" r="2.6" fill="#173b47"/><circle cx="24" cy="18" r="2.6" fill="#173b47"/><path d="M15 25 q8 4 15 0" stroke="#173b47" stroke-width="1.6" fill="none"/><path d="M38 21 l3 -3 l3 3 l-3 3 z" fill="#fff" opacity="0.8"/><path d="M6 19 q-3 -6 2 -9 q4 5 2 9z" fill="#4caf50" stroke="#2e7d32" stroke-width="1"/></g></svg>`,
+ repeater:`<svg class="pvz-svg bob" viewBox="0 0 48 54"><g><rect x="23" y="30" width="3" height="18" fill="#3f9b3a"/><path d="M16 46 q-4 -2 -5 -8 q5 2 6 7z" fill="#4caf50"/><path d="M32 46 q4 -2 5 -8 q-5 2 -6 7z" fill="#4caf50"/></g><g><circle cx="20" cy="21" r="13" fill="#5bbf4a" stroke="#2e7d32" stroke-width="1.5"/><ellipse cx="34" cy="16" rx="9" ry="6" fill="#7ed957" stroke="#2e7d32" stroke-width="1.3"/><ellipse cx="34" cy="27" rx="9" ry="6" fill="#7ed957" stroke="#2e7d32" stroke-width="1.3"/><ellipse cx="39" cy="16" rx="3.2" ry="4.5" fill="#2e7d32"/><ellipse cx="39" cy="27" rx="3.2" ry="4.5" fill="#2e7d32"/><circle cx="15" cy="18" r="2.3" fill="#1a3c16"/><circle cx="23" cy="18" r="2.3" fill="#1a3c16"/><path d="M14 25 q8 4 15 0" stroke="#1a3c16" stroke-width="1.6" fill="none"/><path d="M6 19 q-3 -6 2 -9 q4 5 2 9z" fill="#4caf50" stroke="#2e7d32" stroke-width="1"/></g></svg>`,
+ jalapeno:`<svg class="pvz-svg bob" viewBox="0 0 48 54"><g><path d="M16 48 q-6 -28 10 -42 q14 12 8 40 q-9 8 -18 2z" fill="#e23b2e" stroke="#9e1b13" stroke-width="2"/><path d="M26 6 q2 -8 10 -8" stroke="#3f9b3a" stroke-width="4" fill="none"/><path d="M26 6 q-3 -5 -8 -5" stroke="#3f9b3a" stroke-width="4" fill="none"/></g><g class="jal-face"><ellipse cx="21" cy="23" rx="3.2" ry="4" fill="#3a0e0e"/><ellipse cx="31" cy="23" rx="3.2" ry="4" fill="#3a0e0e"/><path d="M19 34 q7 5 14 -1" stroke="#3a0e0e" stroke-width="2" fill="none"/><path d="M34 15 l6 -4 M34 19 l7 -1" stroke="#fff" stroke-width="1.2" opacity="0.7"/></g><g class="jal-flame" opacity="0"><path d="M10 46 q-6 -8 -2 -16 q4 6 4 12 q2 -6 6 -4 q-2 8 -8 8z" fill="#ff9800" opacity="0.85"/></g></svg>`,
+ potato:`<svg class="pvz-svg bob" viewBox="0 0 48 54"><g><ellipse cx="24" cy="40" rx="21" ry="10" fill="#6d4c2a"/></g><g><path d="M10 36 q-2 -18 18 -20 q20 2 16 22 q-2 8 -16 8 q-14 0 -18 -10z" fill="#b98a4a" stroke="#7a5631" stroke-width="1.8"/><circle cx="18" cy="30" r="2.1" fill="#3a2410"/><circle cx="30" cy="32" r="2.1" fill="#3a2410"/><path d="M18 38 q6 4 12 0" stroke="#3a2410" stroke-width="1.5" fill="none"/><circle cx="20" cy="24" r="1.6" fill="#6b4a22"/><circle cx="28" cy="26" r="1.6" fill="#6b4a22"/></g><g class="potato-mine"><line x1="24" y1="20" x2="24" y2="6" stroke="#666" stroke-width="3"/><circle cx="24" cy="5" r="5" fill="#e23b2e" stroke="#9e1b13" stroke-width="1.2"/><circle cx="24" cy="5" r="1.8" fill="#fff" opacity="0.9"/></g></svg>`,
 };
-const PVZ_ZOMBIE=`<svg class="pvz-svg z-svg" viewBox="0 0 50 64"><g class="z-leg"><rect x="15" y="46" width="7" height="14" rx="2" fill="#5b6068"/><rect x="14" y="58" width="10" height="5" rx="2" fill="#36383d"/><rect x="28" y="46" width="7" height="14" rx="2" fill="#52565e"/><rect x="27" y="58" width="10" height="5" rx="2" fill="#36383d"/></g><g><path d="M12 26 q13 -5 26 0 l2 24 q-15 5 -30 0 z" fill="#6c4c3a"/><rect x="14" y="28" width="22" height="20" fill="#e9e4d8"/><path d="M15 30 h20 M15 36 h20 M15 42 h20" stroke="#d4cfc3" stroke-width="1"/><path d="M16 26 l3 -6 h18 l3 6z" fill="#8a3a2a"/><rect x="20" y="32" width="3" height="8" fill="#a62c2c"/><rect x="27" y="34" width="3" height="6" fill="#a62c2c"/></g><g class="z-arm"><rect x="35" y="28" width="5" height="16" rx="2.5" fill="#9bbf6b"/><circle cx="38" cy="45" r="3.5" fill="#9bbf6b"/><rect x="35" y="30" width="9" height="4" rx="2" fill="#9bbf6b"/></g><g><ellipse cx="25" cy="15" rx="13" ry="12" fill="#9bbf6b"/><ellipse cx="20" cy="13" rx="3.2" ry="4" fill="#f5f5dc"/><ellipse cx="30" cy="13" rx="3.2" ry="4" fill="#f5f5dc"/><circle cx="21" cy="13" r="1" fill="#1a1a1a"/><circle cx="31" cy="13" r="1" fill="#1a1a1a"/><path d="M17 21 q8 7 16 0 q-2 5 -8 5 q-6 0 -8 -5z" fill="#4a1212"/><path d="M15 18 q-3 4 0 7" stroke="#6a3a3a" stroke-width="1" fill="none"/><path d="M35 18 q3 4 0 7" stroke="#6a3a3a" stroke-width="1" fill="none"/></g></svg>`;
 const PVZ_BRAIN=`<svg class="pvz-svg" viewBox="0 0 44 44"><path d="M22 6 q-10 0 -11 9 q-7 1 -7 8 q0 6 6 7 q-1 7 7 8 q6 1 11 -2 q5 3 11 2 q8 -1 7 -8 q6 -1 6 -7 q0 -7 -7 -8 q-1 -9 -11 -9 q-6 0 -12 0z" fill="#f4b9c4" stroke="#d98aa0" stroke-width="1.8"/><path d="M22 10 v20 M15 15 q5 2 0 8 M29 15 q-5 2 0 8 M18 10 q-4 -2 -7 2 M26 10 q4 -2 7 2" stroke="#d98aa0" stroke-width="1.4" fill="none"/></svg>`;
+function pvzZombieSVG(type,hp,maxHp,slow){
+ const ratio=Math.max(0,Math.min(1,hp/maxHp));
+ const injured=ratio<0.5;
+ const cls=(injured?" z-injured":"")+(slow?" z-slow":"");
+ let acc="";
+ if(type==="cone" && hp>150) acc+='<polygon points="16,10 34,10 30,-10 20,-10" fill="#ff7f2a" stroke="#cc5500" stroke-width="1.2"/>';
+ if(type==="bucket" && hp>400) acc+='<path d="M14,-2 h22 v22 q-11 5 -22 0 z" fill="#c8d0d8" stroke="#666" stroke-width="1.2"/>';
+ if(type==="pole") acc+='<line x1="42" y1="45" x2="62" y2="5" stroke="#8b5a2b" stroke-width="3" stroke-linecap="round"/><circle cx="62" cy="5" r="3" fill="#a0703f"/>';
+ if(type==="football" && hp>500) acc+='<path d="M10,-6 h34 v22 q-17 8 -34 0 z" fill="#8b3a3a" stroke="#5a2020" stroke-width="1.5"/><path d="M14,-2 h26 v12 h-26z" fill="#fff" opacity="0.9"/><path d="M18,2 h18 M18,6 h18" stroke="#333" stroke-width="1"/>';
+ if(type==="dancer") acc+='<circle cx="25" cy="-2" r="14" fill="#4a2c18"/><rect x="8" y="24" width="34" height="22" rx="4" fill="#6a3a8a"/><rect x="8" y="24" width="34" height="6" fill="#ffd700" opacity="0.7"/>';
+ if(type==="balloon" && hp>50) acc+='<line x1="28" y1="8" x2="42" y2="-18" stroke="#999" stroke-width="1.5"/><ellipse cx="42" cy="-22" rx="9" ry="11" fill="#e23b2e" stroke="#9e1b13" stroke-width="1"/>';
+ if(type==="digger" && hp>150) acc+='<path d="M12,-4 h26 v16 q-13 4 -26 0 z" fill="#f4c430" stroke="#b8860b" stroke-width="1.2"/><circle cx="18" cy="4" r="2.5" fill="#333"/><circle cx="32" cy="4" r="2.5" fill="#333"/>';
+ if(type==="pogo") acc+='<line x1="22" y1="55" x2="22" y2="72" stroke="#555" stroke-width="3"/><line x1="12" y1="72" x2="32" y2="72" stroke="#555" stroke-width="3"/><rect x="18" y="48" width="8" height="10" fill="#888"/>';
+ if(type==="gargantuar") return `<svg class="pvz-svg z-svg${cls}" viewBox="0 0 60 78"><g class="z-leg"><rect x="18" y="58" width="9" height="16" rx="2" fill="#5b6068"/><rect x="16" y="72" width="12" height="6" rx="2" fill="#36383d"/><rect x="34" y="58" width="9" height="16" rx="2" fill="#52565e"/><rect x="32" y="72" width="12" height="6" rx="2" fill="#36383d"/></g><g><path d="M14 34 q16 -6 32 0 l3 28 q-18 6 -36 0 z" fill="#6c4c3a"/><rect x="16" y="36" width="28" height="24" fill="#e9e4d8"/><path d="M18 40 h24 M18 48 h24" stroke="#d4cfc3" stroke-width="1.2"/><path d="M18 34 l4 -7 h24 l4 7z" fill="#8a3a2a"/></g><g class="z-arm"><rect x="46" y="36" width="7" height="20" rx="3" fill="#9bbf6b"/><circle cx="50" cy="58" r="4.5" fill="#9bbf6b"/><rect x="44" y="38" width="12" height="5" rx="2" fill="#9bbf6b"/></g><g><ellipse cx="30" cy="19" rx="16" ry="14" fill="#9bbf6b"/><ellipse cx="24" cy="16" rx="4" ry="5" fill="#f5f5dc"/><ellipse cx="36" cy="16" rx="4" ry="5" fill="#f5f5dc"/><circle cx="25" cy="16" r="1.3" fill="#1a1a1a"/><circle cx="37" cy="16" r="1.3" fill="#1a1a1a"/><path d="M20 27 q10 8 20 0 q-2 6 -10 6 q-8 0 -10 -6z" fill="#4a1212"/></g><g><ellipse cx="48" cy="48" rx="6" ry="8" fill="#9bbf6b"/><circle cx="50" cy="46" r="1.5" fill="#1a1a1a"/><path d="M45 52 q5 3 8 0" stroke="#4a1212" stroke-width="1"/></g></svg>`;
+ return `<svg class="pvz-svg z-svg${cls}" viewBox="0 0 50 64"><defs><filter id="zInjured"><feColorMatrix type="matrix" values="1 0 0 0 0  0 0.7 0 0 0  0 0 0.7 0 0  0 0 0 1 0"/></filter></defs><g class="z-leg"><rect x="15" y="46" width="7" height="14" rx="2" fill="#5b6068"/><rect x="14" y="58" width="10" height="5" rx="2" fill="#36383d"/><rect x="28" y="46" width="7" height="14" rx="2" fill="#52565e"/><rect x="27" y="58" width="10" height="5" rx="2" fill="#36383d"/></g><g>${acc}</g><g><path d="M12 26 q13 -5 26 0 l2 24 q-15 5 -30 0 z" fill="#6c4c3a"/><rect x="14" y="28" width="22" height="20" fill="#e9e4d8"/><path d="M15 30 h20 M15 36 h20 M15 42 h20" stroke="#d4cfc3" stroke-width="1"/><path d="M16 26 l3 -6 h18 l3 6z" fill="#8a3a2a"/><rect x="20" y="32" width="3" height="8" fill="#a62c2c"/><rect x="27" y="34" width="3" height="6" fill="#a62c2c"/></g><g class="z-arm"><rect x="35" y="28" width="5" height="16" rx="2.5" fill="#9bbf6b"/><circle cx="38" cy="45" r="3.5" fill="#9bbf6b"/><rect x="35" y="30" width="9" height="4" rx="2" fill="#9bbf6b"/></g><g><ellipse cx="25" cy="15" rx="13" ry="12" fill="#9bbf6b"/><ellipse cx="20" cy="13" rx="3.2" ry="4" fill="#f5f5dc"/><ellipse cx="30" cy="13" rx="3.2" ry="4" fill="#f5f5dc"/><circle cx="21" cy="13" r="1" fill="#1a1a1a"/><circle cx="31" cy="13" r="1" fill="#1a1a1a"/><path d="M17 21 q8 7 16 0 q-2 5 -8 5 q-6 0 -8 -5z" fill="#4a1212"/><path d="M15 18 q-3 4 0 7" stroke="#6a3a3a" stroke-width="1" fill="none"/><path d="M35 18 q3 4 0 7" stroke="#6a3a3a" stroke-width="1" fill="none"/></g></svg>`;
+}
 const PVZ_PLANTS=[
- {t:"pea",name:"豌豆射手",ico:"🌱",cost:20,def:30,desc:"阻挡 30 分钟",svg:PVZ_SVG.pea},
- {t:"sun",name:"向日葵",ico:"🌻",cost:15,def:20,desc:"阻挡 20 分钟",svg:PVZ_SVG.sun},
- {t:"wall",name:"坚果墙",ico:"🥥",cost:35,def:90,desc:"高墙阻挡 90 分钟",svg:PVZ_SVG.wall},
- {t:"snow",name:"寒冰射手",ico:"❄️",cost:30,def:45,desc:"阻挡 45 分钟",svg:PVZ_SVG.snow},
- {t:"repeater",name:"双发射手",ico:"🌿",cost:40,def:50,desc:"阻挡 50 分钟",svg:PVZ_SVG.repeater},
- {t:"jalapeno",name:"火爆辣椒",ico:"🌶️",cost:25,def:25,desc:"阻挡 25 分钟",svg:PVZ_SVG.jalapeno},
- {t:"potato",name:"土豆地雷",ico:"🥔",cost:18,def:25,desc:"阻挡 25 分钟",svg:PVZ_SVG.potato},
+ {t:"pea",name:"豌豆射手",ico:"🌱",cost:20,def:30,dmg:6,dmgMin:6,desc:"向左发射豌豆",svg:PVZ_SVG.pea},
+ {t:"sun",name:"向日葵",ico:"🌻",cost:15,def:20,dmg:0,desc:"收集阳光，每10分钟+1阳光",svg:PVZ_SVG.sun},
+ {t:"wall",name:"坚果墙",ico:"🥥",cost:35,def:90,dmg:0,desc:"高墙阻挡僵尸",svg:PVZ_SVG.wall},
+ {t:"snow",name:"寒冰射手",ico:"❄️",cost:30,def:45,dmg:4,dmgMin:4,desc:"冰豌豆减速僵尸",slow:0.6,svg:PVZ_SVG.snow},
+ {t:"repeater",name:"双发射手",ico:"🌿",cost:40,def:50,dmg:12,dmgMin:12,desc:"每次双发豌豆",svg:PVZ_SVG.repeater},
+ {t:"jalapeno",name:"火爆辣椒",ico:"🌶️",cost:25,def:25,dmg:0,burn:true,desc:"僵尸靠近时燃烧",svg:PVZ_SVG.jalapeno},
+ {t:"potato",name:"土豆地雷",ico:"🥔",cost:18,def:25,dmg:0,explode:300,desc:"接触僵尸时爆炸",svg:PVZ_SVG.potato},
 ];
-S.pvz=S.pvz||{day:null,sun:0,plants:[],shop:[],pendingBrain:false,brainShown:false,collapsed:false};
-if(!S.pvz.day)S.pvz.day=null;if(S.pvz.sun===undefined)S.pvz.sun=0;if(!S.pvz.plants)S.pvz.plants=[];if(!S.pvz.shop)S.pvz.shop=[];if(S.pvz.collapsed===undefined)S.pvz.collapsed=false;
+const PVZ_ZOMBIES=[
+ {t:"zombie",name:"普通僵尸",hp:100,speed:1,desc:"最普通的僵尸，移动慢"},
+ {t:"cone",name:"路障僵尸",hp:250,speed:1,desc:"头顶路障，血量更高"},
+ {t:"bucket",name:"铁桶僵尸",hp:550,speed:0.9,desc:"头顶铁桶，非常耐打"},
+ {t:"pole",name:"撑杆僵尸",hp:200,speed:1.6,desc:"持撑杆，速度较快"},
+ {t:"football",name:"橄榄球僵尸",hp:800,speed:1.8,desc:"穿戴橄榄球护具，高速高血"},
+ {t:"dancer",name:"舞王僵尸",hp:350,speed:1,desc:"边跳舞边前进"},
+ {t:"balloon",name:"气球僵尸",hp:150,speed:1.1,desc:"乘气球飘过"},
+ {t:"digger",name:"矿工僵尸",hp:200,speed:1,desc:"从地下挖掘前进"},
+ {t:"pogo",name:"跳跳僵尸",hp:250,speed:1.4,desc:"踩弹簧高跷跳过植物"},
+ {t:"gargantuar",name:"巨人僵尸",hp:3000,speed:0.5,desc:"超高血量，缓慢推进"},
+];
+S.pvz=S.pvz||{day:null,sun:0,plants:[],shop:[],pendingBrain:false,brainShown:false,collapsed:false,zombie:"zombie",zombieHp:100,zombieSlowUntil:0,checkedIn:null};
+if(!S.pvz.day)S.pvz.day=null;if(S.pvz.sun===undefined)S.pvz.sun=0;if(!S.pvz.plants)S.pvz.plants=[];if(!S.pvz.shop)S.pvz.shop=[];if(S.pvz.collapsed===undefined)S.pvz.collapsed=false;if(!S.pvz.zombie)S.pvz.zombie="zombie";if(S.pvz.zombieHp===undefined)S.pvz.zombieHp=100;if(S.pvz.zombieSlowUntil===undefined)S.pvz.zombieSlowUntil=0;if(S.pvz.checkedIn===undefined)S.pvz.checkedIn=null;
 // 记账多账户：确保 accounts/ledger/goals 存在（不再使用旧 S.account）
 if(!S.accounts)S.accounts=defaultAccounts();
 if(!Array.isArray(S.ledger))S.ledger=[];
@@ -5332,17 +5380,15 @@ function renderFocusCard(main){
 }
 
 
-// 工具栏
-document.getElementById("checkin").onclick=()=>{if(S.lastCheckin===todayStr())return;S.checkinXp+=20;S.lastCheckin=todayStr();if(!S.checkinDays.includes(todayStr()))S.checkinDays.push(todayStr());save();confetti();toast("今日打卡 +20 XP 🌱");pvzAward(20,"每日打卡");render();};
-document.getElementById("newmonth").onclick=()=>{const mm=prompt("新月份主线条（例：2026-09 金秋收官）","2026-09 新主线");if(!mm)return;const a=mm.split(/\s+/);const k=a[0];const t=a.slice(1).join(" ")||"新主线";
+// 设置页数据管理函数
+function exportData(){const b=JSON.stringify(S);const u=URL.createObjectURL(new Blob([b],{type:"application/json"}));const a=document.createElement("a");a.href=u;a.download="个人工作台备份.json";a.click();toast("已导出");}
+function openImport(){let inp=document.getElementById("file");if(!inp){inp=document.createElement("input");inp.type="file";inp.id="file";inp.accept=".json,application/json";inp.style.display="none";inp.onchange=handleFileImport;document.body.appendChild(inp);}inp.value="";inp.click();}
+function handleFileImport(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(Array.isArray(d.ledger)&&!d.reading&&!d.film&&!d.settings&&!d.moneyCats&&!d.goals){toast("⚠️ 这是账单文件（仅含流水/账户），请用「记账→账户→📥 导入账单 JSON」导入；此处整包导入会清空阅读/影视等模块，已取消。");return;}if(typeof confirm==="function"&&!confirm("整包导入会覆盖当前全部数据（阅读/影视/记账等），确定继续？")){toast("已取消导入");return;}S=d;migrate(S);save();render();toast("已导入");}catch(_){toast("格式错误");}};r.readAsText(f);}
+function newMonthPrompt(){const mm=prompt("新月份主线条（例：2026-09 金秋收官）","2026-09 新主线");if(!mm)return;const a=mm.split(/\s+/);const k=a[0];const t=a.slice(1).join(" ")||"新主线";
  if(!/^\d{4}-\d{2}$/.test(k)){toast("月份格式应为 2026-09");return;}if(S.months[k]){toast("该月份已存在");return;}
- S.months[k]={main:t,reward:"自定义犒劳",stampName:"✨ 新印记",tasks:[]};S.currentMonth=k;save();render();toast("已开启 "+k);};
-document.getElementById("export").onclick=()=>{const b=JSON.stringify(S);const u=URL.createObjectURL(new Blob([b],{type:"application/json"}));const a=document.createElement("a");a.href=u;a.download="个人工作台备份.json";a.click();toast("已导出");};
-document.getElementById("import").onclick=()=>document.getElementById("file").click();
-document.getElementById("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(Array.isArray(d.ledger)&&!d.reading&&!d.film&&!d.settings&&!d.moneyCats&&!d.goals){toast("⚠️ 这是账单文件（仅含流水/账户），请用「记账→账户→📥 导入账单 JSON」导入；此处整包导入会清空阅读/影视等模块，已取消。");return;}if(typeof confirm==="function"&&!confirm("整包导入会覆盖当前全部数据（阅读/影视/记账等），确定继续？")){toast("已取消导入");return;}S=d;migrate(S);save();render();toast("已导入");}catch(_){toast("格式错误");}};r.readAsText(f);};
+ S.months[k]={main:t,reward:"自定义犒劳",stampName:"✨ 新印记",tasks:[]};S.currentMonth=k;save();render();toast("已开启 "+k);}
 
-// ---- 云同步 UI 事件 ----
-document.getElementById("cloudBtn").onclick=openCloudModal;
+// 旧工具栏事件已移除：打卡改为每日首次自动签到，其余移入设置页
 function openCloudModal(){
  const c=cloudCfg();
  document.getElementById("ckKey").value=c.k;
@@ -5383,29 +5429,56 @@ function pvzRollDay(){
   const prevDef=(S.pvz.plants||[]).reduce(function(a,p){return a+(p.def||0);},0);
   if(prevDef<=0){S.pvz.pendingBrain=true;S.pvz.brainShown=false;} // 昨天没布置任何植物 → 脑子被吃
  }
- S.pvz.day=t;S.pvz.sun=0;S.pvz.plants=[];S.pvz.shop=pvzPickShop();
+ const z=PVZ_ZOMBIES.find(function(x){return x.t===S.pvz.zombie;})||PVZ_ZOMBIES[0];
+ S.pvz.day=t;S.pvz.sun=0;S.pvz.plants=[];S.pvz.shop=pvzPickShop();S.pvz.zombieHp=z.hp;S.pvz.zombieSlowUntil=0;S.pvz.checkedIn=null;
  save();
 }
 function pvzSim(now){
  pvzRollDay();
  const ds=pvzStartOfDay(now);
  const elapsed=Math.max(0,Math.min(1440*3,(now-ds)/60000));
- const step=100/1440; // 每分钟推进的距离单位（100 格 / 1440 分钟）
- const plants=(S.pvz.plants||[]).filter(function(p){return p.alive!==false;}).map(function(p){return {pos:p.pos,def:p.def,eaten:0,id:p.id};});
+ const baseStep=100/1440;
+ const zType=PVZ_ZOMBIES.find(function(x){return x.t===S.pvz.zombie;})||PVZ_ZOMBIES[0];
+ const maxHp=zType.hp;
+ // 重新从当天起点模拟，保证状态一致
+ let curHp=maxHp;
+ let slowUntil=0;
+ const plants=(S.pvz.plants||[]).filter(function(p){return p.alive!==false;}).map(function(p){return {pos:p.pos,def:p.def,eaten:0,id:p.id,t:p.t};});
  plants.sort(function(a,b){return a.pos-b.pos;});
  let realT=0,pos=0;
  while(realT<elapsed && pos<100){
+  const hpFactor=Math.max(0.35,curHp/maxHp);
+  let slowFactor=1;
+  if(slowUntil>realT*60000+ds)slowFactor=0.6;
+  const speed=baseStep*zType.speed*hpFactor*slowFactor;
+  // 植物攻击（位于僵尸右侧的射手）
+  for(const p of plants){
+   if(p.pos>=pos){
+    const def=PVZ_PLANTS.find(function(x){return x.t===p.t;});
+    if(!def)continue;
+    if(def.dmg>0 && realT%3===0){
+     curHp-=def.dmg;
+     if(def.slow)slowUntil=realT*60000+ds+600000;
+    }
+    if(def.burn && p.pos-pos<8 && realT%2===0)curHp-=4;
+    if(def.explode && p.pos<=pos+0.6 && p.eaten<def.def){curHp-=def.explode;p.alive=false;}
+   }
+  }
+  curHp=Math.max(0,curHp);
+  // 僵尸吃最近一株植物
   let cur=null;
   for(const p of plants){ if(p.eaten<p.def && p.pos<=pos+0.0001){ if(!cur||p.pos>cur.pos)cur=p; } }
-  if(cur && cur.eaten<cur.def){ cur.eaten+=1; } else { pos+=step; }
+  if(cur && cur.eaten<cur.def){ cur.eaten+=1; } else { pos+=speed; }
   realT+=1;
  }
+ S.pvz.zombieHp=curHp;
  const posPct=Math.min(100,pos);
  const arrived=pos>=100;
  const totalDef=plants.reduce(function(a,p){return a+p.def;},0);
- const arrivalMin=1440+totalDef; // 僵尸走到脑子(100%)所需的真实分钟数（含植物阻挡）
+ const arrivalMin=Math.round((100-pos)/(baseStep*zType.speed)+elapsed+totalDef);
  const remainToMid=Math.max(0,1440-elapsed);
- return {posPct:posPct,arrived:arrived,plants:plants,pos:pos,totalDef:totalDef,arrivalMin:arrivalMin,remainToMid:remainToMid,elapsed:elapsed};
+ const slowNow=slowUntil>(elapsed*60000+ds);
+ return {posPct:posPct,arrived:arrived,plants:plants,pos:pos,totalDef:totalDef,arrivalMin:arrivalMin,remainToMid:remainToMid,elapsed:elapsed,hp:curHp,maxHp:maxHp,zType:zType,slow:slowNow};
 }
 function pvzAward(amount,reason){
  pvzRollDay();
@@ -5477,7 +5550,9 @@ function pvzPlantUp(e){
 }
 function pvzSpawnFx(cls,xPct){
  const track=document.querySelector(".pvz-track");if(!track)return;
- const el=document.createElement("span");el.className=cls;el.style.left=xPct+"%";
+ const z=document.getElementById("pvzZombie");let dist="30vw";
+ if(z){const tr=track.getBoundingClientRect();const zr=z.getBoundingClientRect();const px=tr.width*(xPct/100);const zx=zr.left-tr.left+20;dist=Math.max(20,px-zx)+"px";}
+ const el=document.createElement("span");el.className=cls;el.style.left=xPct+"%";el.style.setProperty("--fly-dist",dist);
  track.appendChild(el);setTimeout(function(){el.remove();},950);
 }
 var pvzFxTick=0;
@@ -5488,12 +5563,12 @@ function pvzFxLoop(){
    pvzFxTick++;
    const plants=S.pvz.plants||[];
    for(const p of plants){
-    if(p.pos>st.posPct+2)continue; // 僵尸还没到这个植物右边，不发射
-    if(p.t==="pea" && pvzFxTick%1===0)pvzSpawnFx("pvz-pea",p.pos);
-    if(p.t==="snow" && pvzFxTick%1===0)pvzSpawnFx("pvz-ice",p.pos);
-    if(p.t==="repeater"){
-     if(pvzFxTick%1===0){pvzSpawnFx("pvz-pea",p.pos);setTimeout(function(){pvzSpawnFx("pvz-pea",p.pos);},180);}
-    }
+    if(p.pos<st.posPct)continue; // 植物在僵尸左侧才朝左发射
+    const def=PVZ_PLANTS.find(function(x){return x.t===p.t;});
+    if(!def||def.dmg<=0)continue;
+    if(p.t==="pea" && pvzFxTick%2===0)pvzSpawnFx("pvz-pea",p.pos);
+    if(p.t==="snow" && pvzFxTick%2===0)pvzSpawnFx("pvz-ice",p.pos);
+    if(p.t==="repeater" && pvzFxTick%2===0){pvzSpawnFx("pvz-pea",p.pos);setTimeout(function(){pvzSpawnFx("pvz-pea",p.pos);},180);}
    }
   }
  }catch(_){}
@@ -5505,6 +5580,8 @@ function pvzAnimLoop(){
   if(z){
    const st=pvzSim(Date.now());
    z.style.left=st.posPct+"%";
+   z.innerHTML=pvzZombieSVG(st.zType.t,st.hp,st.maxHp,st.slow);
+   z.classList.toggle("z-eating",false);
    const plants=S.pvz.plants||[];
    for(const p of plants){
     const pe=document.querySelector('.pvz-plant[data-pid="'+p.id+'"]');
@@ -5512,10 +5589,33 @@ function pvzAnimLoop(){
     const simP=st.plants.find(function(s){return s.id===p.id;});
     const eating=!!(simP&&simP.eaten<simP.def&&p.pos<=st.posPct+0.8);
     pe.classList.toggle("eating",eating);
+    if(eating)z.classList.add("z-eating");
    }
   }
  }catch(_){}
  pvzRAF=setTimeout(pvzAnimLoop,240);
+}
+function pvzSelectZombie(t){
+ const z=PVZ_ZOMBIES.find(function(x){return x.t===t;});if(!z)return;
+ S.pvz.zombie=t;S.pvz.zombieHp=z.hp;S.pvz.zombieSlowUntil=0;
+ save();renderPvzBar();toast("已选择对手："+z.name);
+}
+function pvzOpenZombiePrison(){
+ const list=PVZ_ZOMBIES.map(function(z){const on=S.pvz.zombie===z.t;return `<button class="pvz-zombie-opt${on?' on':''}" onclick="pvzSelectZombie('${z.t}');closeDModal()">
+  <span class="pvz-z-ico">${pvzZombieSVG(z.t,z.hp,z.hp,false)}</span>
+  <span><b>${esc(z.name)}</b><br><span style="font-size:11px;color:var(--muted)">血量 ${z.hp} · 速度 ${z.speed} · ${esc(z.desc)}</span></span>
+ </button>`;}).join("");
+ openDModal("🧟 僵尸监狱（选择今日对手）",`<div class="pvz-zombie-list">${list}</div><div class="note-txt" style="margin-top:8px">血量越高、速度越快的僵尸越难阻挡。选择后当天不可更换，明天会自动重置。</div>`);
+}
+function pvzDailyCheckin(){
+ pvzRollDay();
+ if(S.pvz.checkedIn===todayStr())return;
+ S.pvz.checkedIn=todayStr();
+ pvzAward(20,"每日首次进入工作台");
+ if(!S.checkinDays.includes(todayStr()))S.checkinDays.push(todayStr());
+ S.checkinXp=(S.checkinXp||0)+20;S.lastCheckin=todayStr();
+ save();
+ toast("🌅 每日签到 +20 阳光已注入向日葵");
 }
 function pvzToggleCollapse(){
  S.pvz.collapsed=!S.pvz.collapsed;save();renderPvzBar();
@@ -5533,20 +5633,24 @@ function renderPvzBar(){
  const shop=(S.pvz.shop||[]).map(function(s){const d=PVZ_PLANTS.find(function(p){return p.t===s.t;});const can=sun>=d.cost;return `<button class="pvz-shop-card${can?' on':''}" onclick="pvzBuy('${d.t}')" title="${esc(d.desc)}">
    <span class="pvz-ico">${d.svg}</span><span class="pvz-nm">${esc(d.name)}</span><span class="pvz-cost">🌞${d.cost}</span></button>`;}).join("");
  const plantEls=(S.pvz.plants||[]).map(function(p){const d=PVZ_PLANTS.find(function(x){return x.t===p.t});const flame=d.t==="jalapeno"?`<span class="flame"></span>`:"";return `<span class="pvz-plant" data-pid="${p.id}" data-type="${d.t}" style="left:${p.pos}%" title="${esc(d.name)}：拖动调整位置，点 × 撤回并退还阳光" onpointerdown="pvzPlantDown(event,this,'${p.id}')">${d.svg}${flame}<span class="pvz-del" onpointerdown="event.stopPropagation()" onclick="pvzWithdraw('${p.id}')">×</span></span>`;}).join("");
+ const hpPct=st.maxHp?Math.max(0,Math.min(100,st.hp/st.maxHp*100)):100;
+ const hpColor=hpPct>50?"#67c23a":(hpPct>25?"#e6a23c":"#f56c6c");
  let status,statusCls="pvz-ok";
  if(st.arrived){status="🧟 僵尸已到达！脑子被吃掉了…明天重新种植物抢回来";statusCls="pvz-bad";}
  else if(st.totalDef<=0){status="⚠️ 还没布置植物，僵尸正直奔你的脑子！去做任务赚阳光种植物吧";statusCls="pvz-bad";}
- else{const leftMin=(st.arrivalMin-st.elapsed).toFixed(0);status="🛡 已布置 "+(S.pvz.plants.length)+" 株植物（共阻挡 "+st.totalDef+" 分钟），僵尸距脑子还剩 "+((100-st.posPct)).toFixed(0)+"%，还要 "+(leftMin)+" 分钟才到（超过午夜即安全）";statusCls="pvz-ok";}
+ else{const leftMin=(st.arrivalMin-st.elapsed).toFixed(0);status="🛡 已布置 "+(S.pvz.plants.length)+" 株植物（共阻挡 "+st.totalDef+" 分钟），僵尸距脑子还剩 "+((100-st.posPct)).toFixed(0)+"%，还要 "+(leftMin)+" 分钟才到";statusCls="pvz-ok";}
  const toggleIco=collapsed?"▲":"▼";
- el.innerHTML=`<div class="pvz-head"><span class="pvz-title">🧟 每日僵尸防守战</span><span style="display:flex;align-items:center"><span class="pvz-sun">🌞 ${sun}</span><button class="pvz-toggle" onclick="pvzToggleCollapse()" title="${collapsed?'展开':'收起'}">${toggleIco}</button></span></div>
+ const zName=st.zType?st.zType.name:"普通僵尸";
+ el.innerHTML=`<div class="pvz-head"><span class="pvz-title">🧟 每日僵尸防守战 · <span class="pvz-zname" onclick="pvzOpenZombiePrison()">${esc(zName)} ▾</span></span><span style="display:flex;align-items:center"><span class="pvz-sun">🌞 ${sun}</span><button class="pvz-toggle" onclick="pvzToggleCollapse()" title="${collapsed?'展开':'收起'}">${toggleIco}</button></span></div>
   <div class="pvz-track pvz-lawn">
    <span class="pvz-brain">${PVZ_BRAIN}</span>
    <span class="pvz-sunflower">${PVZ_SVG.sun}</span>
    ${plantEls}
-   <span class="pvz-zombie" id="pvzZombie" style="left:${st.posPct}%">${PVZ_ZOMBIE}</span>
+   <span class="pvz-zombie" id="pvzZombie" style="left:${st.posPct}%">${pvzZombieSVG(st.zType.t,st.hp,st.maxHp,st.slow)}</span>
+   <span class="pvz-hpbar" style="left:${st.posPct}%;--hp:${hpPct}%;--hp-color:${hpColor}"><span></span></span>
   </div>
   <div class="pvz-status ${statusCls}">${status}</div>
-  <div class="pvz-hint">💡 拖动植物摆放/挪动位置；把植物拖回下方商店区，或点 ×，可撤回并原数退还阳光。</div>
+  <div class="pvz-hint">💡 拖动植物摆放/挪动位置；把植物拖回下方商店区，或点 ×，可撤回并原数退还阳光。点击标题僵尸名可打开「僵尸监狱」换对手。</div>
   <div class="pvz-shop">${shop}</div>`;
 }
 function showBrainEaten(){
@@ -5564,7 +5668,7 @@ function showBrainEaten(){
 document.getElementById("d").textContent="今天 "+todayStr();
 applyTheme();updateWbTitle();
 if(window.matchMedia){try{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if((S.settings&&S.settings.theme)==="auto")applyTheme();});}catch(e){}}
-pvzRollDay();render();showBrainEaten();
+pvzRollDay();pvzDailyCheckin();render();showBrainEaten();
 document.addEventListener("pointermove",pvzPlantMove);
 document.addEventListener("pointerup",pvzPlantUp);
 document.addEventListener("pointercancel",pvzPlantUp);

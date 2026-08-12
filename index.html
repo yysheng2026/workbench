@@ -1146,6 +1146,9 @@ function migrate(s){
  if(!Array.isArray(s.diary))s.diary=[];
  if(!Array.isArray(s.recurring))s.recurring=defaultRecurring();
  if(!s.incomePlan)s.incomePlan=defaultIncomePlan();
+ if(!s.budget||typeof s.budget!=="object")s.budget={total:0,cats:{}};
+ if(typeof s.budget.total!=="number")s.budget.total=0;
+ if(typeof s.budget.cats!=="object"||!s.budget.cats)s.budget.cats={};
  // 兼容旧 incomePlan：补齐新版字段（工资/租金/自动识别/保险会员项），不覆盖用户已有值
  if(s.incomePlan&&typeof s.incomePlan==="object"){
   const d=defaultIncomePlan();
@@ -2923,7 +2926,7 @@ function fmtMoney(n){n=+n||0;return n.toLocaleString("zh-CN",{maximumFractionDig
 // ---------- 记账 ----------
 function pad2(n){return (n<10?"0":"")+n;}
 function normDate(s){if(!s)return s;const p=String(s).split("-");if(p.length>=3)return p[0]+"-"+pad2(+p[1])+"-"+pad2(+p[2]);return s;}
-let moneyTab="home", moneyPeriod="month", moneyCursor=normDate(todayStr());
+let moneyTab="home", moneyPeriod="month", moneyCursor=normDate(todayStr()), moneyAddMore=false;
 let moneyF={method:"",type:"",cat:""}, moneyType="out", moneyMethod="微信";
 let moneyCatExpanded=false;
 let voiceRec=null, rcMethod="微信";
@@ -3070,13 +3073,25 @@ function enableCollapse(card,key,defaultDesktop,title){
  card.classList.toggle("collapsed",collapsed);
 }
 function renderMoney(main){
- const T=totals();
+ const nav=document.createElement("div");nav.className="card grid-wide";
+ nav.innerHTML=`<h2>💰 资产账本</h2>
+  <div class="tabs">${[["home","首页"],["records","明细"],["accounts","账户"],["stats","统计"]].map(t=>`<span class="tab${moneyTab===t[0]?" active":""}" onclick="setMoneyTab('${t[0]}')">${t[1]}</span>`).join("")}</div>`;
+ main.appendChild(nav);
+ if(moneyTab==="home")renderMoneyHome(main);
+ else if(moneyTab==="accounts")renderMoneyAccounts(main);
+ else if(moneyTab==="records")renderMoneyRecords(main);
+ else renderMoneyStats(main);
+ renderMoneyAdd(main);
+}
+function renderMoneyHome(main){
  const L=ledgerRecs();
  const ym=normDate(todayStr()).slice(0,7);
  const m=L.filter(r=>(r.date||"").slice(0,7)===ym);
  const mReal=realIncomeOf(m);
  const mOut=m.filter(r=>r.type==="out").reduce((s,r)=>s+(+r.amount||0),0);
- // 结余率：真实收入为0时无意义；支出超过收入时显示"入不敷出"
+ const lab=ym.replace("-","年")+"月";
+ // ===== 资产账本卡（仅首页显示） =====
+ const T=totals();
  let ringStyle,ringText,ringTitle,rateNote;
  if(mReal<=0){
   ringStyle="background:#ddd;color:#999;";
@@ -3100,8 +3115,8 @@ function renderMoney(main){
    rateNote=`本月结余率 =（¥${fmtMoney(mReal)} − ¥${fmtMoney(mOut)}）/ ¥${fmtMoney(mReal)} = ${sr}%`;
   }
  }
- const c=document.createElement("div");c.className="card grid-wide";
- c.innerHTML=`<h2>💰 资产账本</h2>
+ const acct=document.createElement("div");acct.className="card grid-wide";
+ acct.innerHTML=`<h2>💰 资产账本</h2>
   <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:2px 0 8px">
    <div class="ring" style="${ringStyle};width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto" title="${ringTitle}">${ringText}</div>
    <div style="flex:1;min-width:180px">
@@ -3110,29 +3125,18 @@ function renderMoney(main){
     <div style="font-size:12px;color:var(--muted);margin-top:2px">总资产 <b>¥${fmtMoney(T.assets)}</b> · 负债 <b style="color:var(--bad)">¥${fmtMoney(T.liab)}</b></div>
    </div>
   </div>
-  <div style="font-size:11px;color:var(--muted);margin:-2px 0 6px">${rateNote}。真实收入不含押金、借款归还、父母转账等一次性/非收入资金。</div>
-  <div class="tabs">${[["home","首页"],["records","明细"],["accounts","账户"],["stats","统计"],["health","健康"],["plan","收入分配"]].map(t=>`<span class="tab${moneyTab===t[0]?" active":""}" onclick="setMoneyTab('${t[0]}')">${t[1]}</span>`).join("")}</div>`;
- main.appendChild(c);
- if(moneyTab==="home")renderMoneyHome(main);
- else if(moneyTab==="accounts")renderMoneyAccounts(main);
- else if(moneyTab==="records")renderMoneyRecords(main);
- else if(moneyTab==="health")renderMoneyHealth(main);
- else if(moneyTab==="plan")renderMoneyPlan(main);
- else renderMoneyStats(main);
- renderMoneyAdd(main);
-}
-function renderMoneyHome(main){
- const L=ledgerRecs();
- const ym=normDate(todayStr()).slice(0,7);
- const m=L.filter(r=>(r.date||"").slice(0,7)===ym);
- const mReal=realIncomeOf(m);
- const mOut=m.filter(r=>r.type==="out").reduce((s,r)=>s+(+r.amount||0),0);
- const lab=ym.replace("-","年")+"月";
-  const cats=getMoneyCats();
- const counts={};(S.ledger||[]).forEach(r=>{if(!r||r.type==="transfer")return;counts[r.cat||"其他"]=(counts[r.cat||"其他"]||0)+1;});
- const sortedCats=cats.slice().sort((x,y)=>(counts[y.name]||0)-(counts[x.name]||0));
- const hasMoreCats=sortedCats.length>8;
- const shownCats=moneyCatExpanded?sortedCats:sortedCats.slice(0,8);
+  <div style="font-size:11px;color:var(--muted);margin:-2px 0 6px">${rateNote}。真实收入不含押金、借款归还、父母转账等一次性/非收入资金。</div>`;
+ main.appendChild(acct);
+ // ===== 记账仪表盘（分类改显本月支出金额 + 自动合并小额） =====
+ const cats=getMoneyCats();
+ const mOutRecs=m.filter(r=>r.type==="out");
+ const catAmt={};mOutRecs.forEach(r=>{const c=r.cat||"其他";catAmt[c]=(catAmt[c]||0)+(+r.amount||0);});
+ const withAmt=cats.map(c=>({c,amt:catAmt[c.name]||0})).filter(x=>x.amt>0).sort((a,b)=>b.amt-a.amt);
+ const topN=7;
+ const top=withAmt.slice(0,topN);
+ const restAmt=withAmt.slice(topN).reduce((s,x)=>s+x.amt,0);
+ const hasSmall=withAmt.length>topN;
+ const shownCats=moneyCatExpanded?withAmt:top;
  const dash=document.createElement("div");dash.className="card grid-wide";
  dash.innerHTML=`<h3>💰 记账仪表盘</h3>
   <div class="stat-strip">
@@ -3142,36 +3146,229 @@ function renderMoneyHome(main){
   </div>
   <div style="font-size:11px;color:var(--muted);margin-top:4px">本月（${lab}）· 点击卡片可跳到「明细」只看对应类型。</div>
   <div style="height:1px;background:var(--line);margin:12px 0"></div>
-  <div class="card-head" onclick="toggleMoneyCats()" title="${hasMoreCats?"点击展开 / 收起全部分类":"分类管理"}" style="margin:0 0 8px;cursor:pointer">
-   <h4 style="margin:0;display:flex;align-items:center;gap:6px;font-size:14px">🏷️ 分类管理 <span style="font-size:11px;font-weight:400;color:var(--muted)">· 常用优先</span></h4>
-   <span class="chev" style="font-size:12px">${hasMoreCats?(moneyCatExpanded?"▾ 收起":"▸ 展开全部分类"):"共 "+sortedCats.length+" 个"}</span>
+  <div class="card-head" onclick="toggleMoneyCats()" title="${moneyCatExpanded?'点击收起':'分类管理 · 点击展开'}" style="margin:0 0 8px;cursor:pointer">
+   <h4 style="margin:0;display:flex;align-items:center;gap:6px;font-size:14px">🏷️ 本月支出分类 <span style="font-size:11px;font-weight:400;color:var(--muted)">· 按金额</span></h4>
+   <span class="chev" style="font-size:12px">${moneyCatExpanded?("▾ 收起"):(hasSmall?"▸ 展开全部分类":"共 "+withAmt.length+" 个")}</span>
   </div>
   <div style="display:flex;justify-content:flex-end;margin:-2px 0 8px"><button class="btn sm ghost" onclick="event.stopPropagation();openCategoryManager()">管理</button></div>
-  <div class="cat-grid">${shownCats.map(c=>{
-   const n=counts[c.name]||0;
+  <div class="cat-grid">${shownCats.map(x=>{
+   const c=x.c;
    return `<div class="cat-tile" onclick="viewCatRecords('${esc(c.name)}')" style="--cat-color:${c.color};--cat-bg:${c.color}14">
     <div class="cat-tile-icon">${c.icon}</div>
     <div class="cat-tile-name">${esc(c.name)}</div>
     <div class="cat-tile-desc">${esc(c.desc||"")}</div>
-    <div class="cat-tile-count">${n} 笔</div>
+    <div class="cat-tile-count">-¥${fmtMoney(x.amt)}</div>
    </div>`;
-  }).join("")}</div>
-  ${!moneyCatExpanded&&sortedCats.length>8?`<div style="font-size:11px;color:var(--muted);margin-top:8px">还有 ${sortedCats.length-shownCats.length} 个不常用分类已折叠，点上方「展开全部分类」查看。</div>`:""}`;
+  }).join("")}${!moneyCatExpanded&&hasSmall?`<div class="cat-tile" onclick="toggleMoneyCats()" style="--cat-color:#9b9b9b;--cat-bg:#9b9b9b14;cursor:pointer">
+    <div class="cat-tile-icon">📦</div>
+    <div class="cat-tile-name">其他小额</div>
+    <div class="cat-tile-desc">点击展开</div>
+    <div class="cat-tile-count">-¥${fmtMoney(restAmt)}</div>
+   </div>`:""}</div>
+  ${moneyCatExpanded&&withAmt.length===0?`<div style="font-size:11px;color:var(--muted);margin-top:8px">本月还没有支出记录。</div>`:""}`;
  main.appendChild(dash);
-const acctTotal=(S.accounts||[]).reduce((s,a)=>s+accountBalance(a),0);
-const goals=S.goals||[];
-const g0=goals[0];
-const merged=document.createElement("div");merged.className="card";
-merged.innerHTML=`<h3>🏦 资产 · 攒钱 · 固定收支</h3>
- <div class="stat-strip">
-  <div class="stat"><b>¥${fmtMoney(acctTotal)}</b><span>总资产</span></div>
-  <div class="stat" onclick="setMoneyTab('accounts')" style="cursor:pointer"><b>账户</b><span>账本 ›</span></div>
-  <div class="stat" onclick="openRecurringSheet()" style="cursor:pointer"><b>固定</b><span>收支 ›</span></div>
-  <div class="stat" onclick="openGoalsSheet()" style="cursor:pointer"><b>攒钱</b><span>目标 ›</span></div>
- </div>
- <div style="font-size:11px;color:var(--muted);margin-top:6px">${g0?('当前攒钱目标：'+esc(g0.name)+' · 已攒 ¥'+fmtMoney(g0.saved||0)+' / ¥'+fmtMoney(g0.target)+'（'+Math.round((g0.saved||0)/(g0.target||1)*100)+'%）'):'还没有攒钱目标，点「目标 ›」新建。'}</div>`;
-main.appendChild(merged);
+ // ===== 本月预算卡 =====
+ main.appendChild(moneyBudgetCard());
+ // ===== 本月可自由支配卡（收入分配合并） =====
+ main.appendChild(moneyDiscretionaryCard());
+ // ===== 资产 · 攒钱 · 固定收支 合并卡 =====
+ const acctTotal=(S.accounts||[]).reduce((s,a)=>s+accountBalance(a),0);
+ const goals=S.goals||[];
+ const g0=goals[0];
+ const merged=document.createElement("div");merged.className="card";
+ merged.innerHTML=`<h3>🏦 资产 · 攒钱 · 固定收支</h3>
+  <div class="stat-strip">
+   <div class="stat"><b>¥${fmtMoney(acctTotal)}</b><span>总资产</span></div>
+   <div class="stat" onclick="setMoneyTab('accounts')" style="cursor:pointer"><b>账户</b><span>账本 ›</span></div>
+   <div class="stat" onclick="openRecurringSheet()" style="cursor:pointer"><b>固定</b><span>收支 ›</span></div>
+   <div class="stat" onclick="openGoalsSheet()" style="cursor:pointer"><b>攒钱</b><span>目标 ›</span></div>
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-top:6px">${g0?('当前攒钱目标：'+esc(g0.name)+' · 已攒 ¥'+fmtMoney(g0.saved||0)+' / ¥'+fmtMoney(g0.target)+'（'+Math.round((g0.saved||0)/(g0.target||1)*100)+'%）'):'还没有攒钱目标，点「目标 ›」新建。'}</div>`;
+ main.appendChild(merged);
 }
+// ===== 本月预算卡 =====
+function moneyBudgetCardHTML(){
+ const b=S.budget||{total:0,cats:{}};
+ const ym=normDate(todayStr()).slice(0,7);
+ const L=ledgerRecs();
+ const mOutRecs=L.filter(r=>(r.date||"").slice(0,7)===ym&&r.type==="out");
+ const mOut=mOutRecs.reduce((s,r)=>s+(+r.amount||0),0);
+ const total=+b.total||0;
+ const totalSet=total>0;
+ const remain=total-mOut;
+ const over=totalSet&&mOut>total;
+ const catLimits=Object.entries(b.cats||{}).filter(([k,v])=>v>0);
+ const catSpent={};mOutRecs.forEach(r=>{const c=r.cat||"其他";catSpent[c]=(catSpent[c]||0)+(+r.amount||0);});
+ let catRows="";
+ if(catLimits.length){
+  catRows=catLimits.map(([name,lim])=>{
+   const spent=catSpent[name]||0;const pct=lim?Math.min(100,spent/lim*100):0;const isOver=spent>lim;
+   return `<div style="margin:6px 0">
+     <div style="display:flex;justify-content:space-between;font-size:12px"><span>${esc(name)}</span><span style="color:${isOver?'var(--bad)':'var(--muted)'}">${fmtMoney(spent)} / ${fmtMoney(lim)}</span></div>
+     <div style="height:8px;border-radius:4px;background:#eee;overflow:hidden;margin-top:2px"><i style="display:block;height:100%;width:${pct}%;background:${isOver?'var(--bad)':'#E88A6A'}"></i></div>
+   </div>`;
+  }).join("");
+ }
+ return `<h3>🎯 本月预算</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin:4px 0">
+   <div style="flex:1;min-width:130px"><div style="font-size:12px;color:var(--muted)">本月已花 / 预算</div><div style="font-size:22px;font-weight:800;color:${over?'var(--bad)':'var(--ok)'}">${fmtMoney(mOut)}<span style="font-size:13px;color:var(--muted)"> / ${totalSet?fmtMoney(total):'未设'}</span></div></div>
+   <div style="text-align:right;min-width:90px"><div style="font-size:12px;color:var(--muted)">${totalSet?(over?'已超支':'剩余'):'状态'}</div><div style="font-size:18px;font-weight:700;color:${totalSet?(over?'var(--bad)':'var(--ok)'):'var(--muted)'}">${totalSet?fmtMoney(Math.abs(remain)):'未设预算'}</div></div>
+  </div>
+  ${totalSet?`<div style="height:10px;border-radius:5px;background:#eee;overflow:hidden;margin:6px 0"><i style="display:block;height:100%;width:${Math.min(100,mOut/total*100)}%;background:${over?'var(--bad)':'#7AA874'}"></i></div>`:`<div style="font-size:11px;color:var(--muted);margin:6px 0">还没设本月预算，点下方「设置预算」添加总额与分类限额。</div>`}
+  ${catRows}
+  <button class="btn sm ghost" style="margin-top:8px" onclick="openBudgetSheet()">✏️ 设置预算</button>`;
+}
+function moneyBudgetCard(){const c=document.createElement("div");c.className="card";c.innerHTML=moneyBudgetCardHTML();return c;}
+function openBudgetSheet(){
+ const b=S.budget||(S.budget={total:0,cats:{}});
+ const catRows=getMoneyCats().map((c,idx)=>{
+  const lim=b.cats[c.name]!=null?b.cats[c.name]:"";
+  return `<div style="display:flex;gap:8px;align-items:center;font-size:13px;margin:4px 0">
+    <span style="flex:1">${c.icon} ${esc(c.name)}</span>
+    <input id="bgt_${idx}" type="number" value="${lim}" placeholder="不限" style="width:110px" oninput="setBudgetCat('${esc(c.name)}',this.value)">
+   </div>`;
+ }).join("");
+ showSheet(`<h3>🎯 本月预算</h3>
+  <div class="addrow"><input id="bgtTotal" type="number" value="${b.total||""}" placeholder="本月预算总额（元）" oninput="setBudgetTotal(this.value)"></div>
+  <div style="font-size:12px;color:var(--muted);margin:8px 0 4px">分类限额（可选，留空=不限）</div>
+  ${catRows}
+  <div style="font-size:11px;color:var(--muted);margin-top:8px">预算按自然月统计「本月支出」；超出总额或分类限额会变红提醒。修改即时保存，关掉弹层即生效。</div>`);
+}
+function setBudgetTotal(v){const b=S.budget||(S.budget={total:0,cats:{}});b.total=parseFloat(v)||0;save();}
+function setBudgetCat(name,v){const b=S.budget||(S.budget={total:0,cats:{}});const n=parseFloat(v);if(n>0)b.cats[name]=n;else delete b.cats[name];save();}
+// ===== 本月可自由支配卡（收入分配合并到首页） =====
+function moneyDiscretionaryCardHTML(){
+ const c=planCompute();
+ const disc=c.discretionary>0?c.discretionary:0;
+ const deficit=c.deficit;
+ const inc=c.income>0?c.income:0;
+ const pF=inc?Math.min(100,c.fixedTotal/inc*100):0;
+ const pS=inc?Math.min(100,c.savings/inc*100):0;
+ const pD=inc?Math.min(100,(disc>0?disc:0)/inc*100):0;
+ return `<h3>💸 本月可自由支配</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin:4px 0">
+   <div style="flex:1;min-width:110px"><div style="font-size:12px;color:var(--muted)">月收入</div><div style="font-size:18px;font-weight:700">${fmtMoney(inc)}</div></div>
+   <div style="flex:1;min-width:110px"><div style="font-size:12px;color:var(--muted)">固定支出</div><div style="font-size:18px;font-weight:700;color:#E88A6A">${fmtMoney(c.fixedTotal)}</div></div>
+   <div style="flex:1;min-width:110px"><div style="font-size:12px;color:var(--muted)">储蓄</div><div style="font-size:18px;font-weight:700;color:#7AA874">${fmtMoney(c.savings)}</div></div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+   <div style="flex:1"><div style="font-size:12px;color:var(--muted)">可自由支配</div><div style="font-size:24px;font-weight:800;color:${deficit?'var(--bad)':'#5B9BD5'}">${fmtMoney(disc)}</div></div>
+   ${deficit?`<div style="color:var(--bad);font-size:12px;max-width:170px">⚠ 缺口 ${fmtMoney(-c.afterFixed)}，需压缩固定支出或增收入</div>`:""}
+  </div>
+  <div style="display:flex;height:16px;border-radius:8px;overflow:hidden;background:#eee;margin:8px 0">
+   ${inc?`<i style="width:${pF}%;background:#E88A6A"></i><i style="width:${pS}%;background:#7AA874"></i><i style="width:${pD}%;background:#5B9BD5"></i>`:""}
+  </div>
+  <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);flex-wrap:wrap;margin-bottom:6px">
+   <span><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#E88A6A"></i> 固定</span>
+   <span><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#7AA874"></i> 储蓄</span>
+   <span><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#5B9BD5"></i> 可支配</span>
+  </div>
+  <button class="btn sm ghost" onclick="openIncomePlanSheet()">✏️ 编辑收入分配</button>`;
+}
+function moneyDiscretionaryCard(){const c=document.createElement("div");c.className="card";c.innerHTML=moneyDiscretionaryCardHTML();return c;}
+// 收入分配编辑器（原「收入分配」tab 收敛为弹层）
+function moneyPlanCardHTML(){
+ const c=planCompute();
+ const ip=c.ip;
+ const catOpts=["居住","通讯","物业","水电","保险","其他"];
+ const fixedRows=(ip.fixed||[]).map(f=>`<tr style="border-bottom:1px dashed var(--line)">
+   <td style="padding:5px 4px"><input value="${esc(f.name)}" oninput="planSetFixed('${f.id}','name',this.value)" style="width:100%;min-width:90px"></td>
+   <td style="padding:5px 4px"><input type="number" min="0" step="0.01" value="${+f.amount||0}" oninput="planSetFixed('${f.id}','amount',this.value)" style="width:90px"></td>
+   <td style="padding:5px 4px"><select onchange="planSetFixed('${f.id}','cat',this.value)" style="font-size:12px">${catOpts.map(o=>`<option ${o===f.cat?"selected":""}>${o}</option>`).join("")}</select></td>
+   <td style="padding:5px 4px"><button class="btn sm ghost" onclick="planDelFixed('${f.id}')">✕</button></td>
+  </tr>`).join("");
+ return `<h3>📊 月收入分配计划</h3>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">按 <b>固定支出 → 储蓄目标 → 可支配</b> 的优先级，规划每个月收入怎么花。</div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:4px">
+   <div><div style="font-size:12px;color:var(--muted)">工资收入（元/月）</div><input id="planSalary" type="number" min="0" step="0.01" value="${ip.salaryAuto?detectSalary():(+ip.salary||0)}" ${ip.salaryAuto?"disabled":""} oninput="planSet('salary',this.value)" style="width:160px;font-size:18px;font-weight:700"></div>
+   <div><div style="font-size:12px;color:var(--muted)">租金收入（元/月）</div><input id="planRent" type="number" min="0" step="0.01" value="${+ip.rentIncome||0}" oninput="planSet('rentIncome',this.value)" style="width:120px;font-size:18px;font-weight:700"></div>
+   <label style="font-size:12px;color:var(--accent-ink);display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" ${ip.salaryAuto?"checked":""} onchange="planToggleSalaryAuto(this.checked)"> 工资自动识别</label>
+   <button class="btn sm ghost" onclick="detectSalaryFill()">🔄 重新识别</button>
+  </div>
+  <div style="font-size:12px;color:var(--muted);margin:0 0 8px">月固定收入 ＝ 工资 <b>¥${fmtMoney(ip.salaryAuto?detectSalary():(+ip.salary||0))}</b> ＋ 租金 <b>¥${fmtMoney(+ip.rentIncome||0)}</b> ＝ <b style="color:var(--accent-ink)">¥${fmtMoney((ip.salaryAuto?detectSalary():(+ip.salary||0))+(+ip.rentIncome||0))}</b></div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px">
+   <div><div style="font-size:12px;color:var(--muted)">每月储蓄目标（元）</div><input type="number" min="0" step="0.01" value="${+ip.savingsGoal||0}" oninput="planSet('savingsGoal',this.value)" style="width:160px;font-weight:700"></div>
+   <div style="flex:1;min-width:180px"><div style="font-size:12px;color:var(--muted)">储蓄目标说明（可选）</div><input value="${esc(ip.savingsNote||"")}" oninput="planSet('savingsNote',this.value)" placeholder="如：应急金 / 购房首付" style="width:100%"></div>
+  </div>
+  <div style="font-size:14px;color:var(--accent-ink);font-weight:700;margin:6px 0 4px">① 固定支出（必须优先分配）</div>
+  <div style="overflow-x:auto">
+   <table style="width:100%;min-width:420px;font-size:13px;border-collapse:collapse">
+    <thead><tr style="border-bottom:2px solid var(--line);text-align:left"><th style="padding:5px 4px">名称</th><th style="padding:5px 4px">金额/月</th><th style="padding:5px 4px">类别</th><th></th></tr></thead>
+    <tbody>${fixedRows||`<tr><td colspan="4" style="padding:8px;color:var(--muted)">暂无，点下面添加</td></tr>`}</tbody>
+   </table>
+  </div>
+  <button class="btn sm" style="margin:8px 0 4px" onclick="planAddFixed()">＋ 添加固定支出</button>
+  <button class="btn sm ghost" style="margin:8px 0 4px" onclick="planAutoStats()">🔄 从账单自动统计保险/会员</button>
+  <div style="font-size:14px;color:var(--accent-ink);font-weight:700;margin:10px 0 4px">② 分配方案</div>
+  <div id="planResult">${planResultHTML()}</div>`;
+}
+function openIncomePlanSheet(){showSheet(moneyPlanCardHTML());}
+// 信用卡对账 & 财务健康（原「健康」tab 收敛为诊断内容）
+function moneyHealthHTML(){
+ const L=ledgerRecs();
+ const creditRecs=L.filter(r=>r.accountId==="acc_liability"||r.toAccountId==="acc_liability");
+ const monthKey=d=>{const nd=normDate(d);if(nd&&nd.length===10)return nd.slice(0,7);const s=String(d||'');if(/^\d{8}$/.test(s))return s.slice(0,4)+'-'+s.slice(4,6);return (nd||s).slice(0,7);};
+ const byMonth={};
+ const add=(m,key,amt)=>{if(!byMonth[m])byMonth[m]={out:0,in:0,repay:0};byMonth[m][key]+=amt;};
+ creditRecs.forEach(r=>{
+  const m=monthKey(r.date);
+  if(r.type==="out")add(m,"out",+r.amount||0);
+  if(r.type==="in")add(m,"in",+r.amount||0);
+  if(r.type==="transfer"&&r.toAccountId==="acc_liability")add(m,"repay",+r.amount||0);
+ });
+ L.filter(r=>r.type==="out"&&/招商银行信用卡.*扣款|信用卡还款/.test((r.method||"")+(r.merchant||"")+(r.note||""))).forEach(r=>{add(monthKey(r.date),"repay",+r.amount||0);});
+ let acc=0;
+ const months=Object.keys(byMonth).sort();
+ const rows=months.map(m=>{const b=byMonth[m];acc+=b.out-b.in-b.repay;return `<tr style="border-bottom:1px dashed var(--line)"><td style="padding:6px 4px">${m}</td><td style="padding:6px 4px;color:#f56c6c;text-align:right">-${fmtMoney(b.out)}</td><td style="padding:6px 4px;color:#67c23a;text-align:right">+${fmtMoney(b.in)}</td><td style="padding:6px 4px;color:#409eff;text-align:right">-${fmtMoney(b.repay)}</td><td style="padding:6px 4px;font-weight:700;text-align:right">${fmtMoney(acc)}</td></tr>`;}).join("");
+ const T=totals();
+ const liquid=(S.accounts||[]).filter(a=>["cash","wechat","alipay","bank"].includes(a.type)).reduce((s,a)=>s+accountBalance(a),0);
+ const debtRatio=T.assets?T.liab/T.assets*100:0;
+ const ccOut=creditRecs.filter(r=>r.type==="out").reduce((s,r)=>s+(+r.amount||0),0);
+ const ccIn=creditRecs.filter(r=>r.type==="in").reduce((s,r)=>s+(+r.amount||0),0);
+ const ccRepay=creditRecs.filter(r=>r.type==="transfer"&&r.toAccountId==="acc_liability").reduce((s,r)=>s+(+r.amount||0),0);
+ const monthlyFixed=17700+3000+40000/6;
+ const tips=[];
+ if(T.liab>monthlyFixed*2) tips.push(`信用卡负债 <b style="color:#f56c6c">¥${fmtMoney(T.liab)}</b> 超过 2 个月固定收入，优先还清。`);
+ if(liquid<T.liab) tips.push(`流动资产 <b>¥${fmtMoney(liquid)}</b> 不足以覆盖负债，需加快还款或补充现金。`);
+ if(debtRatio>5) tips.push(`负债/资产 ${debtRatio.toFixed(1)}%（资产以房产为主），现金负债压力需关注。`);
+ if(!tips.length) tips.push("现金流整体可控，建议继续保持记账与对账。");
+ return `<h3>💳 信用卡对账 & 财务健康</h3>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">信用卡消费按「备注/商户含信用卡/招行/掌上生活」识别；还款含云闪付/银行卡扣款识别。</div>
+  <div style="overflow-x:auto">
+   <table style="width:100%;min-width:520px;font-size:13px;border-collapse:collapse">
+    <thead><tr style="border-bottom:2px solid var(--line);text-align:left"><th style="padding:6px 4px">月份</th><th style="padding:6px 4px;text-align:right">消费</th><th style="padding:6px 4px;text-align:right">退款/返现</th><th style="padding:6px 4px;text-align:right">还款</th><th style="padding:6px 4px;text-align:right">累计未还</th></tr></thead>
+    <tbody>${rows}</tbody>
+   </table>
+  </div>
+  <div style="margin:14px 0 6px;font-size:15px;color:var(--accent-ink);font-weight:700">关键指标</div>
+  <div class="stat-strip" style="margin-bottom:8px">
+   <div class="stat"><b>¥${fmtMoney(T.assets)}</b><span>总资产</span></div>
+   <div class="stat"><b>¥${fmtMoney(T.net)}</b><span>净资产</span></div>
+   <div class="stat"><b style="color:#f56c6c">¥${fmtMoney(T.liab)}</b><span>信用卡负债</span></div>
+   <div class="stat"><b>¥${fmtMoney(liquid)}</b><span>流动资产</span></div>
+   <div class="stat"><b>${debtRatio.toFixed(1)}%</b><span>负债/资产</span></div>
+  </div>
+  <div style="font-size:12px;color:var(--accent-ink);margin:10px 0 2px;line-height:1.7;border-top:1px dashed var(--line);padding-top:8px">💡 <b>信用卡对账公式</b>：净消费 <b>¥${fmtMoney(ccOut-ccIn)}</b>（消费−退款） − 已还 <b style="color:#409eff">¥${fmtMoney(ccRepay)}</b> ＝ 当前负债 <b style="color:#f56c6c">¥${fmtMoney((ccOut-ccIn)-ccRepay)}</b></div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:6px">说明：上面「还款」按月汇总自导入账单；若某月显示 0，仅表示该月还款记录未出现在导入的对账单中，并不影响已在公式中扣除的实际还款。若与银行 App 仍不一致，到「账户」页点负债数字 →「校正为银行当前应还额」对齐。</div>
+  <div style="background:var(--accent-weak);border-radius:10px;padding:10px;font-size:13px;color:var(--accent-ink);line-height:1.6">
+   <b>建议：</b>${tips.join('；')}
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-top:8px">若「累计未还」与银行 App 不一致，请到「账户」页点击负债数字 → 使用「校正为银行当前应还额」按钮一键对齐。</div>`;
+}
+// 高级 · 诊断（合并负债明细 / 信用卡对账 / 数据自检 / 重跑迁移）
+function openDiagnosticsSheet(){
+ const parts=[];
+ parts.push(`<h3>🛠 高级 · 诊断</h3>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">负债明细、信用卡对账、数据自检与迁移重跑都收在这里，平时无需打开。</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+   <button class="btn sm" onclick="showLiabilityDetail()">💳 负债明细</button>
+   <button class="btn sm ghost" onclick="dataSelfCheck()">🔍 数据自检</button>
+   <button class="btn sm" style="border-color:#e6a23c;color:#e6a23c" onclick="resetMigrationsAndRecheck()">🔄 重跑迁移</button>
+  </div>`);
+ parts.push(moneyHealthHTML());
+ showSheet(parts.join(""));
+}
+function toggleMoneyAddMore(){moneyAddMore=!moneyAddMore;render();}
 function quickCat(name){const el=document.getElementById("acCat");if(el)el.value=name;setMoneyType("out");const a=document.getElementById("acAmt");if(a){a.focus();toast("已选「"+name+"」，填金额后点记录");}}
 function toggleMoneyCats(){moneyCatExpanded=!moneyCatExpanded;render();}
 function viewCatRecords(catName){
@@ -3546,66 +3743,7 @@ function moneyGoalsHTML(){
  return h;
 }
 function openGoalsSheet(){showSheet(moneyGoalsHTML());}
-function renderMoneyHealth(main){
- const card=document.createElement("div");card.className="card grid-wide";
- const L=ledgerRecs();
- const creditRecs=L.filter(r=>r.accountId==="acc_liability"||r.toAccountId==="acc_liability");
- const monthKey=d=>{const nd=normDate(d);if(nd&&nd.length===10)return nd.slice(0,7);const s=String(d||'');if(/^\d{8}$/.test(s))return s.slice(0,4)+'-'+s.slice(4,6);return (nd||s).slice(0,7);};
- const byMonth={};
- const add=(m,key,amt)=>{if(!byMonth[m])byMonth[m]={out:0,in:0,repay:0};byMonth[m][key]+=amt;};
- creditRecs.forEach(r=>{
-  const m=monthKey(r.date);
-  if(r.type==="out")add(m,"out",+r.amount||0);
-  if(r.type==="in")add(m,"in",+r.amount||0);
-  if(r.type==="transfer"&&r.toAccountId==="acc_liability")add(m,"repay",+r.amount||0);
- });
- // 兼容：迁移前被记为支出的还款（云闪付/银行卡扣款），用 monthKey 兼容 YYYYMMDD
- L.filter(r=>r.type==="out"&&/招商银行信用卡.*扣款|信用卡还款/.test((r.method||"")+(r.merchant||"")+(r.note||""))).forEach(r=>{
-  add(monthKey(r.date),"repay",+r.amount||0);
- });
- let acc=0;
- const months=Object.keys(byMonth).sort();
- const rows=months.map(m=>{
-  const b=byMonth[m];acc+=b.out-b.in-b.repay;
-  return `<tr style="border-bottom:1px dashed var(--line)"><td style="padding:6px 4px">${m}</td><td style="padding:6px 4px;color:#f56c6c;text-align:right">-${fmtMoney(b.out)}</td><td style="padding:6px 4px;color:#67c23a;text-align:right">+${fmtMoney(b.in)}</td><td style="padding:6px 4px;color:#409eff;text-align:right">-${fmtMoney(b.repay)}</td><td style="padding:6px 4px;font-weight:700;text-align:right">${fmtMoney(acc)}</td></tr>`;
- }).join("");
- const T=totals();
- const liquid=(S.accounts||[]).filter(a=>["cash","wechat","alipay","bank"].includes(a.type)).reduce((s,a)=>s+accountBalance(a),0);
- const debtRatio=T.assets?T.liab/T.assets*100:0;
- const ccOut=creditRecs.filter(r=>r.type==="out").reduce((s,r)=>s+(+r.amount||0),0);
- const ccIn=creditRecs.filter(r=>r.type==="in").reduce((s,r)=>s+(+r.amount||0),0);
- const ccRepay=creditRecs.filter(r=>r.type==="transfer"&&r.toAccountId==="acc_liability").reduce((s,r)=>s+(+r.amount||0),0);
- const monthlyFixed=17700+3000+40000/6;
- const tips=[];
- if(T.liab>monthlyFixed*2) tips.push(`信用卡负债 <b style="color:#f56c6c">¥${fmtMoney(T.liab)}</b> 超过 2 个月固定收入，优先还清。`);
- if(liquid<T.liab) tips.push(`流动资产 <b>¥${fmtMoney(liquid)}</b> 不足以覆盖负债，需加快还款或补充现金。`);
- if(debtRatio>5) tips.push(`负债/资产 ${debtRatio.toFixed(1)}%（资产以房产为主），现金负债压力需关注。`);
- if(!tips.length) tips.push("现金流整体可控，建议继续保持记账与对账。");
- const html=`<h3>💳 信用卡对账 & 财务健康</h3>
-  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">信用卡消费按「备注/商户含信用卡/招行/掌上生活」识别；还款含云闪付/银行卡扣款识别。</div>
-  <div style="overflow-x:auto">
-   <table style="width:100%;min-width:520px;font-size:13px;border-collapse:collapse">
-    <thead><tr style="border-bottom:2px solid var(--line);text-align:left"><th style="padding:6px 4px">月份</th><th style="padding:6px 4px;text-align:right">消费</th><th style="padding:6px 4px;text-align:right">退款/返现</th><th style="padding:6px 4px;text-align:right">还款</th><th style="padding:6px 4px;text-align:right">累计未还</th></tr></thead>
-    <tbody>${rows}</tbody>
-   </table>
-  </div>
-  <div style="margin:14px 0 6px;font-size:15px;color:var(--accent-ink);font-weight:700">关键指标</div>
-  <div class="stat-strip" style="margin-bottom:8px">
-   <div class="stat"><b>¥${fmtMoney(T.assets)}</b><span>总资产</span></div>
-   <div class="stat"><b>¥${fmtMoney(T.net)}</b><span>净资产</span></div>
-   <div class="stat"><b style="color:#f56c6c">¥${fmtMoney(T.liab)}</b><span>信用卡负债</span></div>
-   <div class="stat"><b>¥${fmtMoney(liquid)}</b><span>流动资产</span></div>
-   <div class="stat"><b>${debtRatio.toFixed(1)}%</b><span>负债/资产</span></div>
-  </div>
-  <div style="font-size:12px;color:var(--accent-ink);margin:10px 0 2px;line-height:1.7;border-top:1px dashed var(--line);padding-top:8px">💡 <b>信用卡对账公式</b>：净消费 <b>¥${fmtMoney(ccOut-ccIn)}</b>（消费−退款） − 已还 <b style="color:#409eff">¥${fmtMoney(ccRepay)}</b> ＝ 当前负债 <b style="color:#f56c6c">¥${fmtMoney((ccOut-ccIn)-ccRepay)}</b></div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:6px">说明：上面「还款」按月汇总自导入账单；若某月显示 0，仅表示该月还款记录未出现在导入的对账单中（银行在云闪付/他行卡还的款未进导入数据源），并不影响已在公式中扣除的实际还款。若与银行 App 仍不一致，到「账户」页点负债数字 →「校正为银行当前应还额」对齐。</div>
-  <div style="background:var(--accent-weak);border-radius:10px;padding:10px;font-size:13px;color:var(--accent-ink);line-height:1.6">
-   <b>建议：</b>${tips.join('；')}
-  </div>
-  <div style="font-size:11px;color:var(--muted);margin-top:8px">若「累计未还」与银行 App 不一致，请到「账户」页点击负债数字 → 使用「校正为银行当前应还额」按钮一键对齐。</div>`;
- card.innerHTML=html;main.appendChild(card);
- enableCollapse(card,"money_health",true);
-}
+function renderMoneyHealth(main){const card=document.createElement("div");card.className="card grid-wide";card.innerHTML=moneyHealthHTML();main.appendChild(card);enableCollapse(card,"money_health",true);}
 // ===== 月收入分配计划 =====
 function avg3Income(){const L=ledgerRecs();const now=new Date(normDate(todayStr())+"T00:00:00");let sum=0,cnt=0;for(let i=0;i<3;i++){const d=new Date(now.getFullYear(),now.getMonth()-i,1);const ym=d.getFullYear()+"-"+pad2(d.getMonth()+1);const recs=L.filter(r=>(r.date||"").slice(0,7)===ym);const inc=realIncomeOf(recs);if(inc>0){sum+=inc;cnt++;}}return cnt?Math.round(sum/cnt*100)/100:0;}
 function planSet(field,val){const ip=S.incomePlan||(S.incomePlan=defaultIncomePlan());if(["monthlyIncome","savingsGoal","salary","rentIncome"].includes(field))ip[field]=parseFloat(val)||0;else ip[field]=val;save();if(["monthlyIncome","savingsGoal","salary","rentIncome"].includes(field))recalcPlan();}
@@ -3696,43 +3834,7 @@ function planResultHTML(){
   <div style="font-size:13px;line-height:1.7;background:var(--accent-weak);border-radius:10px;padding:10px">${tip}</div>
   <div style="font-size:11px;color:var(--muted);margin-top:6px">分配口诀：先扣<b>固定支出</b>（必须），再按目标<b>攒储蓄</b>，最后才是<b>弹性/意外</b>的可支配金额。</div>`;
 }
-function renderMoneyPlan(main){
- const c=planCompute();
- const ip=c.ip,avg3=c.avg3;
- const catOpts=["居住","通讯","物业","水电","保险","其他"];
- const fixedRows=(ip.fixed||[]).map(f=>`<tr style="border-bottom:1px dashed var(--line)">
-   <td style="padding:5px 4px"><input value="${esc(f.name)}" oninput="planSetFixed('${f.id}','name',this.value)" style="width:100%;min-width:90px"></td>
-   <td style="padding:5px 4px"><input type="number" min="0" step="0.01" value="${+f.amount||0}" oninput="planSetFixed('${f.id}','amount',this.value)" style="width:90px"></td>
-   <td style="padding:5px 4px"><select onchange="planSetFixed('${f.id}','cat',this.value)" style="font-size:12px">${catOpts.map(o=>`<option ${o===f.cat?"selected":""}>${o}</option>`).join("")}</select></td>
-   <td style="padding:5px 4px"><button class="btn sm ghost" onclick="planDelFixed('${f.id}')">✕</button></td>
-  </tr>`).join("");
- const card=document.createElement("div");card.className="card grid-wide";
- card.innerHTML=`<h3>📊 月收入分配计划</h3>
-  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">按 <b>固定支出 → 储蓄目标 → 可支配</b> 的优先级，规划每个月收入怎么花。固定支出是必须先分配的（房租/房贷、话费网络、物业、水电燃气、保险）。</div>
-  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:4px">
-   <div><div style="font-size:12px;color:var(--muted)">工资收入（元/月）</div><input id="planSalary" type="number" min="0" step="0.01" value="${ip.salaryAuto?detectSalary():(+ip.salary||0)}" ${ip.salaryAuto?"disabled":""} oninput="planSet('salary',this.value)" style="width:160px;font-size:18px;font-weight:700"></div>
-   <div><div style="font-size:12px;color:var(--muted)">租金收入（元/月）</div><input id="planRent" type="number" min="0" step="0.01" value="${+ip.rentIncome||0}" oninput="planSet('rentIncome',this.value)" style="width:120px;font-size:18px;font-weight:700"></div>
-   <label style="font-size:12px;color:var(--accent-ink);display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" ${ip.salaryAuto?"checked":""} onchange="planToggleSalaryAuto(this.checked)"> 工资自动从账单识别</label>
-   <button class="btn sm ghost" onclick="detectSalaryFill()">🔄 重新识别工资</button>
-  </div>
-  <div style="font-size:12px;color:var(--muted);margin:0 0 8px">月固定收入 ＝ 工资 <b>¥${fmtMoney(ip.salaryAuto?detectSalary():(+ip.salary||0))}</b> ＋ 租金 <b>¥${fmtMoney(+ip.rentIncome||0)}</b> ＝ <b style="color:var(--accent-ink)">¥${fmtMoney((ip.salaryAuto?detectSalary():(+ip.salary||0))+(+ip.rentIncome||0))}</b>（每年随税/补贴微调，可手动改）</div>
-  <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px">
-   <div><div style="font-size:12px;color:var(--muted)">每月储蓄目标（元）</div><input type="number" min="0" step="0.01" value="${+ip.savingsGoal||0}" oninput="planSet('savingsGoal',this.value)" style="width:160px;font-weight:700"></div>
-   <div style="flex:1;min-width:180px"><div style="font-size:12px;color:var(--muted)">储蓄目标说明（可选）</div><input value="${esc(ip.savingsNote||"")}" oninput="planSet('savingsNote',this.value)" placeholder="如：应急金 / 购房首付 / 旅行基金" style="width:100%"></div>
-  </div>
-  <div style="font-size:14px;color:var(--accent-ink);font-weight:700;margin:6px 0 4px">① 固定支出（必须优先分配）</div>
-  <div style="overflow-x:auto">
-   <table style="width:100%;min-width:420px;font-size:13px;border-collapse:collapse">
-    <thead><tr style="border-bottom:2px solid var(--line);text-align:left"><th style="padding:5px 4px">名称</th><th style="padding:5px 4px">金额/月</th><th style="padding:5px 4px">类别</th><th></th></tr></thead>
-    <tbody>${fixedRows||`<tr><td colspan="4" style="padding:8px;color:var(--muted)">暂无，点下面添加</td></tr>`}</tbody>
-   </table>
-  </div>
-  <button class="btn sm" style="margin:8px 0 4px" onclick="planAddFixed()">＋ 添加固定支出</button>
-  <button class="btn sm ghost" style="margin:8px 0 4px" onclick="planAutoStats()">🔄 从账单自动统计保险/会员</button>
-  <div style="font-size:14px;color:var(--accent-ink);font-weight:700;margin:10px 0 4px">② 分配方案</div>
-  <div id="planResult">${planResultHTML()}</div>`;
- main.appendChild(card);
-}
+function renderMoneyPlan(main){const card=document.createElement("div");card.className="card grid-wide";card.innerHTML=moneyPlanCardHTML();main.appendChild(card);}
 function renderMoneyAdd(main){
  const card=document.createElement("div");card.className="card grid-wide";
  const acOpts=(S.accounts||[]).map(a=>`<option value="${a.id}">${typeIcon(a.type)} ${esc(a.name)}</option>`).join("");
@@ -3758,16 +3860,24 @@ function renderMoneyAdd(main){
   <div id="acMethods" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
    ${MONEY_METHODS.map(m=>`<button class="chip ac-method${m===moneyMethod?" active":""}" data-m="${m}" onclick="setMoneyMethod('${m}')">${m}</button>`).join("")}
   </div>
-  <input id="acNote" placeholder="备注 / 对方（如：午餐·公司食堂）" style="width:100%;margin-bottom:8px">
-  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-   <button class="btn sm primary" onclick="addRecord()">记录</button>
-   <button class="btn sm" id="acVoice" onclick="openVoiceCmd()">🎙 语音/文字</button>
-   <button class="btn sm" onclick="openReceipt()">📷 小票</button>
-   <button class="btn sm ghost" onclick="quickIncome('工资')">工资(个税)</button>
-   <button class="btn sm ghost" onclick="quickIncome('偶然所得')">偶然所得</button>
-   <button class="btn sm ghost" onclick="quickIncome('理财')">理财</button>
-  </div>
-  <div style="font-size:11px;color:var(--muted);margin-top:6px">💡 每笔收支/转账都直接更新对应账户余额；股票/基金余额实时联动股票模块。</div>`;
+  <button class="btn sm primary" onclick="addRecord()">记录</button>
+  <div style="margin-top:8px">
+   <div class="card-head" onclick="toggleMoneyAddMore()" style="cursor:pointer;margin:0;font-size:13px">
+    <span>更多（备注 / 语音 / 小票 / 快捷收入）</span>
+    <span class="chev">${moneyAddMore?'▾':'▸'}</span>
+   </div>
+   <div id="acMore" style="${moneyAddMore?'':'display:none'}">
+    <input id="acNote" placeholder="备注 / 对方（如：午餐·公司食堂）" style="width:100%;margin:8px 0">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+     <button class="btn sm" id="acVoice" onclick="openVoiceCmd()">🎙 语音/文字</button>
+     <button class="btn sm" onclick="openReceipt()">📷 小票</button>
+     <button class="btn sm ghost" onclick="quickIncome('工资')">工资(个税)</button>
+     <button class="btn sm ghost" onclick="quickIncome('偶然所得')">偶然所得</button>
+     <button class="btn sm ghost" onclick="quickIncome('理财')">理财</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px">💡 每笔收支/转账都直接更新对应账户余额；股票/基金余额实时联动股票模块。</div>
+   </div>
+  </div>`;
  main.appendChild(card);
 }
 function addRecord(){const d=normDate(document.getElementById("acDate").value||todayStr());const amt=parseFloat(document.getElementById("acAmt").value)||0;const cat=document.getElementById("acCat").value.trim()||"其他";const note=document.getElementById("acNote").value.trim();if(amt<=0){toast("金额要大于 0");return;}
@@ -3815,12 +3925,11 @@ function renderMoneyAccounts(main){
  let h=`<h3>🗂️ 账户总览</h3>
   <div style="font-size:12px;color:var(--muted);margin-bottom:4px">总资产 <b>¥${fmtMoney(T.assets)}</b> · 负债 <b style="color:var(--bad);cursor:pointer" onclick="showLiabilityDetail()" title="点击查看负债明细">¥${fmtMoney(T.liab)}</b> · 净资产 <b style="color:var(--ok)">¥${fmtMoney(T.net)}</b></div>
   <div style="display:flex;gap:6px;margin:6px 0 4px;flex-wrap:wrap">
-   <button class="btn sm primary" onclick="openImport()">📥 导入账单 JSON</button>
-   <button class="btn sm" onclick="openImportCSV()">📥 智能导入 CSV</button>
+   <button class="btn sm primary" onclick="openImport()">📥 导入账单</button>
    <button class="btn sm" onclick="addAccount()">＋ 新增账户</button>
    <button class="btn sm" onclick="updateFloatingAssets()">🔄 刷新浮动资产</button>
    <button class="btn sm" onclick="syncProvidentFromLedger()">🏛 公积金按流水更新</button>
-   <button class="btn sm" style="border-color:#e6a23c;color:#e6a23c" onclick="dataSelfCheck()">🔍 数据自检</button>
+   <button class="btn sm ghost" onclick="openDiagnosticsSheet()">🛠 高级·诊断</button>
   </div>`;
  ACCT_GROUPS.forEach(g=>{
   const list=(S.accounts||[]).filter(a=>g.types.includes(a.type));
@@ -3959,8 +4068,8 @@ function saveRecurring(id){const name=document.getElementById("rrName").value.tr
 function delRecurring(id){if(typeof confirm==="function"&&!confirm("删除这条固定收支规则？已生成的流水保留。"))return;S.recurring=S.recurring.filter(x=>x.id!==id);save();render();toast("已删除");}
 function toggleRecurring(id){const r=(S.recurring||[]).find(x=>x.id===id);if(!r)return;r.enabled=!r.enabled;save();applyRecurringRules();render();}
 // 导入账单 JSON（微信/支付宝/银行卡对账后导出）：按 id 去重合并到 S.ledger 与 S.accounts
-function openImport(){let inp=document.getElementById("importFile");if(!inp){inp=document.createElement("input");inp.type="file";inp.id="importFile";inp.accept=".json,application/json";inp.style.display="none";inp.onchange=handleImportFile;document.body.appendChild(inp);}inp.value="";inp.click();}
-function handleImportFile(ev){const f=ev.target.files&&ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{mergeImport(JSON.parse(e.target.result));}catch(err){toast("JSON 解析失败："+err.message);}};r.readAsText(f);}
+function openImport(){let inp=document.getElementById("importFile");if(!inp){inp=document.createElement("input");inp.type="file";inp.id="importFile";inp.accept=".json,.csv,.txt,application/json,text/csv";inp.style.display="none";inp.onchange=handleImportFile;document.body.appendChild(inp);}inp.value="";inp.click();}
+function handleImportFile(ev){const f=ev.target.files&&ev.target.files[0];if(!f)return;const name=(f.name||"").toLowerCase();const r=new FileReader();r.onload=e=>{try{const text=e.target.result||"";if(name.endsWith(".json")||/^\s*[[{]/.test(text)){mergeImport(JSON.parse(text));}else{previewStatementCSV(text,f.name);}}catch(err){toast("解析失败："+err.message);}};r.readAsText(f);}
 function mergeImport(data){
  if(!data||!data.ledger||!Array.isArray(data.ledger)){toast("文件格式不对：需要含 ledger 数组");return;}
  if(!S.accounts)S.accounts=defaultAccounts();
@@ -3980,9 +4089,7 @@ function mergeImport(data){
  save();render();
  toast(`导入完成：新增 ${addLed} 笔流水、${addAcc} 个账户（跳过重复 ${dup} 笔）`);
 }
-// ---------- 智能导入账单 CSV（银行 / 微信 / 支付宝对账单导出）----------
-function openImportCSV(){let inp=document.getElementById("importCSV");if(!inp){inp=document.createElement("input");inp.type="file";inp.id="importCSV";inp.accept=".csv,.txt,text/csv";inp.style.display="none";inp.onchange=handleImportCSV;document.body.appendChild(inp);}inp.value="";inp.click();}
-function handleImportCSV(ev){const f=ev.target.files&&ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{previewStatementCSV(e.target.result,f.name);}catch(err){toast("解析失败："+err.message);}};r.readAsText(f);}
+// ---------- 智能导入账单 CSV（银行 / 微信 / 支付宝对账单导出，由 openImport 统一入口自动识别）----------
 function stmtNormDate(s){if(!s)return "";let t=String(s).trim().replace(/\s+\d{1,2}:\d{2}(:\d{2})?\s*$/,"").replace(/[/.]/g,"-");const p=t.split("-");if(p.length===3)return normDate(p[0]+"-"+p[1]+"-"+p[2]);if(p.length===2)return normDate(new Date().getFullYear()+"-"+p[0]+"-"+p[1]);return normDate(s);}
 function stmtNum(v){if(v==null)return 0;let s=String(v).trim().replace(/[¥￥$,\s]/g,"").replace(/\(([^)]+)\)/,"-$1");if(s==="")return 0;const n=parseFloat(s);return isNaN(n)?0:n;}
 const STMT_CAT=[["工资",/工资|薪资|薪酬|代发|薪金|发薪/],["餐饮",/餐饮|饭|餐|美食|外卖|麦当劳|肯德基|肯德鸡|星巴克|咖啡|餐厅|食堂|小吃|奶茶|酒/],["交通",/交通|地铁|公交|滴滴|打车|出租车|高铁|火车|12306|加油|油费|停车|ETC|机票|网约车/],["购物",/淘宝|京东|拼多多|天猫|超市|便利店|商城|唯品会|购物|网购|专卖店|百货/],["医疗",/医疗|医院|药店|诊所|卫生|保健|体检/],["话费",/话费|充值|通讯|电信|移动|联通|缴费/],["居家",/水电|物业|电费|水费|燃气|暖气|宽带|房租|物业费|家政|维修|装修/],["订阅",/订阅|会员|视频|音乐|网飞|爱奇艺|优酷|腾讯视频|网易云|喜马拉雅|知乎|App Store|苹果|自动续费/],["教育",/教育|学费|培训|图书|课程|网课/],["旅游",/旅游|酒店|住宿|景区|门票|携程|飞猪/],["娱乐",/电影|游戏|steam|娱乐|演出|演唱会/],["理财",/理财|基金|股票|证券|收益|利息|活期|定期|黄金|国债/],["红包",/红包|微信红包|零钱|转帐|转账/]];

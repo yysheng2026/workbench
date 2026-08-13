@@ -271,13 +271,12 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  .wrap{max-width:1280px;padding:20px 24px 90px}
  .nav{width:188px;position:sticky;top:84px;align-self:flex-start}
  .nav button{font-size:15px;padding:12px 14px;min-height:48px}
- /* 用 CSS Grid 取代 masonry columns：卡片规整铺满两列，消除底部大片留白 */
- /* 桌面用多列瀑布流（masonry）铺满，消除卡片高低不齐造成的留白 */
- .main{display:block;column-count:2;column-gap:16px}
- .main>.card{break-inside:avoid;margin:0 0 16px;width:100%;display:block;transition:box-shadow .25s ease,transform .25s cubic-bezier(.16,1,.3,1)}
+ /* 桌面用 CSS Grid 双/三栏：取代易裁切的多列瀑布流（column-count 会把高于列高的卡片在列边界处截断） */
+ .main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+ .main>.card{break-inside:auto;margin:0;width:auto;display:block;transition:box-shadow .25s ease,transform .25s cubic-bezier(.16,1,.3,1)}
  .main>.card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
- /* 子标签栏 / 整宽卡 横跨所有列 */
- .main>.sub,.main>.card.grid-wide{grid-column:auto;column-span:all;margin-bottom:16px}
+ /* 子标签栏 / 整宽卡 / 列表容器 横跨全部列，避免被挤成半宽或截断 */
+ .main>.sub,.main>.card.grid-wide,.main>div:not(.card):not(.sub){grid-column:1 / -1;margin:0 0 16px}
  .cat-grid{grid-template-columns:repeat(4,1fr)}
  .stat-strip{gap:10px}
  .home-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch}
@@ -295,7 +294,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
  .box.wide{max-width:640px}
  .hdr-top h1{font-size:22px}
 }
-@media(min-width:1600px){.main{column-count:3}}
+@media(min-width:1600px){.main{grid-template-columns:repeat(3,minmax(0,1fr))}}
 /* fitness redesign */
 .fit-block{margin:8px 0;padding:8px 10px;background:#fffdfa;border:2px dashed var(--line);border-radius:10px}
 .fit-h{font-size:12px;font-weight:bold;color:var(--accent-ink);margin-bottom:4px}
@@ -756,7 +755,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 
 <script type="application/json" id="morningSeed">{"text": "一句话结论：今天最要紧的是把「贴砖耗材争议」彻底闭环——它卡着贴砖复工，是唯一还没解的 P0 根因，今天必须给结论。\n\n🔴 今日必办（P0）\n- 贴砖耗材争议闭环：找陶工问清①缺什么料②合同写没写③谁采购谁送，并听清他 08-10 语音。这是卡住贴砖的唯一根因，今天必须给结论。\n- 闭水试验查漏：妈妈已试水，确认已蓄水，并去楼下看有无渗漏（防水验收关键证据）。\n\n🟠 关键推进（P1）\n- 橱柜方案定稿 + 催徐工效果图终版：壹玖自 07-15 拖了>28天，设明确 deadline。\n- 铺贴复工 + 海棠角文字尺寸：耗材解决后即排铺贴；向装修公司/壹玖要文字版尺寸（加工厂看不懂 CAD）。\n- 主卧补缝 + 全屋智能回执：问汉森主卧胶补完没，问付广金点位回执。\n\n🟡 顺手跟（P2）\n- 全屋定制签约回填（待贴砖复尺）\n- 派雅退门\n- 地面空鼓确认\n\n💰 预算：总超支 ¥30,684.46（+15.34%），连续多期持平。\n\n详细复盘见 装修进度日报_2026-08-12.md。"}</script>
 
-<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 32.56, "name": "紫金矿业", "open": 33.58, "high": 33.84, "low": 32.55, "preClose": 33.58, "change": -1.02, "changePct": -3.04, "amplitude": 3.84, "volumeRatio": 1.03, "amount": 777338.0, "time": "20260813135002"}, "sh601717": {"price": 15.41, "name": "中创智领", "open": 15.67, "high": 15.69, "low": 15.39, "preClose": 15.71, "change": -0.3, "changePct": -1.91, "amplitude": 1.91, "volumeRatio": 1.06, "amount": 21882.0, "time": "20260813135002"}, "sh600879": {"price": 16.0, "name": "航天电子", "open": 15.98, "high": 16.31, "low": 15.93, "preClose": 15.88, "change": 0.12, "changePct": 0.76, "amplitude": 2.39, "volumeRatio": 0.67, "amount": 76716.0, "time": "20260813135000"}, "sh600501": {"price": 14.85, "name": "航天晨光", "open": 14.86, "high": 15.0, "low": 14.8, "preClose": 14.89, "change": -0.04, "changePct": -0.27, "amplitude": 1.34, "volumeRatio": 0.75, "amount": 4958.0, "time": "20260813135002"}, "sz002270": {"price": 20.69, "name": "华明装备", "open": 20.61, "high": 20.93, "low": 20.4, "preClose": 20.61, "change": 0.08, "changePct": 0.39, "amplitude": 2.57, "volumeRatio": 0.78, "amount": 21314.0, "time": "20260813135000"}, "sz000429": {"price": 13.16, "name": "粤高速Ａ", "open": 13.16, "high": 13.23, "low": 13.07, "preClose": 13.16, "change": 0.0, "changePct": 0.0, "amplitude": 1.22, "volumeRatio": 0.43, "amount": 5331.0, "time": "20260813135000"}, "sh605166": {"price": 8.85, "name": "聚合顺", "open": 8.83, "high": 8.88, "low": 8.77, "preClose": 8.84, "change": 0.01, "changePct": 0.11, "amplitude": 1.24, "volumeRatio": 0.86, "amount": 2309.0, "time": "20260813135001"}, "sh600343": {"price": 19.93, "name": "航天动力", "open": 20.42, "high": 20.44, "low": 19.85, "preClose": 20.02, "change": -0.09, "changePct": -0.45, "amplitude": 2.95, "volumeRatio": 0.63, "amount": 29639.0, "time": "20260813135000"}, "sz002997": {"price": 27.21, "name": "瑞鹄模具", "open": 27.34, "high": 27.47, "low": 27.04, "preClose": 27.34, "change": -0.13, "changePct": -0.48, "amplitude": 1.57, "volumeRatio": 1.23, "amount": 4184.0, "time": "20260813134954"}, "sz159928": {"price": 0.687, "name": "消费ETF汇添富", "open": 0.68, "high": 0.689, "low": 0.678, "preClose": 0.683, "change": 0.004, "changePct": 0.59, "amplitude": 1.61, "volumeRatio": 0.84, "amount": 25776.0, "time": "20260813135000"}, "sh513130": {"price": 0.598, "name": "恒生科技ETF华泰柏瑞", "open": 0.592, "high": 0.602, "low": 0.592, "preClose": 0.594, "change": 0.004, "changePct": 0.67, "amplitude": 1.68, "volumeRatio": 0.89, "amount": 136818.0, "time": "20260813135001"}, "sh562800": {"price": 0.968, "name": "稀有金属ETF嘉实", "open": 0.982, "high": 0.986, "low": 0.968, "preClose": 0.981, "change": -0.013, "changePct": -1.33, "amplitude": 1.83, "volumeRatio": 0.73, "amount": 19256.0, "time": "20260813135002"}, "sh601012": {"price": 12.89, "name": "隆基绿能", "open": 13.05, "high": 13.12, "low": 12.85, "preClose": 13.14, "change": -0.25, "changePct": -1.9, "amplitude": 2.05, "volumeRatio": 0.99, "amount": 101012.0, "time": "20260813135002"}}, "news": [], "updated": "2026-08-13 13:50", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
+<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 32.18, "name": "紫金矿业", "open": 33.58, "high": 33.84, "low": 32.11, "preClose": 33.58, "change": -1.4, "changePct": -4.17, "amplitude": 5.15, "volumeRatio": 1.03, "amount": 1040842.0, "time": "20260813145002"}, "sh601717": {"price": 15.39, "name": "中创智领", "open": 15.67, "high": 15.69, "low": 15.33, "preClose": 15.71, "change": -0.32, "changePct": -2.04, "amplitude": 2.29, "volumeRatio": 1.0, "amount": 27845.0, "time": "20260813145002"}, "sh600879": {"price": 15.85, "name": "航天电子", "open": 15.98, "high": 16.31, "low": 15.83, "preClose": 15.88, "change": -0.03, "changePct": -0.19, "amplitude": 3.02, "volumeRatio": 0.63, "amount": 97226.0, "time": "20260813145003"}, "sh600501": {"price": 14.71, "name": "航天晨光", "open": 14.86, "high": 15.0, "low": 14.7, "preClose": 14.89, "change": -0.18, "changePct": -1.21, "amplitude": 2.01, "volumeRatio": 0.71, "amount": 6342.0, "time": "20260813145002"}, "sz002270": {"price": 20.39, "name": "华明装备", "open": 20.61, "high": 20.93, "low": 20.38, "preClose": 20.61, "change": -0.22, "changePct": -1.07, "amplitude": 2.67, "volumeRatio": 0.75, "amount": 27519.0, "time": "20260813145003"}, "sz000429": {"price": 13.2, "name": "粤高速Ａ", "open": 13.16, "high": 13.26, "low": 13.07, "preClose": 13.16, "change": 0.04, "changePct": 0.3, "amplitude": 1.44, "volumeRatio": 0.46, "amount": 7649.0, "time": "20260813145003"}, "sh605166": {"price": 8.78, "name": "聚合顺", "open": 8.83, "high": 8.88, "low": 8.74, "preClose": 8.84, "change": -0.06, "changePct": -0.68, "amplitude": 1.58, "volumeRatio": 0.97, "amount": 3509.0, "time": "20260813145004"}, "sh600343": {"price": 19.76, "name": "航天动力", "open": 20.42, "high": 20.44, "low": 19.69, "preClose": 20.02, "change": -0.26, "changePct": -1.3, "amplitude": 3.75, "volumeRatio": 0.6, "amount": 37894.0, "time": "20260813145003"}, "sz002997": {"price": 26.94, "name": "瑞鹄模具", "open": 27.34, "high": 27.47, "low": 26.92, "preClose": 27.34, "change": -0.4, "changePct": -1.46, "amplitude": 2.01, "volumeRatio": 1.19, "amount": 5503.0, "time": "20260813145003"}, "sz159928": {"price": 0.684, "name": "消费ETF汇添富", "open": 0.68, "high": 0.689, "low": 0.678, "preClose": 0.683, "change": 0.001, "changePct": 0.15, "amplitude": 1.61, "volumeRatio": 0.76, "amount": 31317.0, "time": "20260813145003"}, "sh513130": {"price": 0.596, "name": "恒生科技ETF华泰柏瑞", "open": 0.592, "high": 0.602, "low": 0.592, "preClose": 0.594, "change": 0.002, "changePct": 0.34, "amplitude": 1.68, "volumeRatio": 0.79, "amount": 164054.0, "time": "20260813145004"}, "sh562800": {"price": 0.958, "name": "稀有金属ETF嘉实", "open": 0.982, "high": 0.986, "low": 0.956, "preClose": 0.981, "change": -0.023, "changePct": -2.34, "amplitude": 3.06, "volumeRatio": 0.68, "amount": 24236.0, "time": "20260813145002"}, "sh601012": {"price": 12.71, "name": "隆基绿能", "open": 13.05, "high": 13.12, "low": 12.7, "preClose": 13.14, "change": -0.43, "changePct": -3.27, "amplitude": 3.2, "volumeRatio": 1.14, "amount": 155838.0, "time": "20260813145002"}}, "news": [], "updated": "2026-08-13 14:50", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
 
 <script>
 const MORNING_FALLBACK=`🔴 今天最重要：水电验收前再核一遍智能点位（风管机/米家开关均在待付清单）。
@@ -1715,6 +1714,14 @@ function renderSettings(main){
   <button class="btn" style="width:100%" onclick="saveWriterUrl()">💾 保存</button>
   <button class="linkbtn" onclick="openWriter()" style="width:100%;margin-top:10px;justify-content:center">🚀 打开番茄作家助手</button>`;
  main.appendChild(wCard);
+
+ // 桌面应用（PWA 安装到桌面 / 开始菜单）
+ const pwaCard=document.createElement("div");pwaCard.className="card";
+ pwaCard.innerHTML=`<h2>💻 桌面应用</h2>
+  <div class="note-txt" style="margin:4px 0 10px">把工作台装成电脑上的独立应用：双击即可打开、有专属图标、可固定到「开始菜单」与任务栏，离线也能用。</div>
+  <button class="btn" id="pwaInstallBtn" style="width:100%" onclick="pwaInstall()">📲 安装到桌面 / 开始菜单</button>
+  <div id="pwaHint" style="font-size:12px;color:var(--muted);margin-top:8px"></div>`;
+ main.appendChild(pwaCard);
 
  // 周末充电
  const wk=document.createElement("div");wk.className="card";
@@ -6129,6 +6136,24 @@ setInterval(function(){try{pvzTickSun();renderPvzBar();}catch(e){}},30000);
 initSearch();
 initCloudSync();
 if('serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+// PWA 安装到桌面 / 开始菜单
+let wbDeferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();wbDeferredPrompt=e;pwaRefreshBtn();});
+window.addEventListener('appinstalled',()=>{wbDeferredPrompt=null;pwaRefreshBtn(true);});
+function pwaRefreshBtn(installed){
+ const btn=document.getElementById('pwaInstallBtn');const hint=document.getElementById('pwaHint');
+ if(!btn)return;
+ if(installed||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)){
+  btn.style.display='none';if(hint)hint.textContent='✅ 已安装为桌面应用，可在开始菜单 / 任务栏找到它。';return;
+ }
+ if(wbDeferredPrompt){btn.style.display='';if(hint)hint.textContent='点上方按钮即可安装（仅 HTTPS / localhost 下可用，本地双击打开的 file:// 文件无法安装，请改用已部署的网址）。';}
+ else{btn.style.display='none';if(hint)hint.textContent='当前浏览器未提供安装入口：请用 Edge / Chrome 打开本应用的网址，地址栏会出现「安装」图标；或在「设置 → 应用」里手动安装。';}
+}
+function pwaInstall(){
+ if(wbDeferredPrompt){wbDeferredPrompt.prompt();wbDeferredPrompt.userChoice.then(()=>{wbDeferredPrompt=null;pwaRefreshBtn();});}
+ else if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration){toast('请改用已部署的 HTTPS 网址打开，或用 Edge/Chrome 地址栏的「安装」按钮');}
+}
+setTimeout(pwaRefreshBtn,800);
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // 个人工作台 PWA service worker —— network-first 导航 + cache-first 同源静态 + 跨域放行
-const CACHE = 'wb-pwa-v1';
+const CACHE = 'wb-pwa-v2';
 const ASSETS = [
   './',
   './index.html',

@@ -458,8 +458,9 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .pvz-zombie.z-eating{animation:zBite .35s ease-in-out infinite}
 .pvz-zombie.z-slow .z-svg{filter:drop-shadow(0 0 5px #7bc8e6) sepia(0.3) hue-rotate(160deg)}
 .pvz-zombie.z-injured .z-svg{filter:drop-shadow(0 0 4px #e3554b) sepia(0.4) hue-rotate(-40deg) saturate(1.3)}
-.pvz-hpbar{position:absolute;bottom:56px;transform:translateX(-50%);width:34px;height:5px;background:rgba(0,0,0,.35);border-radius:3px;overflow:hidden;z-index:7}
-.pvz-hpbar span{display:block;height:100%;width:var(--hp);background:var(--hp-color);transition:width .25s linear}
+.z-wrap{position:relative;display:inline-block;line-height:0}
+.pvz-zombie .z-hpbar{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);width:42px;height:6px;margin-bottom:3px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.7);border-radius:4px;overflow:hidden;z-index:8;pointer-events:none}
+.pvz-zombie .z-hpbar span{display:block;height:100%;width:var(--hp);background:var(--hp-color);transition:width .2s linear}
 .pvz-ok{font-size:12px;color:var(--ok);margin:6px 0 2px}
 .pvz-warn{font-size:12px;color:var(--warm);margin:6px 0 2px}
 .pvz-bad{font-size:12px;color:var(--bad);margin:6px 0 2px;font-weight:700}
@@ -755,7 +756,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 
 <script type="application/json" id="morningSeed">{"text": "一句话结论：今天最要紧的是把「贴砖耗材争议」彻底闭环——它卡着贴砖复工，是唯一还没解的 P0 根因，今天必须给结论。\n\n🔴 今日必办（P0）\n- 贴砖耗材争议闭环：找陶工问清①缺什么料②合同写没写③谁采购谁送，并听清他 08-10 语音。这是卡住贴砖的唯一根因，今天必须给结论。\n- 闭水试验查漏：妈妈已试水，确认已蓄水，并去楼下看有无渗漏（防水验收关键证据）。\n\n🟠 关键推进（P1）\n- 橱柜方案定稿 + 催徐工效果图终版：壹玖自 07-15 拖了>28天，设明确 deadline。\n- 铺贴复工 + 海棠角文字尺寸：耗材解决后即排铺贴；向装修公司/壹玖要文字版尺寸（加工厂看不懂 CAD）。\n- 主卧补缝 + 全屋智能回执：问汉森主卧胶补完没，问付广金点位回执。\n\n🟡 顺手跟（P2）\n- 全屋定制签约回填（待贴砖复尺）\n- 派雅退门\n- 地面空鼓确认\n\n💰 预算：总超支 ¥30,684.46（+15.34%），连续多期持平。\n\n详细复盘见 装修进度日报_2026-08-12.md。"}</script>
 
-<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 32.66, "name": "紫金矿业", "open": 33.58, "high": 33.84, "low": 32.6, "preClose": 33.58, "change": -0.92, "changePct": -2.74, "amplitude": 3.69, "volumeRatio": 1.13, "amount": 706440.0, "time": "20260813132111"}, "sh601717": {"price": 15.43, "name": "中创智领", "open": 15.67, "high": 15.69, "low": 15.39, "preClose": 15.71, "change": -0.28, "changePct": -1.78, "amplitude": 1.91, "volumeRatio": 1.1, "amount": 18880.0, "time": "20260813132111"}, "sh600879": {"price": 15.97, "name": "航天电子", "open": 15.98, "high": 16.31, "low": 15.93, "preClose": 15.88, "change": 0.09, "changePct": 0.57, "amplitude": 2.39, "volumeRatio": 0.74, "amount": 69883.0, "time": "20260813132109"}, "sh600501": {"price": 14.81, "name": "航天晨光", "open": 14.86, "high": 15.0, "low": 14.8, "preClose": 14.89, "change": -0.08, "changePct": -0.54, "amplitude": 1.34, "volumeRatio": 0.83, "amount": 4566.0, "time": "20260813132111"}, "sz002270": {"price": 20.76, "name": "华明装备", "open": 20.61, "high": 20.93, "low": 20.4, "preClose": 20.61, "change": 0.15, "changePct": 0.73, "amplitude": 2.57, "volumeRatio": 0.82, "amount": 18548.0, "time": "20260813132112"}, "sz000429": {"price": 13.17, "name": "粤高速Ａ", "open": 13.16, "high": 13.23, "low": 13.07, "preClose": 13.16, "change": 0.01, "changePct": 0.08, "amplitude": 1.22, "volumeRatio": 0.49, "amount": 5023.0, "time": "20260813132112"}, "sh605166": {"price": 8.84, "name": "聚合顺", "open": 8.83, "high": 8.88, "low": 8.77, "preClose": 8.84, "change": 0.0, "changePct": 0.0, "amplitude": 1.24, "volumeRatio": 0.91, "amount": 2024.0, "time": "20260813132110"}, "sh600343": {"price": 19.92, "name": "航天动力", "open": 20.42, "high": 20.44, "low": 19.85, "preClose": 20.02, "change": -0.1, "changePct": -0.5, "amplitude": 2.95, "volumeRatio": 0.69, "amount": 26880.0, "time": "20260813132109"}, "sz002997": {"price": 27.19, "name": "瑞鹄模具", "open": 27.34, "high": 27.47, "low": 27.04, "preClose": 27.34, "change": -0.15, "changePct": -0.55, "amplitude": 1.57, "volumeRatio": 1.42, "amount": 4034.0, "time": "20260813132100"}, "sz159928": {"price": 0.686, "name": "消费ETF汇添富", "open": 0.68, "high": 0.689, "low": 0.678, "preClose": 0.683, "change": 0.003, "changePct": 0.44, "amplitude": 1.61, "volumeRatio": 0.94, "amount": 23865.0, "time": "20260813132109"}, "sh513130": {"price": 0.601, "name": "恒生科技ETF华泰柏瑞", "open": 0.592, "high": 0.602, "low": 0.592, "preClose": 0.594, "change": 0.007, "changePct": 1.18, "amplitude": 1.68, "volumeRatio": 0.9, "amount": 114602.0, "time": "20260813132110"}, "sh562800": {"price": 0.968, "name": "稀有金属ETF嘉实", "open": 0.982, "high": 0.986, "low": 0.968, "preClose": 0.981, "change": -0.013, "changePct": -1.33, "amplitude": 1.83, "volumeRatio": 0.82, "amount": 17946.0, "time": "20260813132108"}, "sh601012": {"price": 12.88, "name": "隆基绿能", "open": 13.05, "high": 13.12, "low": 12.85, "preClose": 13.14, "change": -0.26, "changePct": -1.98, "amplitude": 2.05, "volumeRatio": 1.11, "amount": 93614.0, "time": "20260813132111"}}, "news": [], "updated": "2026-08-13 13:21", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
+<script type="application/json" id="stockSeed">{"prices": {"sh601899": {"price": 32.56, "name": "紫金矿业", "open": 33.58, "high": 33.84, "low": 32.55, "preClose": 33.58, "change": -1.02, "changePct": -3.04, "amplitude": 3.84, "volumeRatio": 1.03, "amount": 777338.0, "time": "20260813135002"}, "sh601717": {"price": 15.41, "name": "中创智领", "open": 15.67, "high": 15.69, "low": 15.39, "preClose": 15.71, "change": -0.3, "changePct": -1.91, "amplitude": 1.91, "volumeRatio": 1.06, "amount": 21882.0, "time": "20260813135002"}, "sh600879": {"price": 16.0, "name": "航天电子", "open": 15.98, "high": 16.31, "low": 15.93, "preClose": 15.88, "change": 0.12, "changePct": 0.76, "amplitude": 2.39, "volumeRatio": 0.67, "amount": 76716.0, "time": "20260813135000"}, "sh600501": {"price": 14.85, "name": "航天晨光", "open": 14.86, "high": 15.0, "low": 14.8, "preClose": 14.89, "change": -0.04, "changePct": -0.27, "amplitude": 1.34, "volumeRatio": 0.75, "amount": 4958.0, "time": "20260813135002"}, "sz002270": {"price": 20.69, "name": "华明装备", "open": 20.61, "high": 20.93, "low": 20.4, "preClose": 20.61, "change": 0.08, "changePct": 0.39, "amplitude": 2.57, "volumeRatio": 0.78, "amount": 21314.0, "time": "20260813135000"}, "sz000429": {"price": 13.16, "name": "粤高速Ａ", "open": 13.16, "high": 13.23, "low": 13.07, "preClose": 13.16, "change": 0.0, "changePct": 0.0, "amplitude": 1.22, "volumeRatio": 0.43, "amount": 5331.0, "time": "20260813135000"}, "sh605166": {"price": 8.85, "name": "聚合顺", "open": 8.83, "high": 8.88, "low": 8.77, "preClose": 8.84, "change": 0.01, "changePct": 0.11, "amplitude": 1.24, "volumeRatio": 0.86, "amount": 2309.0, "time": "20260813135001"}, "sh600343": {"price": 19.93, "name": "航天动力", "open": 20.42, "high": 20.44, "low": 19.85, "preClose": 20.02, "change": -0.09, "changePct": -0.45, "amplitude": 2.95, "volumeRatio": 0.63, "amount": 29639.0, "time": "20260813135000"}, "sz002997": {"price": 27.21, "name": "瑞鹄模具", "open": 27.34, "high": 27.47, "low": 27.04, "preClose": 27.34, "change": -0.13, "changePct": -0.48, "amplitude": 1.57, "volumeRatio": 1.23, "amount": 4184.0, "time": "20260813134954"}, "sz159928": {"price": 0.687, "name": "消费ETF汇添富", "open": 0.68, "high": 0.689, "low": 0.678, "preClose": 0.683, "change": 0.004, "changePct": 0.59, "amplitude": 1.61, "volumeRatio": 0.84, "amount": 25776.0, "time": "20260813135000"}, "sh513130": {"price": 0.598, "name": "恒生科技ETF华泰柏瑞", "open": 0.592, "high": 0.602, "low": 0.592, "preClose": 0.594, "change": 0.004, "changePct": 0.67, "amplitude": 1.68, "volumeRatio": 0.89, "amount": 136818.0, "time": "20260813135001"}, "sh562800": {"price": 0.968, "name": "稀有金属ETF嘉实", "open": 0.982, "high": 0.986, "low": 0.968, "preClose": 0.981, "change": -0.013, "changePct": -1.33, "amplitude": 1.83, "volumeRatio": 0.73, "amount": 19256.0, "time": "20260813135002"}, "sh601012": {"price": 12.89, "name": "隆基绿能", "open": 13.05, "high": 13.12, "low": 12.85, "preClose": 13.14, "change": -0.25, "changePct": -1.9, "amplitude": 2.05, "volumeRatio": 0.99, "amount": 101012.0, "time": "20260813135002"}}, "news": [], "updated": "2026-08-13 13:50", "targetRecovery": 68526, "holdings": [{"code": "sh601899", "name": "紫金矿业", "shares": 1600, "cost": 31.36, "group": "A股", "stop": 28.851, "target": 36.064}, {"code": "sh601717", "name": "中创智领", "shares": 1800, "cost": 18.188, "group": "A股", "stop": 16.733, "target": 20.916}, {"code": "sh600879", "name": "航天电子", "shares": 300, "cost": 17.587, "group": "A股", "stop": 16.18, "target": 20.225}, {"code": "sh600501", "name": "航天晨光", "shares": 700, "cost": 22.461, "group": "A股", "stop": 20.664, "target": 25.83}, {"code": "sz002270", "name": "华明装备", "shares": 1700, "cost": 23.586, "group": "A股", "stop": 21.699, "target": 27.124}, {"code": "sz000429", "name": "粤高速A", "shares": 100, "cost": 7.338, "group": "A股", "stop": 6.751, "target": 8.439}, {"code": "sh605166", "name": "聚合顺", "shares": 3000, "cost": 9.053, "group": "A股", "stop": 8.329, "target": 10.411}, {"code": "sh600343", "name": "航天动力", "shares": 1200, "cost": 53.685, "group": "A股", "stop": 49.39, "target": 61.738}, {"code": "sz002997", "name": "瑞鹄模具", "shares": 200, "cost": 29.816, "group": "A股", "stop": 27.431, "target": 34.288}, {"code": "sz159928", "name": "消费ETF", "shares": 5900, "cost": 0.753, "group": "ETF", "stop": 0.693, "target": 0.866}, {"code": "sh513130", "name": "恒生科技", "shares": 17800, "cost": 0.691, "group": "ETF", "stop": 0.636, "target": 0.795}, {"code": "sh562800", "name": "稀有金属", "shares": 3900, "cost": 0.87, "group": "ETF", "stop": 0.8, "target": 1.0}, {"code": "sh601012", "name": "隆基绿能", "shares": 2300, "cost": 17.133, "group": "A股", "stop": 15.762, "target": 19.703}], "watchlist": []}</script>
 
 <script>
 const MORNING_FALLBACK=`🔴 今天最重要：水电验收前再核一遍智能点位（风管机/米家开关均在待付清单）。
@@ -5481,9 +5482,13 @@ function pvzPlantSprite(t){
   return PVZ_SVG[t]||'';
 }
 function pvzZombieSprite(type,hp,maxHp,slow){
+  const ratio=Math.max(0,Math.min(1,(maxHp?hp/maxHp:1)));
+  const hpPct=Math.round(ratio*100);
+  const hpColor=hpPct>50?"#67c23a":(hpPct>25?"#e6a23c":"#f56c6c");
+  const bar=`<span class="z-hpbar" style="--hp:${hpPct}%;--hp-color:${hpColor}"><span></span></span>`;
   const src=PVZ_IMG.zombie;
-  if(type==="zombie" && src) return `<img class="z-img" src="${src}" alt="zombie">`;
-  return pvzZombieSVG(type,hp,maxHp,slow);
+  const body=(type==="zombie"&&src)?`<img class="z-img" src="${src}" alt="zombie">`:pvzZombieSVG(type,hp,maxHp,slow);
+  return `<span class="z-wrap">${bar}${body}</span>`;
 }
 function pvzZombieSVG(type,hp,maxHp,slow){
  const ratio=Math.max(0,Math.min(1,hp/maxHp));
@@ -5859,16 +5864,19 @@ function pvzSim(now){
  // 重新从当天起点模拟，保证状态一致
  let curHp=maxHp;
  let slowUntil=0;
- const plants=(S.pvz.plants||[]).filter(function(p){return p.alive!==false;}).map(function(p){return {pos:p.pos,def:p.def,eaten:0,id:p.id,t:p.t};});
+ const plants=(S.pvz.plants||[]).filter(function(p){return p.alive!==false;}).map(function(p){return {pos:p.pos,def:p.def,eaten:0,id:p.id,t:p.t,placedAt:p.placedAt};});
  plants.sort(function(a,b){return a.pos-b.pos;});
+ const EAT_BAND=2; // 僵尸只啃"脚下/刚到达"的植物，已越过的不再回头啃，避免放植物时位置被拽动
  let realT=0,pos=0;
  while(realT<elapsed && pos<100){
   const hpFactor=Math.max(0.35,curHp/maxHp);
   let slowFactor=1;
   if(slowUntil>realT*60000+ds)slowFactor=0.6;
   const speed=baseStep*zType.speed*hpFactor*slowFactor;
-  // 植物攻击（位于僵尸右侧的射手；近身植物需僵尸逼近才咬）
+  const simMs=ds+realT*60000;
+  // 植物攻击（位于僵尸右侧的射手；近身植物需僵尸逼近才咬）。未种下的植物不参与，避免"放植物瞬间"回算改变现状。
   for(const p of plants){
+   if(p.placedAt!==undefined && simMs<p.placedAt)continue;
    if(p.pos>=pos-3){
     const def=PVZ_PLANTS.find(function(x){return x.t===p.t;});
     if(!def)continue;
@@ -5884,10 +5892,15 @@ function pvzSim(now){
    }
   }
   curHp=Math.max(0,curHp);
-  // 僵尸吃最近一株植物（已爆炸的植物不再被啃）
+  // 僵尸只啃"脚下/刚到达"的植物，已越过的不再回头啃；未种下的不参与
   let cur=null;
-  for(const p of plants){ if(p.alive!==false && p.eaten<p.def && p.pos<=pos+0.0001){ if(!cur||p.pos>cur.pos)cur=p; } }
-  if(cur && cur.eaten<cur.def){ cur.eaten+=1; } else { pos+=speed; }
+  for(const p of plants){
+   if(p.alive===false)continue;
+   if(p.eaten>=p.def)continue;
+   if(p.placedAt!==undefined && simMs<p.placedAt)continue;
+   if(p.pos<=pos+0.0001 && p.pos>pos-EAT_BAND){ if(!cur||p.pos>cur.pos)cur=p; }
+  }
+  if(cur){ cur.eaten+=1; } else { pos+=speed; }
   realT+=1;
  }
  S.pvz.zombieHp=curHp;
@@ -5936,7 +5949,7 @@ function pvzBuy(t){
  const used=(S.pvz.plants||[]).map(function(p){return p.pos;});
  let pos=slots.find(function(s){return used.indexOf(s)<0;});
  if(pos===undefined)pos=10+Math.floor(Math.random()*10);
- S.pvz.plants.push({id:"p"+Date.now()+Math.floor(Math.random()*999),t:def.t,pos:pos,def:def.def});
+ S.pvz.plants.push({id:"p"+Date.now()+Math.floor(Math.random()*999),t:def.t,pos:pos,def:def.def,placedAt:Date.now()});
  save();renderPvzBar();toast("已购买 "+def.name+"（拖动可摆放位置，× 撤回退阳光）");
 }
 function pvzWithdraw(pid){
@@ -5983,7 +5996,7 @@ function pvzPlantUp(e){
  const cur=parseFloat(el.style.left)||0;
  for(const s of slots){const d=Math.abs(s-cur);if(d<bd){bd=d;best=s;}}
  const p=(S.pvz.plants||[]).find(function(x){return x.id===pid;});
- if(p){p.pos=best;save();}
+ if(p){p.pos=best;p.placedAt=Date.now();save();}
  renderPvzBar();
 }
 function pvzSpawnFx(cls,xPct){
@@ -6087,7 +6100,6 @@ function renderPvzBar(){
    <span class="pvz-sunflower">${PVZ_SVG.sun}</span>
    ${plantEls}
    <span class="pvz-zombie" id="pvzZombie" style="left:${st.posPct}%">${pvzZombieSprite(st.zType.t,st.hp,st.maxHp,st.slow)}</span>
-   <span class="pvz-hpbar" style="left:${st.posPct}%;--hp:${hpPct}%;--hp-color:${hpColor}"><span></span></span>
   </div>
   <div class="pvz-status ${statusCls}">${status}</div>
   <div class="pvz-hint">💡 拖动植物摆放/挪动位置；把植物拖回下方商店区，或点 ×，可撤回并原数退还阳光。点击标题僵尸名可打开「僵尸监狱」换对手。</div>

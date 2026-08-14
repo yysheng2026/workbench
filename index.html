@@ -2706,23 +2706,13 @@ function renderFitness(main){
  const yc=document.createElement("div");yc.className="card grid-wide";
  yc.innerHTML=`<h2>🧘‍♀️ 拜日式 A · 每日早晚</h2>
   <div style="font-size:13px;color:var(--accent-ink);line-height:1.6">每天早晚各练 12 组拜日式 A，配合呼吸口令跟练。已连续坚持 <b>${y.streak||0}</b> 天，每完成一次 +10 XP。</div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
-   <a class="btn" href="${YOGA_VIDEO}" target="_blank" rel="noopener">▶ 打开小红书 16min 拜日A 跟练</a>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0">
    <button class="btn ghost sm" onclick="openYogaCues()">📜 查看瑜伽口令</button>
+   <span style="font-size:12px;color:var(--muted)">跟练视频：本地离线播放（来源 小红书《16min拜日A跟练》）</span>
   </div>
   <div class="vid" style="margin-top:4px">
-   ${yVideoSrc
-     ? `<iframe class="vidframe" src="${esc(yVideoSrc)}" allow="autoplay;encrypted-media;fullscreen" allowfullscreen></iframe>
-        <div style="font-size:12px;color:var(--muted);margin-top:6px">已嵌入镜像视频（B站/YouTube）。如需离线，把 <b>yoga-follow.mp4</b> 放到同目录并清空上方嵌入即可本地播放。</div>`
-     : `<video class="vidframe" src="yoga-follow.mp4" controls preload="metadata" style="background:#000" onerror="this.style.display='none';var f=document.getElementById('yogaFallback');if(f)f.style.display='block';"></video>
-        <div id="yogaFallback" style="display:none">
-          <a class="btn" href="${YOGA_VIDEO}" target="_blank" rel="noopener">▶ 打开小红书 16min 拜日A 跟练</a>
-          <div style="font-size:12px;color:var(--muted);margin-top:6px">未找到本地跟练视频 <b>yoga-follow.mp4</b>。把视频文件命名为 yoga-follow.mp4 放到工作台同目录，即可不联网播放（已为你预留好本地播放位）。</div>
-        </div>`}
-   <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
-    <input id="yogaVidUrl" class="search" style="flex:1;min-width:160px;margin:0" placeholder="粘贴 B站/YouTube 镜像链接页面内播放">
-    <button class="btn sm" onclick="setYogaVideo()">嵌入</button>
-   </div>
+   <video class="vidframe" src="yoga-follow.mp4" controls preload="metadata" style="background:#000" onerror="this.style.display='none';var f=document.getElementById('yogaFallback');if(f)f.style.display='block';"></video>
+   <div id="yogaFallback" style="display:none;font-size:12px;color:var(--muted)">未找到本地跟练视频 <b>yoga-follow.mp4</b>。请把它放到工作台同目录即可离线播放。</div>
   </div>
   ${yogaPeriodHtml('morning','🌅 晨练',mR,mDone)}
   ${yogaPeriodHtml('evening','🌙 晚练',eR,eDone)}

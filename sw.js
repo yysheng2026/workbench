@@ -1,5 +1,5 @@
 // 个人工作台 PWA service worker —— network-first 导航 + cache-first 同源静态 + 跨域放行
-const CACHE = 'wb-pwa-v3';
+const CACHE = 'wb-pwa-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -7,7 +7,8 @@ const ASSETS = [
   './icon-192.png',
   './icon-512.png',
   './icon-maskable-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
+  './yoga-follow.mp4'
 ];
 
 self.addEventListener('install', e => {
@@ -35,7 +36,7 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') {
     e.respondWith((async () => {
       try {
-        const res = await fetch(req);
+        const res = await fetch(req, {cache:'reload'});
         const c = await caches.open(CACHE);
         c.put('./index.html', res.clone());
         return res;

@@ -306,7 +306,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 .fit-sub{font-size:12px;color:var(--muted)}
 .vid{margin-top:8px}
 .vidframe{width:100%;aspect-ratio:16/9;border:2px dashed var(--line);border-radius:10px;background:#000;margin-top:6px}
-.vidframe.portrait{aspect-ratio:9/16;width:100%;max-width:min(380px,100%);margin:10px auto 0;display:block;border:none}
+.vidframe.portrait{aspect-ratio:9/16;width:min(220px,68vw);height:auto;margin:10px auto 0;display:block;border:none}
 /* reading / film / knowledge / stamps redesign */
 .goalbar{height:10px;background:#f0e9dd;border-radius:6px;overflow:hidden;margin-top:4px}
 .goalbar i{display:block;height:100%;background:linear-gradient(90deg,#8fd0a0,#5fae74)}
@@ -692,7 +692,7 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
 <body>
 <div id="bgLayer"></div>
 <div class="wrap">
-<header><div class="tape"></div>
+<header>
  <div class="hdr-top">
   <h1 id="wbTitle">🗺 我的闯关工作台</h1>
   <div class="hdr-actions">
@@ -702,10 +702,8 @@ textarea.note{width:100%;min-height:50px;border:2px dashed var(--line);border-ra
   </div>
  </div>
  <div class="search-bar" id="searchBar"><input id="globalSearch" placeholder="搜索任务、书名、影视、账号、知识、股票..." autocomplete="off"></div>
- <span class="date" id="d"></span></header>
+</header>
 <div class="search-dropdown" id="searchDropdown"></div>
-<!-- 工具栏已整体移入「设置」页面，首页不再显示打卡/导入/导出/云同步/新月份按钮 -->
-<div class="banner" id="banner">🔨 今日装修待确认 —</div>
 <div id="pvzBar" class="pvz-wrap"></div>
 <div class="app">
   <div class="nav" id="nav"></div>
@@ -1613,7 +1611,7 @@ function renderSplash(main){
 function todayList(){const r=R();const st=r.stages.find(s=>s.name===r.currentStage);
  const checks=st?st.checks.filter(c=>!c.d).map(c=>"▢ "+c.t):[];
  return checks.concat(r.pendingItems.map(p=>"▢ 待付："+p));}
-function updateBanner(){const b=document.getElementById("banner");
+function updateBanner(){const b=document.getElementById("banner");if(!b)return;
  b.textContent="🌿 今天也要好好生活 — 手机不解锁也能看";}
 
 // ---------- 个性化设置 ----------

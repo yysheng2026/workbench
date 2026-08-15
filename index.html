@@ -2712,7 +2712,7 @@ function renderFitness(main){
   </div>
   <div class="vid" style="margin-top:4px">
    <video class="vidframe portrait" src="yoga-follow.mp4" controls playsinline webkit-playsinline preload="metadata" style="background:#000" onerror="this.style.display='none';var f=document.getElementById('yogaFallback');if(f)f.style.display='block';"></video>
-   <div id="yogaFallback" style="display:none;font-size:12px;color:var(--muted)">未找到本地跟练视频 <b>yoga-follow.mp4</b>。请把它放到工作台同目录即可离线播放。</div>
+   <div id="yogaFallback" style="display:none;font-size:12px;color:var(--muted)">未找到本地跟练视频 <b>yoga-follow.mp4</b>。<br><label class="btn ghost sm" style="margin-top:6px;cursor:pointer">📁 手动选择本地视频<input id="yogaFile" type="file" accept="video/*" style="display:none" onchange="yogaLoadFile(this)"></label></div>
   </div>
   ${yogaPeriodHtml('morning','🌅 晨练',mR,mDone)}
   ${yogaPeriodHtml('evening','🌙 晚练',eR,eDone)}
@@ -2811,6 +2811,7 @@ function openYogaCues(){
  openDModal("🧘 拜日式 A 口令 · 呼吸同步",html);
 }
 function setYogaVideo(){const u=document.getElementById('yogaVidUrl');if(!u)return;const v=u.value.trim();S.fitness.yoga.video=v;save();render();toast('已设置跟练视频');}
+function yogaLoadFile(input){const v=document.querySelector('.vidframe.portrait');if(input.files&&input.files[0]&&v){const url=URL.createObjectURL(input.files[0]);v.src=url;v.style.display='block';try{v.load();}catch(e){}const f=document.getElementById('yogaFallback');if(f)f.style.display='none';toast('已载入本地视频');}}
 // 阅读
 let READ_FILTER="全部";
 function renderReading(main){
@@ -6203,7 +6204,12 @@ pvzAnimLoop();pvzFxLoop();
 setInterval(function(){try{pvzTickSun();renderPvzBar();}catch(e){}},30000);
 initSearch();
 initCloudSync();
-if('serviceWorker' in navigator){const SW_URL='sw.js?v=6';window.addEventListener('load',()=>{navigator.serviceWorker.register(SW_URL).then(r=>{try{r&&r.update();}catch(e){}}).catch(()=>{});});
+if('serviceWorker' in navigator){const SW_VER='6';const SW_URL='sw.js?v='+SW_VER;window.addEventListener('load',()=>{(async()=>{try{
+  // 强制清掉任何旧版 SW 注册（尤其未带 ?v= 的旧 sw.js），否则 Chrome 24h 节流会卡在旧版
+  const regs=await navigator.serviceWorker.getRegistrations();
+  for(const r of regs){const u=(r.active&&r.active.scriptURL)||(r.installing&&r.installing.scriptURL)||'';if(u&&u.indexOf('?v='+SW_VER)<0){try{await r.unregister();}catch(e){}}}
+  const reg=await navigator.serviceWorker.register(SW_URL);if(reg)try{reg.update();}catch(e){}
+ }catch(e){}})();});
  let wbSwRefreshing=false;
  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(wbSwRefreshing)return; wbSwRefreshing=true; location.reload(); });
 }

@@ -6204,7 +6204,7 @@ pvzAnimLoop();pvzFxLoop();
 setInterval(function(){try{pvzTickSun();renderPvzBar();}catch(e){}},30000);
 initSearch();
 initCloudSync();
-if('serviceWorker' in navigator){const SW_VER='6';const SW_URL='sw.js?v='+SW_VER;window.addEventListener('load',()=>{(async()=>{try{
+if('serviceWorker' in navigator){const SW_VER='7';const SW_URL='sw.js?v='+SW_VER;window.addEventListener('load',()=>{(async()=>{try{
   // 强制清掉任何旧版 SW 注册（尤其未带 ?v= 的旧 sw.js），否则 Chrome 24h 节流会卡在旧版
   const regs=await navigator.serviceWorker.getRegistrations();
   for(const r of regs){const u=(r.active&&r.active.scriptURL)||(r.installing&&r.installing.scriptURL)||'';if(u&&u.indexOf('?v='+SW_VER)<0){try{await r.unregister();}catch(e){}}}
